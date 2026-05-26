@@ -1,15 +1,32 @@
 # setup
 .PHONY: install
-install: copy-templates
+install:
 	uv sync --no-dev
 
+.PHONY: install-lab
+install-lab:
+	uv sync --all-packages --no-dev
+
 .PHONY: install-dev
-install-dev: copy-templates
-	uv sync
+install-dev:
+	uv sync --all-packages
 	uv run pre-commit install
 
 .PHONY: install-all
 install-all: install-dev install-app
+
+
+.PHONY: app
+app:
+	@uv run --package param-decomp-lab python -m param_decomp_lab.app.run_app
+
+.PHONY: install-app
+install-app:
+	(cd param_decomp_lab/app/frontend && npm install)
+
+.PHONY: check-app
+check-app:
+	(cd param_decomp_lab/app/frontend && npm run format && npm run check && npm run lint)
 
 # special install for CI (GitHub Actions) that reduces disk usage and install time
 # 1. create a fresh venv with `--clear` -- this is mostly only for local testing of the CI install
@@ -26,17 +43,10 @@ install-ci:
 	uv venv --python 3.13 --clear
 	uv sync \
 		--frozen \
+		--all-packages \
 		--link-mode copy \
 		--extra-index-url https://download.pytorch.org/whl/cpu \
 		--index-strategy unsafe-best-match
-
-.PHONY: copy-templates
-copy-templates:
-	@if [ ! -f param_decomp/scripts/sweep_params.yaml ]; then \
-		cp param_decomp/scripts/sweep_params.yaml.example param_decomp/scripts/sweep_params.yaml; \
-		echo "Created param_decomp/scripts/sweep_params.yaml from template"; \
-	fi
-
 
 # checks
 .PHONY: type
@@ -60,20 +70,20 @@ check-pre-commit:
 
 .PHONY: test
 test:
-	uv run pytest tests/ --testmon --durations 10
+	uv run pytest param_decomp/tests/ param_decomp_lab/tests/ --testmon --durations 10
 
 # Use min(4, nproc) for numprocesses. Any more and it slows down the tests.
 NUM_PROCESSES ?= $(shell nproc | awk '{print ($$1<4?$$1:4)}')
 
 .PHONY: test-all
 test-all:
-	uv run pytest tests/ --runslow --durations 10 --numprocesses $(NUM_PROCESSES) --dist worksteal
+	uv run pytest param_decomp/tests/ param_decomp_lab/tests/ --runslow --durations 10 --numprocesses $(NUM_PROCESSES) --dist worksteal
 
 COVERAGE_DIR=docs/coverage
 
 .PHONY: coverage
 coverage:
-	uv run pytest tests/ --cov=param_decomp --runslow
+	uv run pytest param_decomp/tests/ param_decomp_lab/tests/ --cov=param_decomp --cov=param_decomp_lab --runslow
 	mkdir -p $(COVERAGE_DIR)
 	uv run python -m coverage report -m > $(COVERAGE_DIR)/coverage.txt
 	uv run python -m coverage html --directory=$(COVERAGE_DIR)/html/
@@ -86,15 +96,3 @@ clean:
 	find . -type d -name "*.egg-info" -exec rm -rf {} +
 	rm -rf build/ dist/ .ruff_cache/ .pytest_cache/ .coverage
 
-
-.PHONY: app
-app:
-	@uv run python param_decomp/app/run_app.py
-
-.PHONY: install-app
-install-app:
-	(cd param_decomp/app/frontend && npm install)
-
-.PHONY: check-app
-check-app:
-	(cd param_decomp/app/frontend && npm run format && npm run check && npm run lint)

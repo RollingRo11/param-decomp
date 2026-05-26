@@ -1,491 +1,209 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code agents working in this repo. Sub-CLAUDE.md files carry the
+module-specific detail; see [Module pointers](#module-pointers).
 
-## Environment Setup
+## Environment
 
-**IMPORTANT**: Always activate the virtual environment before running Python or git operations:
+**Always activate the venv before running Python or git:**
 
 ```bash
 source .venv/bin/activate
 ```
-If working in a worktree, make sure there's a local `.venv` first by running `uv sync` in the worktree directory. Do NOT `cd` to the main repo — all commands (including git) should run in the worktree.
 
-Repo requires `.env` file with WandB credentials (see `.env.example`)
+In a worktree, run `uv sync` first so the worktree has its own `.venv`. Do NOT `cd` to
+the main repo — all commands (including git) run in the worktree.
 
-## Project Overview
+`.env` file with WandB credentials required (see `.env.example`).
 
-PD is a research framework for analyzing neural network components and their interactions through sparse parameter decomposition techniques.
+## Project overview
 
-- Target model parameters are decomposed as a sum of `parameter components`
-- Parameter components approximate target model outputs despite differentiable stochastic masks
-- Causal importance functions quantify how much each component can be masked on each datapoint
-- Multiple loss terms balance faithfulness, output reconstruction quality, and component activation sparsity
+PD is a research framework for sparse parameter decomposition: target-model parameters are
+decomposed into a sum of components; per-datapoint **causal importance (CI)** quantifies
+how much each component can be masked; multiple loss terms balance faithfulness,
+reconstruction, and sparsity.
 
-The codebase supports three experimental domains: TMS (Toy Model of Superposition), ResidualMLP (residual MLP analysis), and Language Models.
+Three experimental domains: TMS (Toy Model of Superposition), ResidualMLP, and Language
+Models. The LM experiment decomposes any HuggingFace-loadable model whose target modules
+are `nn.Linear`, `nn.Embedding`, or `transformers.modeling_utils.Conv1D`.
 
-**Available experiments** (defined in `param_decomp/registry.py`):
+Two research papers describe the method:
 
-- **TMS (Toy Model of Superposition)**:
-  - `tms_5-2` - TMS with 5 features, 2 hidden dimensions
-  - `tms_5-2-id` - TMS with 5 features, 2 hidden dimensions (fixed identity in-between)
-  - `tms_40-10`
-  - `tms_40-10-id`
-- **ResidualMLP**:
-  - `resid_mlp1` - 1 layer
-  - `resid_mlp2` - 2 layers
-  - `resid_mlp3` - 3 layers
-- **Language Models** (MLP-only Llama variants):
-  - `ss_llama_simple_mlp-2L` - 2-layer Llama on SimpleStories
-  - `pile_llama_simple_mlp-4L` - 4-layer Llama on the Pile (the VPD-paper run)
-  - `pile_llama_simple_mlp-12L` - 12-layer Llama on the Pile
+- **SPD** — [`papers/Stochastic_Parameter_Decomposition/spd_paper.md`](papers/Stochastic_Parameter_Decomposition/spd_paper.md). The current framing. Repo has evolved since publication but the concepts are still right.
+- **APD** — [`papers/Attribution_based_Parameter_Decomposition/apd_paper.md`](papers/Attribution_based_Parameter_Decomposition/apd_paper.md). Precursor; introduced linear parameter decomposition.
 
-The `lm` experiment can decompose any HuggingFace-loadable model whose target modules are
-`nn.Linear`, `nn.Embedding`, or `transformers.modeling_utils.Conv1D`.
+## Package layout
 
-## Research Papers
+Two flat-layout distributions, deliberately split:
 
-This repository implements methods from two key research papers on parameter decomposition:
+- **`param-decomp`** (`param_decomp/`) — core library. The reusable, publishable surface:
+  the optimization loop, configs, `ComponentModel`, loss metrics, the `RunSink` protocol.
+  Treat as a stable API; changes here are deliberate.
+- **`param-decomp-lab`** (`param_decomp_lab/`) — team tooling. Experiment scripts, the
+  post-processing pipelines, the app, infra, eval metrics, lab-side helpers. Churns
+  freely; depends on core.
 
-**Stochastic Parameter Decomposition (SPD)**
+`make install-dev` syncs both editably via the uv workspace in the root `pyproject.toml`.
+The `pd-*` console scripts all live in `param_decomp_lab/pyproject.toml`.
 
-- [`papers/Stochastic_Parameter_Decomposition/spd_paper.md`](papers/Stochastic_Parameter_Decomposition/spd_paper.md)
-- A version of this repository was used to run the experiments in this paper. But we continue to develop on the code, so it no longer is limited to the implementation used for this paper.
-- Introduces the core SPD framework
-- Details the stochastic masking approach and optimization techniques used throughout the codebase
-- Useful reading for understanding the implementation details, though may be outdated.
+## Public API
 
-**Attribution-based Parameter Decomposition (APD)**
-
-- [`papers/Attribution_based_Parameter_Decomposition/apd_paper.md`](papers/Attribution_based_Parameter_Decomposition/apd_paper.md)
-- This paper was the precursor to SPD.
-- It introduced the concept of linear parameter decomposition.
-- Contains theoretical foundations, broader context, and high-level conceptual insights of parameter decomposition methods.
-- Useful for understanding the conceptual framework and motivation behind SPD
-
-## Development Commands
-
-**Setup:**
-
-- `make install-dev` - Install package with dev dependencies and pre-commit hooks
-- `make install` - Install package only (`pip install -e .`)
-- `make install-app` - Install frontend dependencies (`npm install` in `param_decomp/app/frontend/`)
-
-**Code Quality:**
-
-- `make check` - Run full pre-commit suite (basedpyright, ruff lint, ruff format)
-- `make type` - Run basedpyright type checking only
-- `make format` - Run ruff linter and formatter
-
-**Frontend (when working on `param_decomp/app/frontend/`):**
-
-- `make check-app` - Run frontend checks (format, type check, lint)
-- Or run individually from `param_decomp/app/frontend/`:
-  - `npm run format` - Format code with Prettier
-  - `npm run check` - Run Svelte type checking
-  - `npm run lint` - Run ESLint
-
-**Testing:**
-
-- `make test` - Run tests (excluding slow tests)
-- `make test-all` - Run all tests including slow ones
-- `python -m pytest tests/test_specific.py` - Run specific test file
-- `python -m pytest tests/test_specific.py::test_function` - Run specific test
-
-**Running the App:**
-
-- `make app` - Launch the PD visualization app (backend + frontend)
-
-## Architecture Overview
-
-**Core PD Framework:**
-
-- `param_decomp/run_param_decomp.py` - Main PD optimization logic called by all experiments
-- `param_decomp/configs.py` - Pydantic config classes for all experiment types
-- `param_decomp/registry.py` - Centralized experiment registry with all experiment configurations
-- `param_decomp/models/component_model.py` - Core ComponentModel that wraps target models
-- `param_decomp/models/components.py` - Component types (LinearComponent, EmbeddingComponent, etc.)
-- `param_decomp/losses.py` - PD loss functions (faithfulness, reconstruction, importance minimality)
-- `param_decomp/metrics.py` - Metrics for logging to WandB (e.g. CI-L0, KL divergence, etc.)
-- `param_decomp/figures.py` - Figures for logging to WandB (e.g. CI histograms, Identity plots, etc.)
-
-**Terminology: Sources vs Masks:**
-
-- **Sources** (`adv_sources`, `PPGDSources`, `self.sources`): The raw values that PGD optimizes adversarially. These are interpolated with CI to produce component masks: `mask = ci + (1 - ci) * source`. Used in both regular PGD (`param_decomp/metrics/pgd_utils.py`) and persistent PGD (`param_decomp/persistent_pgd.py`).
-- **Masks** (`component_masks`, `RoutingMasks`, `make_mask_infos`, `n_mask_samples`): The materialized per-component masks used during forward passes. These are produced from sources (in PGD) or from stochastic sampling, and are a general PD concept across the whole codebase.
-
-**Experiment Structure:**
-
-Each experiment (`param_decomp/experiments/{tms,resid_mlp,lm}/`) contains:
-
-- `models.py` - Experiment-specific model classes and pretrained loading
-- `*_decomposition.py` - Main PD execution script
-- `train_*.py` - Training script for target models
-- `*_config.yaml` - Configuration files
-- `plotting.py` - Visualization utilities
-
-**Key Data Flow:**
-
-1. Experiments load pretrained target models via WandB or local paths
-2. Target models are wrapped in ComponentModel with specified target modules
-3. PD optimization runs via `param_decomp.run_param_decomp.optimize()` with config-driven loss combination
-4. Results include component masks, causal importance scores, and visualizations
-
-**Configuration System:**
-
-- YAML configs define all experiment parameters
-- Pydantic models provide type safety and validation
-- WandB integration for experiment tracking and model storage
-- Supports both local paths and `wandb:project/runs/run_id` format for model loading
-- Centralized experiment registry (`param_decomp/registry.py`) manages all experiment configurations
-
-**Harvest, Autointerp & Dataset Attributions Modules:**
-
-- `param_decomp/harvest/` - Offline GPU pipeline for collecting component statistics (correlations, token stats, activation examples)
-- `param_decomp/autointerp/` - LLM-based automated interpretation of components
-- `param_decomp/dataset_attributions/` - Multi-GPU pipeline for computing component-to-component attribution strengths aggregated over training data
-- `param_decomp/graph_interp/` - Context-aware component labeling using graph structure (attributions + correlations)
-- Data stored at `PARAM_DECOMP_OUT_DIR/{harvest,autointerp,dataset_attributions,graph_interp}/<run_id>/`
-- See `param_decomp/harvest/CLAUDE.md`, `param_decomp/autointerp/CLAUDE.md`, `param_decomp/dataset_attributions/CLAUDE.md`, and `param_decomp/graph_interp/CLAUDE.md` for details
-
-**Output Directory (`PARAM_DECOMP_OUT_DIR`):**
-
-- Defined in `param_decomp/settings.py`
-- On cluster: `/mnt/polished-lake/artifacts/mechanisms/param-decomp/`
-- Off cluster: `~/param_decomp_out/`
-- Contains: runs, SLURM logs, sbatch scripts, clustering outputs, harvest data, autointerp results
-
-**Experiment Logging:**
-
-- Uses WandB for experiment tracking and model storage
-- All runs generate timestamped output directories with configs, models, and plots
-
-## Directory Structure
-
-```
-<repo-root>/
-├── papers/                          # Research papers (SPD, APD)
-├── scripts/                         # Standalone utility scripts
-├── tests/                           # Test suite
-├── param_decomp/                             # Main source code
-│   ├── investigate/                 # Agent investigation (see investigate/CLAUDE.md)
-│   ├── app/                         # Web visualization app (see app/CLAUDE.md)
-│   ├── autointerp/                  # LLM interpretation (see autointerp/CLAUDE.md)
-│   ├── clustering/                  # Component clustering (see clustering/CLAUDE.md)
-│   ├── dataset_attributions/        # Dataset attributions (see dataset_attributions/CLAUDE.md)
-│   ├── harvest/                     # Statistics collection (see harvest/CLAUDE.md)
-│   ├── postprocess/                 # Unified postprocessing pipeline (harvest + attributions + autointerp)
-│   ├── graph_interp/                # Context-aware interpretation (see graph_interp/CLAUDE.md)
-│   ├── pretrain/                    # Target model pretraining (see pretrain/CLAUDE.md)
-│   ├── experiments/                 # Experiment implementations
-│   │   ├── tms/                     # Toy Model of Superposition
-│   │   ├── resid_mlp/               # Residual MLP
-│   │   ├── lm/                      # Language models
-│   │   └── ih/                      # Induction heads
-│   ├── metrics/                     # Metrics - both for use as losses and as eval metrics
-│   ├── models/
-│   │   ├── component_model.py       # ComponentModel, ParamDecompRunInfo, from_pretrained()
-│   │   └── components.py            # LinearComponent, EmbeddingComponent, etc.
-│   ├── scripts/                     # CLI entry points (pd-run, pd-local)
-│   ├── utils/
-│   │   └── slurm.py                 # SlurmConfig, submit functions
-│   ├── configs.py                   # Pydantic configs (Config, ModuleInfo, etc.)
-│   ├── registry.py                  # Experiment registry (name → config)
-│   ├── run_param_decomp.py                   # Main optimization loop
-│   ├── losses.py                    # Loss functions (faithfulness, reconstruction, etc.)
-│   ├── figures.py                   # WandB figure generation
-│   └── settings.py                  # PARAM_DECOMP_OUT_DIR, SLURM_LOGS_DIR, SBATCH_SCRIPTS_DIR
-├── Makefile                         # Dev commands (make check, make test)
-└── pyproject.toml                   # Package config
-```
-
-## Quick Navigation
-
-### CLI Entry Points
-
-| Command | Entry Point | Description |
-|---------|-------------|-------------|
-| `pd-run` | `param_decomp/scripts/run.py` | SLURM-based experiment runner |
-| `pd-local` | `param_decomp/scripts/run_local.py` | Local experiment runner |
-| `pd-harvest` | `param_decomp/harvest/scripts/run_slurm_cli.py` | Submit harvest SLURM job |
-| `pd-autointerp` | `param_decomp/autointerp/scripts/run_slurm_cli.py` | Submit autointerp SLURM job |
-| `pd-attributions` | `param_decomp/dataset_attributions/scripts/run_slurm_cli.py` | Submit dataset attribution SLURM job |
-| `pd-postprocess` | `param_decomp/postprocess/cli.py` | Unified postprocessing pipeline (harvest + attributions + interpret + evals) |
-| `pd-graph-interp` | `param_decomp/graph_interp/scripts/run_slurm_cli.py` | Submit graph interpretation SLURM job |
-| `pd-clustering` | `param_decomp/clustering/scripts/run_pipeline.py` | Clustering ensemble pipeline |
-| `pd-cluster-harvest` | `param_decomp/clustering/scripts/run_harvest.py` | Harvest activations → membership snapshot |
-| `pd-cluster-merge` | `param_decomp/clustering/scripts/run_merge.py` | Merge from snapshot (CPU-only) |
-| `pd-pretrain` | `param_decomp/pretrain/scripts/run_slurm_cli.py` | Pretrain target models |
-| `pd-investigate` | `param_decomp/investigate/scripts/run_slurm_cli.py` | Launch investigation agent |
-
-### Files to Skip When Searching
-
-Use `param_decomp/` as the search root (not repo root) to avoid noise.
-
-**Always skip:**
-
-- `.venv/` - Virtual environment
-- `__pycache__/`, `.pytest_cache/`, `.ruff_cache/` - Build artifacts
-- `node_modules/` - Frontend dependencies
-- `.git/` - Version control
-- `.data/` - Runtime data/caches
-- `notebooks/` - Analysis notebooks (unless explicitly relevant)
-- `wandb/` - WandB local files
-
-**Usually skip unless relevant:**
-
-- `tests/` - Test files (unless debugging test failures)
-- `papers/` - Research paper drafts
-
-### Common Call Chains
-
-**Running Experiments:**
-
-- `pd-run` → `param_decomp/scripts/run.py` → `param_decomp/utils/slurm.py` → SLURM → `param_decomp/run_param_decomp.py`
-- `pd-local` → `param_decomp/scripts/run_local.py` → `param_decomp/run_param_decomp.py` directly
-
-**Harvest Pipeline:**
-
-- `pd-harvest` → `param_decomp/harvest/scripts/run_slurm_cli.py` → `param_decomp/utils/slurm.py` → SLURM array → `param_decomp/harvest/scripts/run_worker.py` → `param_decomp/harvest/harvest.py`, then merge job → `param_decomp/harvest/scripts/run_merge.py`
-
-**Autointerp Pipeline:**
-
-- `pd-autointerp` → `param_decomp/autointerp/scripts/run_slurm_cli.py` → `param_decomp/utils/slurm.py` → `param_decomp/autointerp/interpret.py`
-
-**Dataset Attributions Pipeline:**
-
-- `pd-attributions` → `param_decomp/dataset_attributions/scripts/run_slurm_cli.py` → `param_decomp/utils/slurm.py` → SLURM array → `param_decomp/dataset_attributions/harvest.py`
-
-**Clustering Pipeline:**
-
-- `pd-clustering` → `param_decomp/clustering/scripts/run_pipeline.py` → `param_decomp/utils/slurm.py` → `param_decomp/clustering/scripts/run_clustering.py`
-
-**Investigation Pipeline:**
-
-- `pd-investigate` → `param_decomp/investigate/scripts/run_slurm_cli.py` → `param_decomp/utils/slurm.py` → SLURM → `param_decomp/investigate/scripts/run_agent.py` → Claude Code
-
-## Common Usage Patterns
-
-### Running Experiments Locally (`pd-local`)
-
-For collaborators and simple local execution, use `pd-local`:
-
-```bash
-pd-local tms_5-2           # Run on single GPU (default)
-pd-local tms_5-2 --cpu     # Run on CPU
-pd-local tms_5-2 --dp 4    # Run on 4 GPUs (single node DDP)
-```
-
-This runs experiments directly without SLURM, git snapshots, or W&B views/reports.
-
-### Web App for Visualization
-
-The PD app provides interactive visualization of component decompositions and attributions:
-
-```bash
-make app              # Launch backend + frontend dev servers
-# or
-python -m param_decomp.app.run_app
-```
-
-The app has its own detailed documentation in `param_decomp/app/CLAUDE.md` and `param_decomp/app/README.md`.
-
-### Harvesting Component Statistics (`pd-harvest`)
-
-Collect component statistics (activation examples, correlations, token stats) for a run:
-
-```bash
-pd-harvest <wandb_path> --n_batches 1000 --n_gpus 8    # Submit SLURM job to harvest statistics
-```
-
-See `param_decomp/harvest/CLAUDE.md` for details.
-
-### Automated Component Interpretation (`pd-autointerp`)
-
-Generate LLM interpretations for harvested components:
-
-```bash
-pd-autointerp <wandb_path>            # Submit SLURM job to interpret components
-```
-
-Requires `OPENROUTER_API_KEY` env var. See `param_decomp/autointerp/CLAUDE.md` for details.
-
-### Agent Investigation (`pd-investigate`)
-
-Launch a Claude Code agent to investigate a specific question about a PD model:
-
-```bash
-pd-investigate <wandb_path> "How does the model handle gendered pronouns?"
-pd-investigate <wandb_path> "What components are involved in verb agreement?" --time 4:00:00
-```
-
-Each investigation:
-
-- Runs in its own SLURM job with 1 GPU
-- Starts an isolated app backend instance
-- Investigates the specific research question using PD tools via MCP
-- Writes findings to append-only JSONL files
-
-Output: `PARAM_DECOMP_OUT_DIR/investigations/<inv_id>/`
-
-For parallel investigations, run the command multiple times with different prompts.
-
-See `param_decomp/investigate/CLAUDE.md` for details.
-
-### Unified Postprocessing (`pd-postprocess`)
-
-Run all postprocessing steps for a completed PD run with a single command. The CLI takes a
-positional path to a `PostprocessConfig` YAML (the wandb run is specified inside the config):
-
-```bash
-pd-postprocess config.yaml                    # Submit the pipeline defined by this config
-pd-postprocess config.yaml --dependency 123   # Wait for SLURM job 123 before starting
-pd-postprocess config.yaml --dry_run          # Print the resolved config without submitting
-```
-
-The config schema is `PostprocessConfig` in `param_decomp/postprocess/config.py`. Set any optional
-section to `null` to skip it:
-
-- `attributions: null` — skip dataset attributions
-- `autointerp: null` — skip autointerp entirely (interpret + evals)
-- `autointerp.evals: null` — skip evals but still run interpret
-- `intruder: null` — skip intruder eval
-- `graph_interp: null` — skip context-aware graph interpretation (requires `attributions`)
-
-SLURM dependency graph:
-
-```
-harvest (GPU array → merge)
-├── intruder eval    (CPU, depends on harvest merge, label-free)
-└── autointerp       (depends on harvest merge)
-    ├── interpret    (CPU, LLM calls)
-    │   ├── detection (CPU, depends on interpret)
-    │   └── fuzzing   (CPU, depends on interpret)
-attributions (GPU array → merge, parallel with harvest)
-graph_interp         (CPU, depends on harvest merge + attributions merge)
-```
-
-### Running on SLURM Cluster (`pd-run`)
-
-For the core team, `pd-run` provides full-featured SLURM orchestration:
-
-```bash
-pd-run --experiments tms_5-2                    # Run a specific experiment
-pd-run --experiments tms_5-2,resid_mlp1         # Run multiple experiments
-pd-run                                          # Run all experiments
-```
-
-All `pd-run` executions:
-
-- Submit jobs to SLURM
-- Create a git snapshot for reproducibility
-- Create W&B workspace views
-
-A run will output the important losses and the paths to which important figures are saved. Use these
-to analyse the result of the runs.
-
-**Metrics and Figures:**
-
-Metrics and figures are defined in `param_decomp/metrics.py` and `param_decomp/figures.py`. These files expose dictionaries of functions that can be selected and parameterized in the config of a given experiment. This allows for easy extension and customization of metrics and figures, without modifying the core framework code.
-
-### Sweeps
-
-Run hyperparameter sweeps on the GPU cluster:
-
-```bash
-pd-run --experiments <experiment_name> --sweep --n_agents <n-agents> [--cpu]
-```
-
-Examples:
-
-```bash
-pd-run --experiments tms_5-2 --sweep --n_agents 4            # Run TMS 5-2 sweep with 4 GPU agents
-pd-run --experiments resid_mlp2 --sweep --n_agents 3 --cpu   # Run ResidualMLP2 sweep with 3 CPU agents
-pd-run --sweep --n_agents 10                                 # Sweep all experiments with 10 agents
-pd-run --experiments tms_5-2 --sweep custom.yaml --n_agents 2 # Use custom sweep params file
-```
-
-**Supported Experiments:** All experiments in `param_decomp/registry.py` (run `pd-local --help` to see available options)
-
-**How It Works:**
-
-1. Creates a WandB sweep using parameters from `param_decomp/scripts/sweep_params.yaml` (or custom file)
-2. Deploys multiple SLURM agents as a job array to run the sweep
-3. Each agent runs on a single GPU by default (use `--cpu` for CPU-only)
-4. Creates a git snapshot to ensure consistent code across all agents
-
-**Sweep Parameters:**
-
-- Default sweep parameters are loaded from `param_decomp/scripts/sweep_params.yaml`
-- You can specify a custom sweep parameters file by passing its path to `--sweep`
-- Sweep parameters support both experiment-specific and global configurations:
-
-  ```yaml
-  # Global parameters applied to all experiments
-  global:
-    seed:
-      values: [0, 1, 2]
-    lr_schedule:
-      start_val:
-        values: [0.001, 0.01]
-
-  # Experiment-specific parameters (override global)
-  tms_5-2:
-    seed:
-      values: [100, 200] # Overrides global seed
-    task_config:
-      feature_probability:
-        values: [0.05, 0.1]
-  ```
-
-**Logs:** logs are found in `~/slurm_logs/slurm-<job_id>_<task_id>.out`
-
-### Loading Models from WandB
-
-Load trained PD models from wandb or local paths using these methods:
+Import names from where they're defined. No package-level re-exports — `__init__.py`
+files are bare. The canonical entrypoint and the protocols / configs it consumes:
 
 ```python
-from param_decomp.models.component_model import ComponentModel, ParamDecompRunInfo
-
-# Option 1: Load model directly (simplest)
-model = ComponentModel.from_pretrained("wandb:entity/project/runs/run_id")
-
-# Option 2: Load run info first, then model (access config before loading)
-run_info = ParamDecompRunInfo.from_path("wandb:entity/project/runs/run_id")
-print(run_info.config)  # Inspect config before loading model
-model = ComponentModel.from_run_info(run_info)
-
-# Local paths work too
-model = ComponentModel.from_pretrained("/path/to/checkpoint.pt")
+from param_decomp.optimize import EvalLoop, optimize
+from param_decomp.configs import Cadence, PDConfig, RuntimeConfig
+from param_decomp.run_sink import RunSink
+from param_decomp.metrics.base import LossMetricConfig, Metric
+from param_decomp.batch_and_loss_fns import RunBatch, ReconstructionLoss
 ```
 
-**Path Formats:**
+- `optimize(target_model, train_loader, run_batch, reconstruction_loss, pd_config,
+  runtime_config, sink, cadence, eval_loop=None)` — the only entrypoint. Builds the
+  `ComponentModel`, binds eval metrics, runs the loop. Side effects all flow through `sink`.
+- `PDConfig` — algorithm: seed, CI fn, loss metrics, optimizers, decomposition targets,
+  tied weights, faithfulness warmup. Flipping a field here changes what algorithm runs.
+- `RuntimeConfig` — compute substrate: `autocast_bf16`, `device`, `dp`. Perturbs numerics
+  without changing the algorithm.
+- `Cadence` — train-log / save period predicates. Train-log fires every
+  `train_log_every` steps; `save_every` is optional and `should_save` is false at
+  step 0. `optimize()` always checkpoints at the final step regardless of `save_every`.
+- `EvalLoop` — frozen dataclass in `param_decomp/optimize.py` bundling the eval-loop
+  triple (`loader`, `metrics`, `n_steps`) with its timing (`every`, `slow_every`,
+  `slow_on_first_step`). Atomic optional: pass `None` to disable eval. `slow_every` must
+  be a multiple of `every`.
+- `RunSink` — Protocol with three methods (`log`, `console`, `checkpoint`). Concrete
+  impl in `param_decomp_lab.run_sink.RunSink` (local files + wandb + rank-aware no-op),
+  built via `.local(...)`, `.with_wandb(...)`, or `.silent()`.
+- `Metric` — base class with `__init__(cfg)` + `bind(model, device)`. Each config carries
+  a `type: Literal["<ClassName>"]` discriminator. See `param_decomp/metrics/CLAUDE.md`
+  for the loss-metric wiring (canonical, curated) and
+  `param_decomp_lab/eval_metrics/CLAUDE.md` for the eval-metric wiring
+  (user-extensible).
 
-- WandB: `wandb:entity/project/run_id` or `wandb:entity/project/runs/run_id`
-- Local: Direct path to checkpoint file (config must be in same directory as `final_config.yaml`)
+## Where things live
 
-Downloaded runs are cached in `PARAM_DECOMP_OUT_DIR/runs/<project>-<run_id>/`.
+- `param_decomp/` — core library (see [Public API](#public-api)). Module docstrings
+  describe each file.
+- `param_decomp/metrics/` — loss `Metric` classes and dispatch.
+- `param_decomp_lab/experiments/{tms,resid_mlp,lm}/run.py` — composition roots; each
+  parses a YAML, builds objects, calls `optimize()`.
+- `param_decomp_lab/{harvest,autointerp,clustering,dataset_attributions,graph_interp,investigate,app}/`
+  — post-pipeline + app, each with its own CLAUDE.md.
+- `param_decomp_lab/postprocess/` — orchestrates the post-pipeline stages.
+- `param_decomp_lab/eval_metrics/` — batteries-included eval-metric set.
+- `param_decomp_lab/infra/` — settings, paths, slurm, wandb, sqlite, git, run_files,
+  markdown, pydantic helpers.
+- `param_decomp_lab/{seed.py, distributed.py, batch_and_loss_fns.py, component_model_io.py, run_sink.py}`
+  — lab-side helpers that aren't big enough to warrant their own subdir.
 
-### Cluster Usage Guidelines
+## Module pointers
 
-- DO NOT use more than 8 GPUs at one time
-- This includes not setting off multiple sweeps/evals that total >8 GPUs
-- Monitor jobs with: `squeue --format="%.18i %.9P %.15j %.12u %.12T %.10M %.9l %.6D %b %R" --me`
+| Module | CLAUDE.md | What it covers |
+|---|---|---|
+| `param_decomp/metrics/` | `param_decomp/metrics/CLAUDE.md` | Loss-metric dispatch, config placement rule, sources vs masks, PPGD |
+| `param_decomp_lab/experiments/` | `param_decomp_lab/experiments/CLAUDE.md` | Adding an experiment, YAML schema, LM `target.spec`, `Saved<Name>Run` |
+| `param_decomp_lab/eval_metrics/` | `param_decomp_lab/eval_metrics/CLAUDE.md` | Eval-metric dispatch — user-extensible (vs canonical loss metrics) |
+| `param_decomp_lab/postprocess/` | `param_decomp_lab/postprocess/CLAUDE.md` | Pipeline orchestration: harvest → autointerp / attributions / intruder → graph_interp |
+| `param_decomp_lab/harvest/` | `param_decomp_lab/harvest/CLAUDE.md` | Component-statistics collection pipeline |
+| `param_decomp_lab/autointerp/` | `param_decomp_lab/autointerp/CLAUDE.md` | LLM-based component interpretation |
+| `param_decomp_lab/clustering/` | `param_decomp_lab/clustering/CLAUDE.md` | Hierarchical clustering of components |
+| `param_decomp_lab/dataset_attributions/` | `param_decomp_lab/dataset_attributions/CLAUDE.md` | Aggregated component-to-component attributions |
+| `param_decomp_lab/graph_interp/` | `param_decomp_lab/graph_interp/CLAUDE.md` | Context-aware labelling using the attribution graph |
+| `param_decomp_lab/investigate/` | `param_decomp_lab/investigate/CLAUDE.md` | Agent investigation of a research question |
+| `param_decomp_lab/app/` | `param_decomp_lab/app/CLAUDE.md` | Web visualization (FastAPI + Svelte) |
+| `param_decomp_lab/experiments/lm/pretrain/` | `param_decomp_lab/experiments/lm/pretrain/CLAUDE.md` | LM target-model pretraining |
 
-## Coding Guidelines & Software Engineering Principles
+## Saved-run layout
 
-**This is research code, not production. Prioritize simplicity and fail-fast over defensive programming.**
+```
+PARAM_DECOMP_OUT_DIR/decompositions/<run_id>/
+  model_<step>.pth           # checkpoints (RunSink.checkpoint)
+  metrics.jsonl              # local logs (RunSink.log)
+```
 
-Core principles:
+`PARAM_DECOMP_OUT_DIR` is `/mnt/polished-lake/artifacts/mechanisms/param-decomp/` on
+cluster, `~/param_decomp_out/` off cluster. Defined in
+`param_decomp_lab/infra/settings.py`.
 
-- **Fail fast** - assert assumptions, crash on violations, don't silently recover
-- **No legacy support** - delete unused code, don't add fallbacks for old formats or migration shims
-- **Narrow types** - avoid `| None` unless null is semantically meaningful; use discriminated unions over bags of optional fields
-- **No try/except for control flow** - check preconditions explicitly, then trust them
-- **YAGNI** - don't add abstractions, config options, or flexibility for hypothetical futures
+## Development commands
+
+| Command | Purpose |
+|---|---|
+| `make install-dev` | Install all workspace packages + dev deps + pre-commit |
+| `make install` | Core only |
+| `make install-lab` | Core + lab, no dev deps |
+| `make check` | basedpyright + ruff lint + format |
+| `make type` | basedpyright |
+| `make format` | ruff lint + format |
+| `make test` | Tests excluding slow |
+| `make test-all` | All tests |
+| `make app` | Launch the PD app (backend + frontend) |
+
+Run a single test: `python -m pytest path/to/test_file.py::test_name`.
+
+## CLI entry points
+
+All declared in `param_decomp_lab/pyproject.toml`.
+
+| Command | Entry point | Purpose |
+|---|---|---|
+| `pd-tms` | `experiments/tms/run.py` | Run TMS experiment from a YAML |
+| `pd-resid-mlp` | `experiments/resid_mlp/run.py` | Run ResidMLP from a YAML |
+| `pd-lm` | `experiments/lm/run.py` | Run LM from a YAML |
+| `pd-lm-layerwise` | `experiments/lm/layerwise.py` | Split an LM YAML into per-matrix configs, submit as a SLURM array |
+| `pd-pretrain` | `experiments/lm/pretrain/cli.py` | Pretrain target models |
+| `pd-harvest` | `harvest/scripts/run_slurm_cli.py` | Submit harvest SLURM job |
+| `pd-autointerp` | `autointerp/scripts/run_slurm_cli.py` | Submit autointerp SLURM job |
+| `pd-attributions` | `dataset_attributions/scripts/run_slurm_cli.py` | Submit dataset-attribution SLURM job |
+| `pd-graph-interp` | `graph_interp/scripts/run_slurm_cli.py` | Submit graph-interp SLURM job |
+| `pd-postprocess` | `postprocess/cli.py` | Unified postprocessing pipeline |
+| `pd-clustering` | `clustering/scripts/run_pipeline.py` | Clustering ensemble pipeline |
+| `pd-cluster-harvest` | `clustering/scripts/run_harvest.py` | Harvest activations → membership snapshot |
+| `pd-cluster-merge` | `clustering/scripts/run_merge.py` | Merge from snapshot (CPU only) |
+| `pd-intruder` | `harvest/scripts/run_intruder_slurm_cli.py` | Submit intruder eval job |
+| `pd-investigate` | `investigate/scripts/run_slurm_cli.py` | Submit agent-investigation job |
+
+All `pd-*` run commands accept `--group <id>` (wandb group field, used for UI
+collapsing) and `--tags a,b,c` (wandb tags). Both no-op when `wandb:` is omitted from
+the YAML. `pd-lm-layerwise` auto-generates a `lw-...` group id and propagates it (and
+any `--tags`) to every child run.
+
+## Cluster usage
+
+- **Do not use more than 8 GPUs at one time** — this includes simultaneous sweeps / evals.
+- Monitor your jobs: `squeue --format="%.18i %.9P %.15j %.12u %.12T %.10M %.9l %.6D %b %R" --me`
+
+## Files to skip when searching
+
+Use `param_decomp/` or `param_decomp_lab/` as the search root, not the repo root.
+
+Always skip: `.venv/`, `__pycache__/`, `.pytest_cache/`, `.ruff_cache/`, `node_modules/`,
+`.git/`, `.data/`, `wandb/`, `notebooks/`.
+
+Usually skip unless relevant: `param_decomp/tests/`, `param_decomp_lab/tests/`, `papers/`.
+
+---
+
+# Coding guidelines
+
+This is research code, not production. Prioritize simplicity and fail-fast over
+defensive programming.
+
+## Fail fast
+
+- If you have an invariant in your head, **assert it**. Asserting isn't a sign you
+  distrust the code — it's the opposite. Codify the trust.
+- Don't write `if everything_is_ok: continue_happy_path()`. Just `assert everything_is_ok`.
+- Have a VERY good reason to handle an error gracefully. If the program isn't working as
+  it should, it shouldn't be running — fix it instead.
+- Avoid `try/except` unless it's the right tool. Never use it for control flow.
+- Write for the golden path. Don't pre-handle edge cases — raise instead, and handle
+  them when they actually bite.
 
 ```python
-# BAD - defensive, recovers silently, wide types
+# BAD
 def get_config(path: str) -> dict | None:
     try:
         with open(path) as f:
@@ -493,93 +211,105 @@ def get_config(path: str) -> dict | None:
     except:
         return None
 
-config = get_config(path)
-if config is not None:
-    value = config.get("key", "default")
-
-# GOOD - fail fast, narrow types, trust preconditions
+# GOOD
 def get_config(path: Path) -> Config:
     assert path.exists(), f"config not found: {path}"
     with open(path) as f:
-        data = json.load(f)
-    return Config(**data)  # pydantic validates
-
-config = get_config(path)
-value = config.key
+        return Config(**json.load(f))  # pydantic validates
 ```
 
-### Tests
+## No legacy support
 
-- The point of tests in this codebase is to ensure that the code is working as expected, not to prevent production outages - there's no deployment here. Therefore, don't worry about lots of larger integration/end-to-end tests. These often require too much overhead for what it's worth in our case, and this codebase is interactively run so often that issues will likely be caught by the user at very little cost.
+- Don't add fallbacks for old formats or migration shims. Change it; migrate manually
+  if needed.
+- Delete unused code. If an argument is always the same value, inline it.
 
-### Assertions and error handling
+## Types & arguments
 
-- If you have an invariant in your head, assert it. Are you afraid to assert? Sounds like your program might already be broken. Assert, assert, assert. Never soft fail.
-- Do not write: `if everythingIsOk: continueHappyPath()`. Instead do `assert everythingIsOk`
-- You should have a VERY good reason to handle an error gracefully. If your program isn't working like it should then it shouldn't be running, you should be fixing it.
-- Do not write `try-catch` blocks unless it definitely makes sense
-- **Write for the golden path.** Never let edge cases bloat the code. Before handling them, just raise an exception. If an edge case becomes annoying enough, we'll handle it then — but write first and foremost for the common case.
+- Encode invariants in types. If two fields jointly vary (both present or neither),
+  put them in an optional tuple — don't make them independently optional.
+- Avoid `| None` unless null is semantically meaningful. Differentiate `None` from `[]`
+  when it matters.
+- Don't use bare dicts for heterogeneous values. `{<id>: <val>}` good; `{"tokens": ...,
+  "loss": ...}` bad — use a dataclass.
+- PEP 604 unions (`X | Y`, `X | None`) — not `Union[X, Y]` or `Optional[X]`.
+- Lowercase generics (`list`, `dict`, `tuple`) — not `List`, `Dict`, `Tuple`.
+- Type-checker: **basedpyright** (not mypy).
+- Don't use `from __future__ import annotations`. Use quoted forward references when needed.
+- Don't add redundant annotations (`x: int = 5` when `x = 5` infers fine).
+- Default arguments are rarely a good idea. Have a very good reason — especially if the
+  caller also defaults to the same value. Keep defaults high in the call stack.
+- Be explicit about naming, even if names end up long. If a name has to be long to be
+  honest about what the thing is, that's fine — if it feels silly, the abstraction is
+  probably wrong upstream.
 
-### Control Flow
+## Control flow
 
-- Keep I/O as high up as possible. Make as many functions as possible pure.
-- Prefer `match` over `if/elif/else` chains when dispatching on conditions - more declarative and makes cases explicit
-- If you either have (a and b) or neither, don't make them both independently optional. Instead, put them in an optional tuple
+- Keep I/O as high as possible. Make as many functions pure as possible.
+- Prefer `match` over `if/elif/else` for dispatching on a tag or kind — more declarative.
 
-### Types, Arguments, and Defaults
+## Tensor operations
 
-- Write your invariants into types as much as possible.
-- Use jaxtyping for tensor shapes (though for now we don't do runtime checking)
-- Always use the PEP 604 typing format of `|` for unions and `type | None` over `Optional`.
-- Use `dict`, `list` and `tuple` not `Dict`, `List` and `Tuple`
-- Don't add type annotations when they're redundant. (i.e. `my_thing: Thing = Thing()` or `name: str = "John Doe"`)
-- Differentiate no data from empty collections. Often it's important to differentiate `None` from `[]`
-- Don't use bare dictionaries for structures whose values aren't homogenous
-  - good: {<id>: <val>}
-  - bad: {"tokens": …, "loss": …}
-- Default args are rarely a good idea. Avoid them unless necessary. You should have a very good reason for having a default value for an argument, especially if it's caller also defaults to the same thing
-- This repo uses basedpyright (not mypy)
-- Keep defaults high in the call stack.
-- Don't use `from __future__ import annotations` — use string quotes for forward references instead.
+- Prefer einops for clarity.
+- Use jaxtyping for shape annotations (we don't runtime-check, but they document).
+- Assert shapes liberally.
 
-### Tensor Operations
+## Comments
 
-- Try to use einops by default for clarity.
-- Assert shapes liberally
-- Document complex tensor manipulations
+Comments hide sloppy code. If you feel a comment coming on, consider: better names,
+extract a function, extract a named local.
 
-### Comments
+Comments describe what the code is, not what changed about it. No narrativizing:
 
-- Comments hide sloppy code. If you feel the need to write a comment, consider that you should instead
-  - name your functions more clearly
-  - name your variables more clearly
-  - separate a chunk of logic into a function
-  - separate an inlined computation into a meaningfully named variable
-- Don’t write dialogic / narrativised comments or code. Instead, write comments that describe
-  the code as is, not the diff you're making. Examples of narrativising comments:
-  - `# the function now uses y instead of x`
-  - `# changed to be faster`
-  - `# we now traverse in reverse`
-- Here's an example of a bad diff, where the new comment makes reference to a change in code, not just the state of the code:
+- `# the function now uses y instead of x` — bad
+- `# changed to be faster` — bad
+- `# we now traverse in reverse` — bad
 
-```
-95 -      # Reservoir states
-96 -      reservoir_states: list[ReservoirState]
-95 +      # Reservoir state (tensor-based)
-96 +      reservoir: TensorReservoirState
-```
+## Docstrings
 
-### Other Important Software Development Practices
+Docstrings carry information the signature doesn't.
 
-- Don't add legacy fallbacks or migration code - just change it and let old data be manually migrated if needed.
-- Delete unused code.
-- If an argument is always x, strongly consider removing as an argument and just inlining
-- **Update CLAUDE.md files** when changing code structure, adding/removing files, or modifying key interfaces. Update the CLAUDE.md in the same directory (or nearest parent) as the changed files.
+- Default to a single line — or none at all, even on public classes / configs /
+  functions, when name + type carry everything. `class DistributedState:` doesn't need
+  `"""Immutable snapshot of the distributed runtime state for this process."""`.
+- Skip `Args:` / `Attributes:` entries that just paraphrase the name and type.
+- Don't restate the function name in English. If the name needs translation, fix the name.
+- Keep: non-obvious semantics, invariants, gotchas, shape constraints not in jaxtyping,
+  side effects, ordering requirements, cross-references.
+- No Sphinx/RST markup. Single backticks, not double.
+- No `Raises:` for `AssertionError` — asserts are programmer errors, not part of the
+  contract.
+- Don't re-document a Protocol or abstract method in its impl unless there's
+  impl-specific behavior to note.
+- Module docstrings: one orienting line. Anything longer belongs in CLAUDE.md.
 
-### GitHub
+**Load-bearing public entrypoints in `param_decomp/` are an exception** — there, a full
+Google-style `Args:` block is worth the bookkeeping, because IDE hover surfaces it and
+the callers are external. Concretely: `optimize`, `ComponentModel.__init__` / `forward`
+/ `calc_causal_importances`, `RunSink` protocol methods, `Metric.bind` / `update` /
+`reset` / `compute`, `make_components`, `make_ci_fn_wrapper`. For everything else,
+*including internal helpers in `param_decomp/`*, prefer better parameter names and
+clearer parameterisation over docstrings — name parameters by their role inside the
+function, not just their type.
 
-- To view github issues and PRs, use the github cli (e.g. `gh issue view 28` or `gh pr view 30`).
-- When making PRs, use the github template defined in `.github/pull_request_template.md`.
-- Before committing, ALWAYS ensure you are on the correct branch and do not use `git add .` to add all unstaged files. Instead, add only the individual files you changed, don't commit all files.
-- Use branch names `refactor/X` or `feature/Y` or `fix/Z`.
-- NEVER use `--no-verify` to skip pre-commit hooks. They are there for a good reason. If pre-commit hooks fail, you MUST fix the underlying problem.
+## Tests
+
+Tests catch obvious bugs; they're not insurance against production outages — there's
+no production. Skip heavy end-to-end tests when they require lots of overhead. The
+codebase is run interactively constantly, so the user catches issues cheaply.
+
+## Other
+
+- **Update CLAUDE.md files** when changing code structure, adding/removing files, or
+  modifying key interfaces. Update the CLAUDE.md in the same directory (or nearest
+  parent) as the changed files.
+
+## GitHub
+
+- Use `gh` for issues and PRs (`gh issue view 28`, `gh pr view 30`).
+- PR template: `.github/pull_request_template.md`.
+- Before committing: verify you're on the right branch. Don't `git add .` — add
+  specific files.
+- Branch names: `refactor/X`, `feature/Y`, `fix/Z`.
+- **Never** `--no-verify`. Pre-commit hooks exist for a reason. If they fail, fix the
+  underlying issue.
