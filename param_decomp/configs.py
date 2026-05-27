@@ -216,12 +216,19 @@ class Cadence(BaseConfig):
 
     Held separately from `RunSink` so the sink only owns *where* output goes; `Cadence`
     owns *when* train logs and checkpoints fire. Eval timing lives on `EvalLoop`,
-    alongside the runtime objects it depends on. `optimize()` always checkpoints at the
+    alongside the runtime objects it depends on. `Trainer.run` always checkpoints at the
     final step regardless of `save_every`.
     """
 
     train_log_every: PositiveInt
     save_every: PositiveInt | None = None
+    keep_last_n_checkpoints: PositiveInt | None = None
+    """How many of the most-recent ``training_<step>.pth`` / ``model_<step>.pth`` pairs
+    to keep on disk after each checkpoint write. ``None`` (the default) keeps all
+    checkpoints — the conservative choice for research where prior steps may matter.
+    Opt in to e.g. ``3`` for long jobs where disk pressure outweighs the value of
+    intermediate checkpoints; the final-step checkpoint is always included in the
+    retained set."""
 
     def should_log_train(self, step: int) -> bool:
         return step % self.train_log_every == 0
