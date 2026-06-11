@@ -185,7 +185,6 @@ any `--tags`) to every child run.
 
 ## Cluster usage
 
-- **Do not use more than 8 GPUs at one time** — this includes simultaneous sweeps / evals.
 - Monitor your jobs: `squeue --format="%.18i %.9P %.15j %.12u %.12T %.10M %.9l %.6D %b %R" --me`
 
 ## Files to skip when searching
