@@ -69,7 +69,6 @@ import torch.nn.functional as F
 import wandb  # type: ignore[import-untyped]
 from PIL import Image
 from torch import Tensor
-from torch.nn.parallel import DistributedDataParallel
 
 # --- Section A: Config ---
 
@@ -148,6 +147,7 @@ class Config:
     use_wandb: bool = False
     wandb_project: str = "param-decomp"
     wandb_run_name: str | None = None
+    save_path: str | None = None  # if set, rank0 saves the decomposition (V/U + CI net) at the end
 
 
 # --- Section B: Leaky-hard sigmoids ---
@@ -688,7 +688,7 @@ def decompose(
     cfg: Config,
     train_loader: Iterator[Tensor],
     eval_loader: Iterator[Tensor],
-) -> None:
+) -> dict[str, Any]:
     """Decompose `target_model` using SPD. `cfg.C_per_module` names the `nn.Linear` submodules
     to decompose; `target_model.forward(input_ids)` must return logits.
 
@@ -737,15 +737,11 @@ def decompose(
     torch.manual_seed(cfg.seed + rank)
     torch.cuda.manual_seed_all(cfg.seed + rank)
 
+    # No DDP wrapper: V/U grads come from the recon forwards that bypass spd's forward, which DDP
+    # would not all-reduce. We average all trainable grads manually after backward (see loop).
     spd = SPDModule(target_model, ci_fn, wrappers).to(device)
-    spd_wrapped: nn.Module
-    if world_size > 1:
-        spd_wrapped = DistributedDataParallel(
-            spd, device_ids=[local_rank], output_device=local_rank
-        )
-    else:
-        spd_wrapped = spd
-    _log("DDP wrap complete")
+    spd_wrapped: nn.Module = spd
+    _log("module ready (manual grad all-reduce)")
 
     ppgd = PersistentPGD(wrappers, local_B, cfg.seq_len, device, cfg)
     ci_params = list(ci_fn.parameters())
@@ -800,6 +796,10 @@ def decompose(
 
         opt.zero_grad()
         total.backward()
+        if world_size > 1:  # data-parallel: average all trainable grads across ranks
+            for p in component_params + ci_params:
+                if p.grad is not None:
+                    dist.all_reduce(p.grad, op=dist.ReduceOp.AVG)
         torch.nn.utils.clip_grad_norm_(component_params, cfg.grad_clip_components)
         opt.step()
         ppgd.external_step(ppgd_grads_dict, ppgd_lr)
@@ -842,8 +842,38 @@ def decompose(
                     flush=True,
                 )
 
+    # Final eval, returned so callers can compare runs programmatically.
+    eval_batch = next(eval_loader).to(device)
+    final_metrics = run_eval(
+        target_model,
+        ci_fn,
+        wrappers,
+        cfg,
+        world_size,
+        eval_batch,
+        is_slow=False,
+        imp_p=anneal_p(cfg.n_steps, cfg.n_steps, cfg.p_start, cfg.p_end),
+    )
+    if rank == 0 and cfg.save_path is not None:
+        import dataclasses
+
+        torch.save(
+            {
+                "method": "vpd",
+                "wrappers": {
+                    n: {"V": w.V.detach().cpu(), "U": w.U.detach().cpu()} for n, w in wrappers.items()
+                },
+                "ci_fn": {k: v.detach().cpu() for k, v in ci_fn.state_dict().items()},
+                "C_per_module": dict(cfg.C_per_module),
+                "cfg": dataclasses.asdict(cfg),
+                "final_metrics": {k: v for k, v in final_metrics.items() if isinstance(v, (int, float))},
+            },
+            cfg.save_path,
+        )
+        print(f"[rank0] saved decomposition -> {cfg.save_path}", flush=True)
     if world_size > 1:
         dist.destroy_process_group()
+    return final_metrics
 
 
 # --- Section J: Eval metrics ---
@@ -866,6 +896,49 @@ def _ce_next_token(logits: Tensor, input_ids: Tensor) -> float:
     flat_logits = logits.reshape(-1, logits.shape[-1])
     flat_labels = masked.reshape(-1)
     return F.cross_entropy(flat_logits[:-1], flat_labels[1:], ignore_index=-100).item()
+
+
+def make_induction_batch(vocab: int, n: int, L: int, device: torch.device, seed: int) -> tuple[Tensor, Tensor]:
+    """Repeated-random-token induction probe: `n` sequences of `L` random tokens, repeated twice ->
+    [n, 2L]. Returns (sequence, first_half). Same on every rank (rank-independent seed)."""
+    g = torch.Generator(device=device).manual_seed(seed)
+    first = torch.randint(0, vocab, (n, L), device=device, generator=g)
+    return torch.cat([first, first], dim=1), first
+
+
+def induction_copy_acc(logits: Tensor, first: Tensor, L: int) -> float:
+    """2nd-copy copy accuracy: at position L+i the induction-correct next token is first[:, i+1]
+    (what followed the same token the first time). Fraction of 2nd-copy positions whose argmax
+    matches. ~0 = no induction, high = the model copies the repeat."""
+    pred = logits[:, L : 2 * L - 1, :].argmax(dim=-1)  # [n, L-1]
+    return (pred == first[:, 1:L]).float().mean().item()
+
+
+def eval_induction_vpd(
+    target_model: nn.Module, wrappers: dict[str, "ComponentLinear"], ci_fn: "CITransformer",
+    cfg: "Config", eval_batch: Tensor, device: torch.device,
+) -> dict[str, Any]:
+    """Does the VPD decomposition preserve induction? Copy accuracy on an IN-DISTRIBUTION repeated
+    probe (repeat the first half of eval-batch sequences), unmasked (original model ceiling) and
+    CI-masked (important components only). In-distribution because the CI function does not
+    generalize to OOD random tokens -- a random-repeat probe spuriously reads as ~0."""
+    L = min(64, cfg.seq_len // 2)
+    first = eval_batch[:32, :L]
+    seq = torch.cat([first, first], dim=1)
+    clear_wrapper_masks(wrappers)
+    unmasked = target_model(seq)
+    acts = {n: _require(w.last_input) for n, w in wrappers.items()}
+    ci_lower, _u, _p = ci_fn(acts)
+    zeros = {n: torch.zeros(seq.shape[0], seq.shape[1], device=device) for n in wrappers}
+    set_wrapper_masks(wrappers, ci_lower, zeros, routing=None)
+    try:
+        ci_masked = target_model(seq)
+    finally:
+        clear_wrapper_masks(wrappers)
+    return {
+        "eval/induction/copy_unmasked": induction_copy_acc(unmasked, first, L),
+        "eval/induction/copy_ci_masked": induction_copy_acc(ci_masked, first, L),
+    }
 
 
 def eval_ci_l0(
@@ -1155,6 +1228,9 @@ def run_eval(
             ci_lower, ci_upper, _ci_pre_sigmoid = ci_fn(acts)
 
             metrics.update(eval_ci_l0(ci_lower, cfg.ci_alive_threshold, world_size, cfg.use_wandb))
+            metrics.update(
+                eval_induction_vpd(target_model, wrappers, ci_fn, cfg, eval_batch, eval_batch.device)
+            )
             metrics.update(
                 eval_ce_kl_losses(
                     target_model=target_model,

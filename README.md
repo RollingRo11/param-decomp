@@ -1,7 +1,8 @@
 # Parameter Decomposition
 
 Training tools for parameter decomposition on neural networks. For a compact implementation of
-the core method, see [`nano_param_decomp/`](nano_param_decomp/).
+the core method — plus the **Matryoshka PD** research line (cross-layer components + circuit-recovery
+experiments on pythia-14m and `attn-only-2l`) — see [`nano_param_decomp/`](nano_param_decomp/README.md).
 
 ## References
 
