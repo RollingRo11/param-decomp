@@ -134,26 +134,17 @@ genuine structure, not redundancy, and is deliberately left alone. Mixed record:
 RNN this achieved causal independence at zero accuracy cost; on the LM it hurt at both doses tried
 (§7).
 
-**Entrywise sparsity (L1)** — penalizes carvings in which components overlap and cancel against
-each other, thereby choosing *which of many equally-valid-looking carvings* we get. The problem it
-targets: suppose the true mechanisms are M₁ and M₂, but the optimizer instead lands on
-A = M₁ + M₂ and B = −M₂ (or any other mixture). The sum is unchanged, so faithfulness is satisfied;
-with the gates co-adapted, the deletion tests can be satisfied too. Every loss above is blind to
-the difference between the clean carving {M₁, M₂} and the mixed one {A, B} — that freedom is why
-components can come out as plausible-looking mixtures ("blobs"). The fix exploits one arithmetic
-fact: mixtures require **cancellation**. In the {A, B} carving, the M₂-entries appear twice with
-opposite signs, so the total absolute value of all component entries is larger than in the clean
-carving, where each weight entry appears in exactly one component. Since the components' *sum* is
-pinned to the original weights, simply penalizing the total absolute value of all entries makes
-clean, non-overlapping carvings the cheapest — it is the only loss in the method that breaks this
-"which basis" tie. Free diagnostic: the ratio (total absolute component entries) / (total absolute
-original entries) is exactly 1.0 for a perfectly non-overlapping carving, and larger the more the
-components cancel against each other. The crucial caveat is that **some networks genuinely store
-mechanisms as overlapping weight patterns** (superposition) — there the *correct* carving has ratio
-well above 1 (measured ~8 on our superposition toy), and forcing it toward 1 destroys the
-decomposition. Hence three dose regimes (§7): too weak = no effect; moderate = prunes needless
-cancellation, which helped the LM on every metric; too strong on a superposed target = actively
-destructive. Dose-find per target, watching the ratio and the all-on sanity check.
+**Entrywise sparsity (L1)** — add up the absolute values of every number in every component;
+penalize the total. Because the components must always sum to the original weights, this total is
+smallest when each weight entry belongs to just one component — overlapping components have to
+store extra, cancelling numbers, which costs more. So the penalty pushes components to claim
+separate pieces of the weights; none of the other losses cares about this, which is why components
+otherwise come out as overlapping mixtures. Free progress number: (this total) / (the same total
+for the original weights) = 1.0 when there is no overlap at all. Caveat: some models genuinely
+store mechanisms as overlapping weights (superposition) — the correct answer there sits well above
+1.0 (~8 on our superposition toy), and pushing it to 1.0 destroys the decomposition. Use a moderate
+dose and watch the ratio and the all-on sanity check (three regimes: too weak = nothing, moderate =
+helps everything, too strong = destroys; see §7).
 
 Optional extras, currently off in the main configurations: a **simplicity** penalty on each active
 component's internal complexity (APD's nuclear norm — note it is *rotation-invariant*, so it cannot
