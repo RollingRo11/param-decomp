@@ -318,8 +318,12 @@ the missing rigor step.
 1. **Worst-case robustness** — the one axis where the per-matrix-atom baseline is clearly better
    (~10×), now known to be structural (see failure record). Candidate fixes: train dormant
    components against adversarial activation, or a stronger/longer adversary during training.
-2. **The ~82–86% reconstruction ceiling** on real LMs — shared by the baseline method and
-   confirmed budget-independent for ours; whatever lifts it is a new idea, not a bigger run.
+2. ~~The ~82–86% reconstruction ceiling~~ **Broken by variable rank**: nested+trim components
+   (cap 8) reached 91.8% CE-recovered / KL 0.59 on Pythia-14M at the same token budget where
+   rank-1 plateaued at ~85% / 1.16 (single seed). The ceiling was a rank-1 expressiveness limit,
+   not an objective limit. Open follow-ons: the MLP cap is saturated (mechanisms there want more
+   than rank 8), and the trim dose that preserves reconstruction does not invert the
+   rank-vs-usage correlation (frequent components stay near the cap — bounded, not shrunk).
 3. **L1 scheduling**: anneal it off or stop at a target ratio instead of letting it grind past the
    reconstruction optimum; per-module dosing guided by the per-matrix ratio map (MLPs look
    neuron-aligned; attention subspaces don't).

@@ -143,6 +143,29 @@ unchanged by removing the L1, by 5× more training, or across seeds.
 Only ~7% better from 5× the compute: the ~82–86% recovery level is a property of the current
 objective (the VPD baseline plateaus in the same range), not undertraining.
 
+**Variable rank on Pythia (nested + trim, C=1024, rank cap 8, same 100k-step / ~800M-token budget,
+L1 off, single seed):**
+
+| | VPD (20k) | rank-1 flagship (100k best) | **nested+trim (100k best)** |
+|---|---|---|---|
+| CE-recovered | 82.2% | ~85% | **91.8%** |
+| KL, ci-masked ↓ | 1.46 | 1.16 | **0.59** |
+| KL, all-on (sanity) ↓ | 0.014 | ~1e-5 | 1.4e-3 |
+| adversarial KL ↓ | **3.6** | 35.4 | 23.0 |
+| gates active per token | 0.72% of pieces | 0.54% | 1.5% (15.2/1024) |
+
+The ~82–86% recovery ceiling — previously shared by both methods and budget-independent — **breaks**
+under variable rank: fatter components lift reconstruction rather than more training. Worst-case
+robustness also improves ~35% but remains the deficit axis. Rank anatomy (SVD of materialized
+components): only 4 always-on components (~25% of weight energy — no mega-clique formed), and rank
+*rises* with firing rate (always-on ~7.6, common ~6.5, rare ~5.9): at the working trim dose,
+reconstruction value outbids the capacity-x-usage tax for frequent components, so the tax bounds
+but does not invert the correlation. MLP pieces saturate the cap (~8.0) across all buckets — the
+cap is binding there and MLP mechanisms likely want more; attention differentiates (rare
+components use ~4). Caveats: 725 dormant components still hold ~20% of weight energy at rank ~6
+(the standing adversarial-surface suspect); all-on summation oscillated above the best-checkpoint
+gate mid-run (the trim-vs-faithfulness tug-of-war, L1's old pattern) before settling at 1.4e-3.
+
 **Do the components mean anything?** (open-ended inspection of the 100k best checkpoint; ~2,800 of
 4,096 components fire somewhere; verified causally by deleting one component and seeing which
 predictions degrade)
