@@ -146,6 +146,29 @@ store mechanisms as overlapping weights (superposition) — the correct answer t
 dose and watch the ratio and the all-on sanity check (three regimes: too weak = nothing, moderate =
 helps everything, too strong = destroys; see §7).
 
+**Variable-rank components (extension of the rank-1 structure).** Instead of one piece per matrix,
+a component may hold up to R pieces per matrix (a hard cap — R = one attention head's slice is the
+natural ceiling), and training pressure decides how much of that budget each component actually
+uses, independently per matrix. The gate binding is unchanged: one gate still switches all of a
+component's pieces everywhere, so this does not drift toward the per-piece-gate baseline. Two
+pressures earned their place (validated on the cross-layer toy, §7):
+
+- **Nested ranks** — each step, truncate every component to its first k pieces (k random from
+  {1, 2, 4, ..., R}) during the stochastic reconstruction; full rank everywhere else. Prefixes must
+  stand alone, so pieces become importance-ordered and unneeded rank dies in the tail. This is the
+  piece that restores one-mechanism-per-component when rank is free; it needs ~2-4x the training
+  budget (each rung trains a fraction of the steps).
+- **Rank-count trim** — penalize each piece's magnitude below linearly (power 0.5, smoothed at
+  zero — the raw power's gradient diverges exactly when nesting zeroes a tail), weighted per
+  component by its firing rate plus a small floor. The floor must sit BELOW the typical live
+  component's firing rate or the usage coupling washes out. Trims the small tail ranks nesting
+  leaves behind; controls capacity but does NOT by itself decide component identity.
+
+A third candidate is recorded as rejected: an unweighted Frobenius penalty on the factors (the
+variational nuclear norm). Its optimum under faithfulness is few fat merged components — it
+actively causes the mega-component failure it was meant to prevent, with no helpful dose between
+inert and destructive.
+
 Optional extras, currently off in the main configurations: a **simplicity** penalty on each active
 component's internal complexity (APD's nuclear norm — note it is *rotation-invariant*, so it cannot
 do the basis-choosing job the L1 does), and a **lifetime** penalty (squared firing frequency) that
@@ -256,6 +279,19 @@ the missing rigor step.
 **Failure record worth remembering:**
 - Full-rank components blob or collapse on every dense target (LM and toys) regardless of penalty
   tuning; rank-1 is what fixed it, not a coefficient.
+- Rank caps and rank penalties do not by themselves create component identity: with rank budget
+  available and no other pressure, components pack several unrelated mechanisms into their budget
+  (cross-layer toy at cap 8: feature separation fell from ~0.9 to 0.68 with no penalty, and the
+  rank-count trim reduced rank without unpacking the mechanisms). Nested ranks is what unpacked
+  them; the trim then removes the leftover tail.
+- The Frobenius/variational-nuclear-norm penalty on factors is not a usable rank pressure (see §4):
+  inert at low dose, merges components at high dose, nothing in between.
+- On a dense 2-layer induction toy (the Christensen & Riggs testbed: every position runs most of
+  the model), NO rank scheme — including rank-1 — produced a dedicated induction crew: components
+  converge to interchangeable rank-~13 shards, each owning ~1/24 of every matrix, even after the
+  minimality dose was raised until gates became position-selective. Same lesson as the algorithmic
+  RNN: on dense targets mechanisms differ by role, not rate or size, and the role-based forces
+  (interaction loss, entrywise L1 at the right dose) are the ones that must do the separating.
 - Undercomplete C collapses the gates to all-on: too few whole-network components forces every one
   to be a generalist. Capacity is a first-class hyperparameter, not a budget knob.
 - Rate-based granularity pressures (per-input minimality, firing-frequency penalties) are

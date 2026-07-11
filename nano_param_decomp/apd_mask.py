@@ -138,6 +138,30 @@ class ApdConfig:
     # Diagnostic: sum_c ||P_c||_1 / ||W||_1 = 1.0 at perfect disjoint support.
     coeff_weight_l1: float = 0.0
 
+    # --- variable-rank components (factored backend, factor_rank R > 1) ---------------------------
+    # Three independent pressures that let a component's EFFECTIVE rank land anywhere in 0..R,
+    # per matrix, while the cap R blocks mega-components. All three keep the one-gate-per-component
+    # binding (the whole-network coupling) untouched.
+    #
+    # V1: plain UNWEIGHTED variational nuclear norm sum_c 1/2(||A_c||^2+||B_c||^2). Under the
+    # faithfulness constraint sum_c P_c = W this is minimized by carving W's spectrum across
+    # components without overlap (the rank-analog of the entrywise L1); unused rank shrinks to 0,
+    # including in DORMANT components (unlike coeff_simplicity, which is importance-weighted).
+    coeff_frob: float = 0.0
+    # V2: Matryoshka-style nested ranks. Each step sample a rung k from {1,2,4,...,R} and run the
+    # stochastic recon with every component truncated to its FIRST k rank-pieces (faithfulness,
+    # PGD and eval stay full-rank). Prefixes must stand alone -> pieces become importance-ordered
+    # and effective rank is where the tail dies. Structurally hostile to blobs.
+    nested_rank: bool = False
+    # V3: effective-rank (piece-count) penalty with capacity-x-usage coupling. Piece magnitude
+    # s(c,r) = ||A[c,:,r]|| * ||B[c,r,:]|| (gauge-invariant); penalize sum_r s^rank_p (p<1 counts
+    # pieces rather than magnitude), weighted per component by (rank_freq_floor + firing rate),
+    # detached: frequent components must be low-rank, high-rank components must be rare, and the
+    # floor makes dormant components shed junk rank too.
+    coeff_rank: float = 0.0
+    rank_p: float = 0.5
+    rank_freq_floor: float = 0.05
+
     # in-training anti-redundancy (interaction) loss: sample component pairs each step, penalize
     # positive second-difference ablation damage I(i,j) = L(ij) - L(i) - L(j) + L(base) -- i.e.
     # super-additive damage = the pair backs each other up = redundant role overlap. The first
@@ -220,6 +244,7 @@ class ComponentBankLinear(nn.Module):
         # transient per-forward state
         self.mode: str = "target"
         self.mask: Tensor | None = None       # [*batch, C] gate, shared across modules
+        self.rank_keep: int | None = None      # nested-rank truncation: use only pieces [:k] (factored)
         self.delta_mask: Tensor | None = None  # [*batch] scalar for the spillover
         self.last_input: Tensor | None = None
         self.W_cache: Tensor | None = None     # [C, d_out, d_in] (only when a materialize path needs it)
@@ -274,6 +299,9 @@ class ComponentBankLinear(nn.Module):
             self.last_target_out = out.detach()  # for hidden-activation recon (APD L_hidden)
             return out
         assert self.mask is not None
+        if self.rank_keep is not None:
+            assert self.impl == "factored" and self.lowrank_fwd, \
+                "nested_rank needs the factored backend with lowrank_forward=True"
         if self.impl == "tucker":
             # entirely in core space: gate contracts into the component mode, forward never leaves
             # the r_mode-dim space. gh = g @ F_C [.,r_C]; x~ = x @ F_in [.,r_in];
@@ -286,9 +314,13 @@ class ComponentBankLinear(nn.Module):
         elif self.impl == "factored" and self.lowrank_fwd:
             # stay in r-dim factored space: x@B_c -> gate -> @A_c. Cost B*C*r*(d_in+d_out); never
             # materializes W_eff=[*batch,d_out,d_in]. Equivalent to sum_c g_c (A_c B_c) applied to x.
-            h = torch.einsum("...i,cri->...cr", x, self.B)  # [*batch, C, r]
+            # nested-rank truncation (rank_keep=k): only the first k pieces of every component run.
+            rk = self.rank_keep
+            Bf = self.B if rk is None else self.B[:, :rk, :]
+            Af = self.A if rk is None else self.A[:, :, :rk]
+            h = torch.einsum("...i,cri->...cr", x, Bf)  # [*batch, C, r]
             h = h * self.mask.unsqueeze(-1)                  # gate components
-            out = torch.einsum("...cr,cor->...o", h, self.A)  # [*batch, d_out]
+            out = torch.einsum("...cr,cor->...o", h, Af)  # [*batch, d_out]
         else:
             # materialize W_eff = sum_c g_c P_c, then out = x @ W_eff^T. [*batch, d_out, d_in].
             assert self.W_cache is not None
@@ -380,6 +412,71 @@ def simplicity_loss(banks: dict[str, ComponentBankLinear], importance_c: Tensor,
     return (importance_c.detach() * per_c).sum()
 
 
+def frob_loss(banks: dict[str, ComponentBankLinear]) -> Tensor:
+    """V1: unweighted variational nuclear norm sum_c 1/2(||A_c||_F^2 + ||B_c||_F^2), all modules.
+    Under faithfulness (sum_c P_c = W) minimized by splitting W's spectrum across components with
+    no overlap; drives unused rank-pieces to zero in every component, dormant ones included."""
+    total = torch.zeros((), device=next(iter(banks.values())).W_target.device)
+    for b in banks.values():
+        assert b.impl == "factored", "coeff_frob needs the factored backend"
+        total = total + 0.5 * (b.A.pow(2).sum() + b.B.pow(2).sum())
+    return total
+
+
+def piece_norms(bank: ComponentBankLinear) -> Tensor:
+    """Per-piece magnitudes s[c, r] = ||A[c,:,r]||_2 * ||B[c,r,:]||_2 (gauge-invariant)."""
+    return bank.A.norm(dim=1) * bank.B.norm(dim=2)  # [C, r]
+
+
+def rank_count_loss(banks: dict[str, ComponentBankLinear], freq_c: Tensor,
+                    cfg: ApdConfig) -> Tensor:
+    """V3: soft piece-count penalty with capacity-x-usage coupling. Per module,
+    sum_c (floor + freq_c) * sum_r s(c,r)^p with p<1 -- sub-linear in piece magnitude, so it
+    concentrates each component's mass on few pieces (rank selection) rather than shrinking all
+    of them; the (floor + firing-rate) weight makes frequent components low-rank and lets
+    high-rank specialists exist only if they are rare."""
+    w = (cfg.rank_freq_floor + freq_c).detach()  # [C]
+    total = torch.zeros((), device=freq_c.device)
+    for b in banks.values():
+        assert b.impl == "factored", "coeff_rank needs the factored backend"
+        s = piece_norms(b)  # [C, r]
+        # smoothed power: s^p has an infinite gradient at s -> 0, which explodes exactly when
+        # another pressure (nested prefixes) drives tail pieces to zero; (s^2 + eps^2)^(p/2) is
+        # the same count-like penalty with a bounded gradient near zero.
+        total = total + (w * s.pow(2).add(1e-8).pow(cfg.rank_p / 2).sum(dim=1)).sum()
+    return total
+
+
+def sample_rank_rung(r: int, gen: torch.Generator) -> int:
+    """V2 rung sampler: uniform over {1, 2, 4, ..., R} (powers of two, full rank included)."""
+    rungs = [1 << i for i in range(r.bit_length()) if (1 << i) <= r]
+    if rungs[-1] != r:
+        rungs.append(r)
+    return rungs[int(torch.randint(0, len(rungs), (1,), generator=gen).item())]
+
+
+@torch.no_grad()
+def rank_profile(banks: dict[str, ComponentBankLinear], thresh: float = 0.05) -> dict[str, Tensor]:
+    """Effective rank per component per module, three ways. THE number is the SVD rank of the
+    materialized component (singular values above `thresh` of the largest) — the outer-product
+    pieces are not unique, so 16 mixed pieces can sum to a rank-3 matrix and the piece count only
+    matches the true rank once a penalty has aligned pieces with singular directions. Piece count
+    and participation ratio are kept as secondary diagnostics (V2/V3 act on pieces directly).
+    Returns {module: [C, 3] (svd_rank, piece_count, participation)} for factored banks."""
+    out: dict[str, Tensor] = {}
+    for n, b in banks.items():
+        if b.impl != "factored":
+            continue
+        sv = torch.linalg.svdvals(b.materialized_weights())  # [C, min(d_out, d_in)]
+        svd_rank = (sv > thresh * sv.max(dim=1, keepdim=True).values.clamp_min(1e-12)).float().sum(dim=1)
+        s = piece_norms(b)  # [C, r]
+        top = s.max(dim=1, keepdim=True).values.clamp_min(1e-12)
+        count = (s > thresh * top).float().sum(dim=1)
+        part = s.sum(dim=1).pow(2) / s.pow(2).sum(dim=1).clamp_min(1e-24)
+        out[n] = torch.stack([svd_rank, count, part], dim=1)  # [C, 3]
+    return out
+
+
 # --- CI net (one gate per component, shared across modules) ----------------------------------------
 
 
@@ -442,6 +539,7 @@ def decompose_apd(model: nn.Module, data_fn: Callable[[], Tensor], cfg: ApdConfi
                   device: torch.device) -> dict[str, object]:
     order = sorted(cfg.modules)
     torch.manual_seed(cfg.seed)
+    rgen = torch.Generator().manual_seed(cfg.seed + 31)  # nested-rank rung sampling
     banks = install_banks(model, cfg)
     model = model.to(device)
     d_in = {n: int(b.W_target.shape[1]) for n, b in banks.items()}
@@ -476,9 +574,19 @@ def decompose_apd(model: nn.Module, data_fn: Callable[[], Tensor], cfg: ApdConfi
         deltas = {n: torch.rand(B, device=device) for n in order} if cfg.use_delta else None
 
         loss_faith = faithfulness_loss(banks)
+        if cfg.nested_rank:  # V2: recon under a random rank-prefix; faithfulness/eval stay full
+            rung = sample_rank_rung(next(iter(banks.values())).r, rgen)
+            for b in banks.values():
+                b.rank_keep = rung
         loss_stoch, loss_adv = recon_pair(model, banks, cfg, g_lower, x, target_out, tvar, deltas)
+        if cfg.nested_rank:
+            for b in banks.values():
+                b.rank_keep = None
         loss_imp = importance_minimality_loss({"g": g_upper}, p, cfg.imp_eps, cfg.imp_beta, 1)
         loss_simp = simplicity_loss(banks, g_upper.mean(dim=0), cfg)
+        loss_frob = frob_loss(banks) if cfg.coeff_frob > 0 else torch.zeros((), device=device)
+        loss_rank = (rank_count_loss(banks, g_upper.mean(dim=0), cfg)
+                     if cfg.coeff_rank > 0 else torch.zeros((), device=device))
 
         loss_life = torch.zeros((), device=device)
         life_coeff = cfg.coeff_lifetime
@@ -499,13 +607,16 @@ def decompose_apd(model: nn.Module, data_fn: Callable[[], Tensor], cfg: ApdConfi
                 + cfg.coeff_imp * loss_imp
                 + cfg.coeff_simplicity * loss_simp
                 + life_coeff * loss_life
-                + cfg.coeff_weight_l1 * loss_l1)
+                + cfg.coeff_weight_l1 * loss_l1
+                + cfg.coeff_frob * loss_frob
+                + cfg.coeff_rank * loss_rank)
         opt.zero_grad(); loss.backward(); opt.step()
 
         if step % max(1, cfg.n_steps // 10) == 0 or step == cfg.n_steps - 1:
             print(f"  step {step:>6} faith={loss_faith.item():.2e} stoch={loss_stoch.item():.4f} "
                   f"adv={loss_adv.item():.4f} imp={loss_imp.item():.3f} simp={loss_simp.item():.3f} "
-                  f"life={loss_life.item():.4f}", flush=True)
+                  f"life={loss_life.item():.4f} frob={loss_frob.item():.2f} rank={loss_rank.item():.2f}",
+                  flush=True)
 
     # final eval
     out: dict[str, object] = {"banks": banks, "ci": ci}
@@ -678,6 +789,11 @@ def _run_resid() -> None:
     fr = os.environ.get("R", "")  # factor_rank for the factored backend; "" -> min(d_out,d_in)
     factor_rank = int(fr) if fr else None
     weight_l1 = float(os.environ.get("L1", "0.0"))
+    frob = float(os.environ.get("FROB", "0.0"))       # V1: unweighted variational nuclear norm
+    rank_pen = float(os.environ.get("RANK", "0.0"))   # V3: capacity-x-usage piece-count penalty
+    rank_floor = float(os.environ.get("RANKFLOOR", "0.05"))  # V3 usage-weight floor (set BELOW the
+    # typical live-component firing rate or the usage coupling washes out)
+    nested = os.environ.get("NESTED", "0") == "1"     # V2: Matryoshka nested rank prefixes
     seed = int(os.environ.get("SEED", "0"))
     fprob = 0.01
     ckpt = f"/tmp/toy/resid_2l_apd_dmlp{d_mlp}.pt"
@@ -704,10 +820,22 @@ def _run_resid() -> None:
                     coeff_imp=imp, coeff_simplicity=simp, coeff_lifetime=life,
                     lifetime_target=life_target, lifetime_ramp_frac=life_ramp,
                     simplicity_impl=impl, tucker_rc=tucker_rc, factor_rank=factor_rank,
-                    coeff_weight_l1=weight_l1, seed=seed)
+                    coeff_weight_l1=weight_l1, coeff_frob=frob, coeff_rank=rank_pen,
+                    rank_freq_floor=rank_floor, nested_rank=nested, seed=seed)
     out = decompose_apd(model, data_fn, cfg, device)
     print(f"recon ci={out['recon_ci']:.4f} off={out['recon_off']:.4f} on={out['recon_on']:.4f} "
           f"L0={out['l0']:.2f} / C={C} l1_ratio={out['l1_ratio']:.2f}", flush=True)
+    if impl == "factored" and factor_rank is not None and factor_rank > 1:
+        prof = rank_profile(out["banks"])  # {module: [C, 3] (svd_rank, piece_count, participation)}
+        live = out["mean_ci"] > 0.1  # only components that actually fire
+        svd_r = torch.stack([prof[n][:, 0] for n in sorted(prof)], dim=1).cpu()  # [C, n_modules]
+        pieces = torch.stack([prof[n][:, 1] for n in sorted(prof)], dim=1).cpu()
+        el = (svd_r[live] if live.any() else svd_r).mean(dim=1)
+        pl = (pieces[live] if live.any() else pieces).mean(dim=1)
+        hist = torch.histc(el.float(), bins=factor_rank, min=0.5, max=factor_rank + 0.5)
+        print(f"effective rank, SVD of materialized comps (live, mean over modules): mean={el.mean():.2f} "
+              f"median={el.median():.1f} max={el.max():.1f}  [pieces alive: mean={pl.mean():.2f}]", flush=True)
+        print("  svd-rank histogram (1..R): " + " ".join(str(int(v)) for v in hist), flush=True)
     if os.environ.get("RECOVERY", "0") == "1":
         rec = feature_recovery_resid(model, out["banks"], out["ci"], cfg, device)
         print(f"RECOVERY active_frac={rec['active_frac']:.2f} injectivity={rec['injectivity']:.2f} "

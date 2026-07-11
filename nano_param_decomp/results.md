@@ -73,6 +73,39 @@ Note: a healthy decomposition of this model sits at L1 ratio ~8 — its mechanis
 in the weights (superposition). Forcing the ratio toward 1 here *destroys* recovery; this is the
 model that taught us the L1 must be dosed per target.
 
+## 2b. Variable-rank components (same distributed-reps toy, rank cap R=8)
+
+Components may use up to 8 rank-1 pieces per matrix (one shared gate per component, unchanged);
+training pressure decides how much each uses. Ground truth is rank **1** per matrix, so the test is
+whether the method *chooses* rank 1 and keeps one feature per component. "True rank" = SVD of the
+materialized component (the piece count overestimates — pieces can mix and cancel); entries marked
+~ are from the piece-based proxy (run predates the SVD metric).
+
+| variant | separation | coverage | recon ↓ | true rank (mean / median) |
+|---|---|---|---|---|
+| rank-1 reference (structural) | 0.89–0.92 | ~1.0 | — | 1 (fixed) |
+| no penalty (cap only) | 0.68 | 0.99 | 0.095 | ~at cap |
+| Frobenius / nuclear-norm penalty | 0.17–0.61 | 0.89–0.99 | 0.071–0.092 | inert or merging |
+| rank-count trim (strong dose) | 0.64 | 0.96 | 0.090 | ~3.4 |
+| nested ranks, 4x budget | 0.91 | 0.99 | **0.085** | 3.2 / 2.8 |
+| **nested + trim, 2x budget** | 0.90 | 0.93 | 0.108 | **2.6 / 2.0** |
+
+Readings: rank freedom with no counter-pressure lets components pack several mechanisms into their
+budget (separation 0.68). The Frobenius penalty makes that *worse* (its optimum is few fat merged
+components) — rejected. The rank-count trim controls capacity but not identity. **Nested ranks**
+(train random rank-prefixes so pieces become importance-ordered) is what restores
+one-mechanism-per-component at full coverage while beating the cap-only control on reconstruction;
+adding the trim then pushes ranks toward the ground truth (median 2 vs answer 1, 80/130 components
+at rank ≤ 2) at half nested's budget. Single seed each.
+
+**Dense-target counterpoint (2-layer induction toy, the Christensen & Riggs testbed).** On a model
+where every position runs most of the network, every rank scheme — including rank-1 — converges to
+interchangeable components (~1/24 of every matrix each, true rank ~13/16, no dedicated induction
+crew; deleting the most copy-selective components hurts no more than deleting random ones), even
+after raising minimality until gates became position-selective. Rank pressure cannot create
+component identity on dense targets; role-based forces (interaction, entrywise L1) are the open
+lever there.
+
 ## 3. Pythia-14M (real 6-layer language model, Pile-trained, MLPs included)
 
 All 24 weight matrices decomposed. VPD baseline: 6,912 pieces, 20k training steps. Ours: C=4096

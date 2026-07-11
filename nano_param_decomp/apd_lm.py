@@ -34,9 +34,12 @@ from .apd_mask import (
     ApdConfig,
     clear_masks,
     faithfulness_loss,
+    frob_loss,
     install_banks,
     masked_forward,
+    rank_count_loss,
     refresh_caches,
+    sample_rank_rung,
     set_masks,
     simplicity_loss,
 )
@@ -215,6 +218,11 @@ def decompose_lm(model: nn.Module, pool: Tensor, cfg: ApdConfig, ci_cfg: VpdConf
         if cfg.subset_routing:
             k = int(torch.randint(1, len(order) + 1, (1,), generator=g).item())
             subset = {order[i] for i in torch.randperm(len(order), generator=g)[:k].tolist()}
+        if cfg.nested_rank:  # V2: stochastic recon (+hidden, same pass) under a random rank-prefix;
+            # faithfulness, PPGD and eval stay full-rank
+            rung = sample_rank_rung(next(iter(banks.values())).r, g)
+            for b in banks.values():
+                b.rank_keep = rung
         loss_stoch = kl_logits(masked_forward(model, banks, idx, mask, deltas, subset), target_logits)
         # APD hidden-activation recon: match each masked module's output to its target-weights
         # output (cached during the target forward). Only masked modules contribute (unmasked = 0).
@@ -225,10 +233,16 @@ def decompose_lm(model: nn.Module, pool: Tensor, cfg: ApdConfig, ci_cfg: VpdConf
                 tgt = banks[n].last_target_out
                 loss_hidden = loss_hidden + F.mse_loss(banks[n].last_masked_out, tgt) / (tgt.var() + 1e-8)
             loss_hidden = loss_hidden / len(hid_mods)
+        if cfg.nested_rank:
+            for b in banks.values():
+                b.rank_keep = None
         loss_ppgd = ppgd.recon_loss(model, banks, idx, target_logits, g_lower)  # adversarial recon
         loss_imp = importance_minimality_loss({"g": g_upper}, p, cfg.imp_eps, cfg.imp_beta, world)
         loss_simp = (simplicity_loss(banks, g_upper.mean(dim=(0, 1)), cfg)
                      if cfg.coeff_simplicity > 0 else torch.zeros((), device=device))
+        loss_frob = frob_loss(banks) if cfg.coeff_frob > 0 else torch.zeros((), device=device)
+        loss_rank = (rank_count_loss(banks, g_upper.mean(dim=(0, 1)), cfg)
+                     if cfg.coeff_rank > 0 else torch.zeros((), device=device))
         # anti-redundancy interaction loss (ported from apd_alg): penalize super-additive pairwise
         # ablation damage (redundant role overlap); sub-additive (shared pathway) not penalized.
         loss_inter = torch.zeros((), device=device)
@@ -273,7 +287,8 @@ def decompose_lm(model: nn.Module, pool: Tensor, cfg: ApdConfig, ci_cfg: VpdConf
                 + ci_cfg.coeff_ppgd * loss_ppgd + cfg.coeff_imp * loss_imp
                 + cfg.coeff_simplicity * loss_simp + loss_life
                 + cfg.coeff_hidden * loss_hidden + cfg.coeff_interaction * loss_inter
-                + cfg.coeff_weight_l1 * loss_l1)
+                + cfg.coeff_weight_l1 * loss_l1
+                + cfg.coeff_frob * loss_frob + cfg.coeff_rank * loss_rank)
         ppgd_grads = torch.autograd.grad(loss_ppgd, ppgd._sources(), retain_graph=True)
         opt.zero_grad(); loss.backward()
         if world > 1:  # data-parallel: average trainable grads; PGD sources stay per-rank
@@ -296,12 +311,14 @@ def decompose_lm(model: nn.Module, pool: Tensor, cfg: ApdConfig, ci_cfg: VpdConf
             print(f"  step {step:>5} faith={loss_faith.item():.2e} kl={loss_stoch.item():.4f} "
                   f"ppgd={loss_ppgd.item():.4f} imp={loss_imp.item():.2f} hid={loss_hidden.item():.4f} "
                   f"inter={loss_inter.item():.4f} l1={loss_l1.item():.0f} "
+                  f"frob={loss_frob.item():.2f} rank={loss_rank.item():.2f} "
                   f"L0={l0:.1f}/{cfg.n_components}", flush=True)
             if use_wandb:
                 wandb.log({"train/faithfulness": loss_faith.item(), "train/kl_stoch": loss_stoch.item(),
                            "train/kl_ppgd": loss_ppgd.item(), "train/importance_min": loss_imp.item(),
                            "train/hidden_recon": loss_hidden.item(), "train/interaction": loss_inter.item(),
                            "train/weight_l1": loss_l1.item(), "train/lifetime": loss_life.item(),
+                           "train/frob": loss_frob.item(), "train/rank_count": loss_rank.item(),
                            "train/L0": l0, "train/p_anneal": p}, step=step)
         if (step % eval_every == 0 or step == n_steps - 1) and rank0:
             fe = faithfulness_eval(model, banks, ci, idx, cfg, device)
