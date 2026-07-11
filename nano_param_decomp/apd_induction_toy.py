@@ -196,7 +196,8 @@ def _run() -> None:
     R = int(os.environ.get("R", "1"))                 # pieces per matrix per component (rank cap)
     frob = float(os.environ.get("FROB", "0.0"))       # V1
     nested = os.environ.get("NESTED", "0") == "1"     # V2
-    rank_pen = float(os.environ.get("RANK", "0.0"))   # V3
+    rank_pen = float(os.environ.get("TRIM", os.environ.get("RANK", "0.0")))  # V3 (TRIM; RANK
+    # fallback for single-process use -- torchrun clobbers RANK under DDP)
     rank_floor = float(os.environ.get("RANKFLOOR", "0.05"))  # V3 usage-weight floor
 
     print("training target ...", flush=True)

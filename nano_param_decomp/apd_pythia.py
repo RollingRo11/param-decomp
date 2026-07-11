@@ -79,6 +79,12 @@ def _run() -> None:
     hidden = float(os.environ.get("HIDDEN", "1.0"))
     l1 = float(os.environ.get("L1", "0.0"))
     inter = float(os.environ.get("INTER", "0.0"))
+    nested = os.environ.get("NESTED", "0") == "1"     # V2: Matryoshka nested rank prefixes
+    # env is TRIM, not RANK: torchrun exports RANK (the process rank) to every DDP worker, which
+    # silently clobbers a RANK knob with 0/1/... per rank -- divergent configs across ranks.
+    rank_pen = float(os.environ.get("TRIM", "0.0"))   # V3: capacity-x-usage piece-count trim
+    rank_floor = float(os.environ.get("RANKFLOOR", "0.005"))
+    frob = float(os.environ.get("FROB", "0.0"))       # V1 (rejected on toys; kept for ablations)
     # L1 fights the faithfulness pin; when L1 is on, default the pin 10x higher (attn2l lesson)
     faith = float(os.environ.get("FAITH", "1e8" if l1 > 0 else "1e7"))
     seq_len = int(os.environ.get("SEQ", "128"))
@@ -105,6 +111,8 @@ def _run() -> None:
     cfg = ApdConfig(modules=modules, n_components=C, simplicity_impl="factored", factor_rank=R,
                     lowrank_forward=True, coeff_faith=faith, coeff_imp=imp, coeff_simplicity=0.0,
                     coeff_hidden=hidden, coeff_weight_l1=l1, coeff_interaction=inter,
+                    nested_rank=nested, coeff_rank=rank_pen, rank_freq_floor=rank_floor,
+                    coeff_frob=frob,
                     p_start=2.0, p_end=0.4, seed=seed,
                     use_wandb=os.environ.get("WANDB", "0") == "1",
                     wandb_project=os.environ.get("WANDB_PROJECT", "apd-basis"),
@@ -116,7 +124,8 @@ def _run() -> None:
                        coeff_stoch=0.5, coeff_ppgd=0.5, ppgd_lr=0.01, ppgd_inner_steps=2)
     if rank0:
         print(f"config: C={C} R={fr or 'full'} steps={steps} imp={imp} hidden={hidden} l1={l1} "
-              f"inter={inter} faith={faith:g} seq={seq_len} B={batch_global} (x{world} ranks)", flush=True)
+              f"inter={inter} nested={nested} rank={rank_pen} rank_floor={rank_floor} frob={frob} "
+              f"faith={faith:g} seq={seq_len} B={batch_global} (x{world} ranks)", flush=True)
 
     out = decompose_lm(model, pool, cfg, ci_cfg, device, n_steps=steps, batch=batch,
                        seq_len=seq_len, warmup_steps=(100 if smoke else 400),

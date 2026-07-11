@@ -790,7 +790,8 @@ def _run_resid() -> None:
     factor_rank = int(fr) if fr else None
     weight_l1 = float(os.environ.get("L1", "0.0"))
     frob = float(os.environ.get("FROB", "0.0"))       # V1: unweighted variational nuclear norm
-    rank_pen = float(os.environ.get("RANK", "0.0"))   # V3: capacity-x-usage piece-count penalty
+    rank_pen = float(os.environ.get("TRIM", os.environ.get("RANK", "0.0")))  # V3 piece-count
+    # penalty (TRIM; RANK kept as a single-process fallback -- torchrun clobbers RANK under DDP)
     rank_floor = float(os.environ.get("RANKFLOOR", "0.05"))  # V3 usage-weight floor (set BELOW the
     # typical live-component firing rate or the usage coupling washes out)
     nested = os.environ.get("NESTED", "0") == "1"     # V2: Matryoshka nested rank prefixes
