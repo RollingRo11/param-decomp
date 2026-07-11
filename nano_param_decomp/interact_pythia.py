@@ -8,12 +8,20 @@ No target circuit. For each inspected component we report:
     how much their probability drops at the positions where it fired (top damaged predictions)
   - its module/layer weight fingerprint
 
-Components are chosen two ways: most-used, and most-selective (rare but strong) — the latter are
-usually the interpretable ones. Caveat: the pool is text sampled from pythia-14m itself
-(in-distribution for the CI net, but 14M-model prose, so semi-coherent).
+Components are chosen by SELECT:
+  - "gate" (default): most-used (mean gate) + most-selective (rare but strong peak gate). The
+    selective group surfaces dead-but-high-peak duplicates on some checkpoints.
+  - "causal": rank every live component by the KL damage of ablating it (at its own firing
+    positions), skipping the backbone (rate>RATE_HI) and dead duplicates (ablation KL ~ 0). This
+    is the honest "which rare components actually DO something" census.
+
+Caveat: the pool is text sampled from pythia-14m itself (in-distribution for the CI net, but
+14M-model prose, so semi-coherent).
 
 Run:  CUDA_VISIBLE_DEVICES=1 python -m nano_param_decomp.interact_pythia
-Env:  CKPT (default the C=4096 best ckpt), NCOMP (per group), NCTX (examples per comp), B
+Env:  CKPT, NCOMP (per group), NCTX (examples per comp), B, SELECT (gate|causal),
+      RATE_HI (causal: exclude backbone above this rate, default 0.5),
+      RANK_B (causal: pool size for the ranking sweep, default min(96, B))
 """
 
 import os
@@ -69,11 +77,44 @@ def main() -> None:
           f"(>0.05), of C={g_lower.shape[-1]}", flush=True)
     strength = g_upper.mean(dim=(0, 1))               # [C] mean gate
     peak = g_upper.amax(dim=(0, 1))                   # [C] max gate
-    # selectivity: strong somewhere, rare overall
-    selective = peak * (1 - rate).clamp(min=0) * (rate > 1e-4).float()
-    top_used = strength.topk(n_comp).indices.tolist()
-    top_sel = selective.topk(n_comp).indices.tolist()
-    comps = list(dict.fromkeys(top_used + top_sel))  # dedup, keep order
+    select = os.environ.get("SELECT", "gate")
+    causal_rank: dict[int, float] = {}
+    if select == "causal":
+        # rank every live, non-backbone component by the KL damage of ablating it alone (measured
+        # at ITS firing positions). One masked forward per candidate; the ci-masked baseline is
+        # computed once. This skips dead duplicates (KL ~ 0) that high-peak-gate selection surfaces.
+        rate_hi = float(os.environ.get("RATE_HI", "0.5"))
+        rb = min(int(os.environ.get("RANK_B", "96")), B)
+        zeros_rb = {n: torch.zeros(rb, S, device=device) for n in banks}
+        cand = [c for c in range(C)
+                if g_lower[:rb, :, c].amax() > 0.5 and rate[c] < rate_hi]
+        print(f"causal ranking: {len(cand)} live non-backbone candidates (rate<{rate_hi}), "
+              f"ablating each on {rb} seqs ...", flush=True)
+        base = masked_forward(model, banks, pool[:rb], g_lower[:rb], zeros_rb)
+        logp_base = F.log_softmax(base, dim=-1)
+        p_base = logp_base.exp()
+        for i, c in enumerate(cand):
+            gate_ab = g_lower[:rb].clone()
+            gate_ab[..., c] = 0.0
+            ab = masked_forward(model, banks, pool[:rb], gate_ab, zeros_rb)
+            logp_ab = F.log_softmax(ab, dim=-1)
+            fmask = (g_lower[:rb, :, c] > 0.5)               # [rb,S] its firing positions
+            if fmask.any():
+                kl = (p_base * (logp_base - logp_ab)).sum(-1)[fmask].mean().item()
+            else:
+                kl = 0.0
+            causal_rank[c] = kl
+            if (i + 1) % 50 == 0:
+                print(f"  ...{i + 1}/{len(cand)} ablated", flush=True)
+        ranked = sorted(causal_rank, key=lambda c: -causal_rank[c])
+        comps = ranked[:n_comp]
+        top_used, top_sel = comps, []
+    else:
+        # selectivity: strong somewhere, rare overall
+        selective = peak * (1 - rate).clamp(min=0) * (rate > 1e-4).float()
+        top_used = strength.topk(n_comp).indices.tolist()
+        top_sel = selective.topk(n_comp).indices.tolist()
+        comps = list(dict.fromkeys(top_used + top_sel))  # dedup, keep order
 
     # module/layer fingerprint helper
     kinds = {"query_key_value": "qkv", "attention.dense": "attnO",
@@ -82,7 +123,10 @@ def main() -> None:
 
     for c in comps:
         r, st, pk = rate[c].item(), strength[c].item(), peak[c].item()
-        group = "USED" if c in top_used else "SELECTIVE"
+        if select == "causal":
+            group = f"CAUSAL kl={causal_rank[c]:.3f}"
+        else:
+            group = "USED" if c in top_used else "SELECTIVE"
         # fingerprint
         km, lm = {}, {}
         for n, w in W.items():
