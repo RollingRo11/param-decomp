@@ -68,6 +68,11 @@ def module_fingerprints(banks, topk_comps: Tensor) -> None:
 def _run() -> None:
     # DDP: launch with `torchrun --standalone --nproc_per_node=2 -m nano_param_decomp.apd_pythia`.
     # B env is the GLOBAL batch; each rank runs B/world locally, grads all-reduced in decompose_lm.
+    if os.environ.get("TF32", "1") == "1":
+        # fp32 matmul on H100 CUDA cores is ~1/7 of TF32 tensor-core throughput; TF32's ~1e-3
+        # relative precision is far below this loop's SGD noise floor (train faith ~1e-6). The VPD
+        # baseline stack (run.py) already trains under bf16 autocast.
+        torch.set_float32_matmul_precision("high")
     rank, world, _local_rank, device = init_dist()
     rank0 = rank == 0
     smoke = os.environ.get("SMOKE", "0") == "1"
