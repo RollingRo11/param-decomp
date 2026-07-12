@@ -64,15 +64,32 @@ def subset_attribution(model, banks, x: Tensor, target_out: Tensor, tvar: Tensor
     redundant components (a component's credit vanishes on subsets where its backup is present),
     unlike the straight-line path (all components scale together; redundant pairs look identical)."""
     B = x.shape[0]
-    A = torch.zeros(B, C, device=device)
-    for _ in range(K):
-        rho = torch.rand(B, 1, device=device)
-        S = (torch.rand(B, C, device=device) < rho).float()
+    rho = torch.rand(K * B, 1, device=device)
+    S = (torch.rand(K * B, C, device=device) < rho).float()
+    return _subset_attr_core(model, banks, x, target_out, tvar, S, K, second_order)
+
+
+def _subset_attr_core(model, banks, x: Tensor, target_out: Tensor, tvar: Tensor, S: Tensor,
+                      K: int, second_order: bool, tiled: bool = True) -> Tensor:
+    """One TILED forward+backward for all K subset samples (the K-loop was kernel-launch-bound:
+    ~50 tiny sequential passes/step left the GPU at 12%). Gate-gradient rows are per-input, so one
+    backward on the [K*B] batch yields every sample's attribution. `tiled=False` keeps the loop
+    path for the equivalence test."""
+    B = x.shape[0]
+    C = S.shape[-1]
+    if tiled:
         g = S.requires_grad_(True)
+        out = masked_forward(model, banks, x.repeat(K, *([1] * (x.dim() - 1))), g, None)
+        tt = target_out.repeat(K, *([1] * (target_out.dim() - 1)))
+        obj = -(((out - tt) ** 2).sum(-1) / tvar).sum()
+        grad = torch.autograd.grad(obj, g, create_graph=second_order)[0]  # [K*B, C]
+        return grad.view(K, B, C).mean(0)
+    A = torch.zeros(B, C, device=x.device)
+    for k in range(K):
+        g = S[k * B:(k + 1) * B].requires_grad_(True)
         out = masked_forward(model, banks, x, g, None)
-        obj = -(((out - target_out) ** 2).sum(-1) / tvar).sum()  # rows are per-input objectives
-        grad = torch.autograd.grad(obj, g, create_graph=second_order)[0]  # [B, C]
-        A = A + grad
+        obj = -(((out - target_out) ** 2).sum(-1) / tvar).sum()
+        A = A + torch.autograd.grad(obj, g, create_graph=second_order)[0]
     return A / K
 
 
@@ -103,25 +120,26 @@ def causal_role_penalty(model, banks, x: Tensor, q: Tensor, C: int, n_score: int
     and per-site mean deltas (=1 when it moves one coordinate, =N when uniform)."""
     q = q.detach()
     imp = q.mean(0)
-    top = imp.topk(min(n_score, C)).indices
-    out_full = masked_forward(model, banks, x, q, None)
-    hid_full = {n: b.last_masked_out for n, b in banks.items()}
+    top = [c for c in imp.topk(min(n_score, C)).indices.tolist() if imp[c] >= 1e-4]
+    if not top:
+        return torch.zeros((), device=device)
+    B = x.shape[0]
+    V = len(top) + 1  # variant 0 = full, then one ablation per scored component; ONE tiled forward
+    gates = q.repeat(V, 1)
+    for vi, c in enumerate(top):
+        gates[(vi + 1) * B:(vi + 2) * B, c] = 0.0
+    out = masked_forward(model, banks, x.repeat(V, *([1] * (x.dim() - 1))), gates, None)
+    outs = out.view(V, B, -1)
+    hids = {n: b.last_masked_out.view(V, B, -1) for n, b in banks.items()}
     pens = []
-    for c in top.tolist():
-        if imp[c] < 1e-4:
-            continue
-        qa = q.clone()
-        qa[:, c] = 0.0
-        out_c = masked_forward(model, banks, x, qa, None)
-        parts = [(out_full - out_c).abs().mean(0)]
-        for n, b in banks.items():
-            parts.append((hid_full[n] - b.last_masked_out).abs().mean(0))
+    for vi, c in enumerate(top):
+        parts = [(outs[0] - outs[vi + 1]).abs().mean(0)]
+        for n in banks:
+            parts.append((hids[n][0] - hids[n][vi + 1]).abs().mean(0))
         v = torch.cat(parts)
         pr = v.sum().pow(2) / (v.pow(2).sum() + 1e-12)
         pens.append(imp[c] * pr)
-    if not pens:
-        return torch.zeros((), device=device)
-    return torch.stack(pens).sum() / (imp[top].sum() + 1e-12)
+    return torch.stack(pens).sum() / (imp[torch.tensor(top, device=device)].sum() + 1e-12)
 
 
 def interaction_penalty(model, banks, x: Tensor, q: Tensor, target_out: Tensor, tvar: Tensor,
@@ -137,17 +155,24 @@ def interaction_penalty(model, banks, x: Tensor, q: Tensor, target_out: Tensor, 
     cidx = torch.multinomial(probs, n_s, replacement=False)
     pairs = cidx[: (n_s // 2) * 2].view(-1, 2)
 
-    def D(gm: Tensor) -> Tensor:
-        return (((masked_forward(model, banks, x, gm, None) - target_out) ** 2).mean()) / tvar
-
-    base = D(q)
+    # ONE tiled forward for base + the 3 deletion variants of every pair
+    B = x.shape[0]
+    plist = pairs.tolist()
+    V = 1 + 3 * len(plist)
+    gates = q.repeat(V, 1)
+    for k, (i, j) in enumerate(plist):
+        o = (1 + 3 * k) * B
+        gates[o:o + B, i] = 0.0                                   # i off
+        gates[o + B:o + 2 * B, j] = 0.0                            # j off
+        gates[o + 2 * B:o + 3 * B, i] = 0.0
+        gates[o + 2 * B:o + 3 * B, j] = 0.0                        # both off
+    out = masked_forward(model, banks, x.repeat(V, *([1] * (x.dim() - 1))), gates, None)
+    tt = target_out.repeat(V, *([1] * (target_out.dim() - 1)))
+    D = (((out - tt) ** 2).view(V, B, -1).mean(dim=(1, 2))) / tvar  # [V]
     total = torch.zeros((), device=device)
-    for i, j in pairs.tolist():
-        qi = q.clone(); qi[:, i] = 0.0
-        qj = q.clone(); qj[:, j] = 0.0
-        qij = q.clone(); qij[:, i] = 0.0; qij[:, j] = 0.0
-        total = total + F.relu(D(qij) - D(qi) - D(qj) + base)
-    return total / max(1, len(pairs))
+    for k in range(len(plist)):
+        total = total + F.relu(D[3 * k + 3] - D[3 * k + 1] - D[3 * k + 2] + D[0])
+    return total / max(1, len(plist))
 
 
 def decompose_attr(model, data_fn, cfg: ApdConfig, device, K: int, thresh: float, width: float,
