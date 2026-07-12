@@ -75,6 +75,10 @@ def _run() -> None:
     C = int(os.environ.get("C", "512"))
     fr = os.environ.get("R", "1")
     R = int(fr) if fr else None
+    # per-matrix-type rank caps (anatomy: MLP pieces saturate the cap, attention differentiates
+    # below it). R_MLP raises the cap on the two MLP matrices only; empty -> uniform R everywhere.
+    r_mlp = os.environ.get("R_MLP", "")
+    rank_map = ({"dense_h_to_4h": int(r_mlp), "dense_4h_to_h": int(r_mlp)} if r_mlp else None)
     imp = float(os.environ.get("IMP", "1e-3"))
     hidden = float(os.environ.get("HIDDEN", "1.0"))
     l1 = float(os.environ.get("L1", "0.0"))
@@ -89,6 +93,9 @@ def _run() -> None:
     faith = float(os.environ.get("FAITH", "1e8" if l1 > 0 else "1e7"))
     seq_len = int(os.environ.get("SEQ", "128"))
     batch_global = int(os.environ.get("B", "64"))
+    lr = float(os.environ.get("LR", "5e-4"))          # decompose_lm default; lower for big C / small B
+    grad_clip = float(os.environ.get("GRADCLIP", "0.0"))  # clip component-factor grad norm (spike guard)
+    warmup = int(os.environ.get("WARMUP", "100" if smoke else "400"))  # faithfulness warmup steps
     assert batch_global % world == 0, "global batch must divide by world size"
     batch = batch_global // world
     seed = int(os.environ.get("SEED", "0"))
@@ -109,10 +116,11 @@ def _run() -> None:
 
     modules = list(C_PER_MODULE_PYTHIA_14M.keys())
     cfg = ApdConfig(modules=modules, n_components=C, simplicity_impl="factored", factor_rank=R,
+                    factor_rank_map=rank_map,
                     lowrank_forward=True, coeff_faith=faith, coeff_imp=imp, coeff_simplicity=0.0,
                     coeff_hidden=hidden, coeff_weight_l1=l1, coeff_interaction=inter,
                     nested_rank=nested, coeff_rank=rank_pen, rank_freq_floor=rank_floor,
-                    coeff_frob=frob,
+                    coeff_frob=frob, grad_clip=grad_clip,
                     p_start=2.0, p_end=0.4, seed=seed,
                     use_wandb=os.environ.get("WANDB", "0") == "1",
                     wandb_project=os.environ.get("WANDB_PROJECT", "apd-basis"),
@@ -123,12 +131,14 @@ def _run() -> None:
                        ci_d_model=256, ci_n_blocks=4, ci_n_heads=8, ci_mlp_hidden=1024,
                        coeff_stoch=0.5, coeff_ppgd=0.5, ppgd_lr=0.01, ppgd_inner_steps=2)
     if rank0:
-        print(f"config: C={C} R={fr or 'full'} steps={steps} imp={imp} hidden={hidden} l1={l1} "
-              f"inter={inter} nested={nested} rank={rank_pen} rank_floor={rank_floor} frob={frob} "
-              f"faith={faith:g} seq={seq_len} B={batch_global} (x{world} ranks)", flush=True)
+        print(f"config: C={C} R={fr or 'full'} R_mlp={r_mlp or R} steps={steps} imp={imp} "
+              f"hidden={hidden} l1={l1} inter={inter} nested={nested} rank={rank_pen} "
+              f"rank_floor={rank_floor} frob={frob} faith={faith:g} lr={lr:g} "
+              f"grad_clip={grad_clip:g} warmup={warmup} seq={seq_len} "
+              f"B={batch_global} (x{world} ranks)", flush=True)
 
-    out = decompose_lm(model, pool, cfg, ci_cfg, device, n_steps=steps, batch=batch,
-                       seq_len=seq_len, warmup_steps=(100 if smoke else 400),
+    out = decompose_lm(model, pool, cfg, ci_cfg, device, n_steps=steps, batch=batch, lr=lr,
+                       seq_len=seq_len, warmup_steps=warmup,
                        save_path=os.environ.get("SAVE", "/tmp/pythia_compare/apd_pythia.pt"))
     if not rank0:  # final evaluation is rank-0 work
         import torch.distributed as dist

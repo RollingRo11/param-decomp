@@ -219,8 +219,10 @@ def decompose_lm(model: nn.Module, pool: Tensor, cfg: ApdConfig, ci_cfg: VpdConf
             k = int(torch.randint(1, len(order) + 1, (1,), generator=g).item())
             subset = {order[i] for i in torch.randperm(len(order), generator=g)[:k].tolist()}
         if cfg.nested_rank:  # V2: stochastic recon (+hidden, same pass) under a random rank-prefix;
-            # faithfulness, PPGD and eval stay full-rank
-            rung = sample_rank_rung(next(iter(banks.values())).r, g)
+            # faithfulness, PPGD and eval stay full-rank. Sample the rung from the LARGEST cap; each
+            # bank truncates to min(rung, its own r) -- the slice [:rung] clamps naturally -- so piece
+            # index i means "i-th most important piece" consistently across heterogeneous-rank banks.
+            rung = sample_rank_rung(max(b.r for b in banks.values()), g)
             for b in banks.values():
                 b.rank_keep = rung
         loss_stoch = kl_logits(masked_forward(model, banks, idx, mask, deltas, subset), target_logits)

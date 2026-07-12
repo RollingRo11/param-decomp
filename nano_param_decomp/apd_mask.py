@@ -105,6 +105,10 @@ class ApdConfig:
     simplicity_impl: str = "svd"  # "svd" | "factored" | "tucker"
     simplicity_p: float = 1.0     # p=1 -> nuclear norm -> low rank (svd backend only)
     factor_rank: int | None = None  # inner rank r for "factored"; None -> min(d_out,d_in) (full)
+    # per-matrix rank caps: {substring: R}. First matching substring in a module path wins; modules
+    # matching nothing fall back to factor_rank. Lets attention and MLP carry different rank budgets
+    # (the anatomy showed MLP pieces saturate the cap while attention differentiates below it).
+    factor_rank_map: dict | None = None
     tucker_rc: int = 64           # component-mode rank r_C for "tucker" (<= C)
     tucker_r_mode: int | None = None  # weight-mode rank r_out=r_in for "tucker"; None -> min(d_out,d_in)
 
@@ -345,7 +349,10 @@ def install_banks(model: nn.Module, cfg: "ApdConfig") -> dict[str, ComponentBank
         parent = model.get_submodule(parent_path) if parent_path else model
         linear = model.get_submodule(path)
         assert isinstance(linear, nn.Linear), f"{path} is not nn.Linear: {type(linear)}"
-        bank = ComponentBankLinear(linear, cfg.n_components, cfg.simplicity_impl, cfg.factor_rank,
+        R = cfg.factor_rank
+        if cfg.factor_rank_map:  # per-matrix cap: first matching substring wins
+            R = next((rv for key, rv in cfg.factor_rank_map.items() if key in path), cfg.factor_rank)
+        bank = ComponentBankLinear(linear, cfg.n_components, cfg.simplicity_impl, R,
                                    tucker_rc=cfg.tucker_rc, tucker_r_mode=cfg.tucker_r_mode)
         bank.lowrank_fwd = cfg.lowrank_forward
         setattr(parent, attr, bank)
@@ -575,7 +582,7 @@ def decompose_apd(model: nn.Module, data_fn: Callable[[], Tensor], cfg: ApdConfi
 
         loss_faith = faithfulness_loss(banks)
         if cfg.nested_rank:  # V2: recon under a random rank-prefix; faithfulness/eval stay full
-            rung = sample_rank_rung(next(iter(banks.values())).r, rgen)
+            rung = sample_rank_rung(max(b.r for b in banks.values()), rgen)
             for b in banks.values():
                 b.rank_keep = rung
         loss_stoch, loss_adv = recon_pair(model, banks, cfg, g_lower, x, target_out, tvar, deltas)
