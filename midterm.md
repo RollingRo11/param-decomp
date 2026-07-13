@@ -20,95 +20,47 @@ Since submitting my report, I've developed the following method aimed at model-d
 
 # Parameter Decomposition Methodology
 
-**APD** (Braun et al. 2025) proposed the right *shape*: a component is a thin slice of every weight matrix at once, so a cross-layer mechanism is one object — but its attribution-plus-top-k training was unstable. **SPD/VPD** (Bushnaq et al. 2025; Goodfire 2026) contributed the right *training machinery* — a small side network learns which components matter per input, verified by actually deleting components — but its unit is a rank-1 piece of a *single* matrix, so cross-layer mechanisms shatter and must be reassembled by post-hoc clustering. Our method combines the two, and adds one new ingredient: **variable rank**.
-
-## The decomposition object
+Two prior methods bracket what we want. **APD** (Braun et al. 2025) proposed the right *shape*: a component is a thin slice of every weight matrix at once, so a cross-layer mechanism is one object — but its attribution-plus-top-k training was unstable. **SPD/VPD** (Bushnaq et al. 2025; Goodfire 2026) contributed the right *training machinery* — a small side network learns which components matter for each input, and is verified by actually deleting components — but its unit is a rank-1 piece of a *single* matrix, so cross-layer mechanisms shatter and must be reassembled by post-hoc clustering. My method combines the two, and adds one new ingredient: **variable rank**.
 
 For weight matrices $W^{(1)}, \dots, W^{(M)}$ (every attention and MLP projection), we create $C$ **components**. Component $c$ owns a piece of *every* matrix, each a sum of at most $R_m$ rank-1 terms:
 
-$$P_c^{(m)} = \sum_{r=1}^{R_m} a_{c,r}^{(m)} \big(b_{c,r}^{(m)}\big)^{\!\top}, \qquad \text{with } \; \mathcal{L}_{\text{faith}} = \sum_m \Big\| W^{(m)} - \sum_c P_c^{(m)} \Big\|_F^2$$
+$$P_c^{(m)} = \sum_{r=1}^{R_m} a_{c,r}^{(m)} \big(b_{c,r}^{(m)}\big)^{\!\top}, \qquad \mathcal{L}_{\text{faith}} = \sum_m \Big\| W^{(m)} - \sum_c P_c^{(m)} \Big\|_F^2,$$
 
-enforcing that components sum back to the network exactly (**faithfulness**). Each component has **one gate** $g_c(x) \in [0,1]$, computed per token by a small side network, shared across all the component's pieces — this sharing is what makes it a whole-network object. A masked forward runs the model with $W_g^{(m)}(x) = \sum_c g_c(x) P_c^{(m)}$, so $g_c = 0$ deletes component $c$ everywhere at once: the gate is a *promise the component can be deleted without changing the output*, and training checks that promise by performing deletions.
+where the faithfulness loss forces the components to sum back to the network exactly. Each component has **one gate** $g_c(x) \in [0,1]$, computed per token by a small side network and shared across all the component's pieces — this sharing is what makes it a whole-network object. A masked forward runs the model with $W_g^{(m)}(x) = \sum_c g_c(x) P_c^{(m)}$, so $g_c = 0$ deletes component $c$ everywhere at once. A gate of 0 is a *promise the component can be deleted without changing the output*, and the training losses check that promise by performing deletions:
 
-## Training losses
-
-- **Stochastic reconstruction** — delete components at random in proportion to their unimportance and match the original output: $\mathcal{L}_{\text{stoch}} = D\big(f_{\,g+(1-g)\odot u}(x), f(x)\big)$, $u \sim U(0,1)$, $D$ = KL for LMs. Every component is sampled every step, so dormant ones keep receiving gradient.
-- **Adversarial reconstruction** — an attacker searches (gradient steps) for the worst combination of "unimportant" components to delete; penalize that damage.
+- **Stochastic reconstruction** — delete components at random in proportion to their unimportance, match the original output: $\mathcal{L}_{\text{stoch}} = D\big(f_{\,g+(1-g)\odot u}(x), f(x)\big)$ with $u \sim U(0,1)$.
+- **Adversarial reconstruction** — an attacker searches for the most damaging combination of "unimportant" components to delete; penalize that worst-case damage.
 - **Importance minimality** — $\sum_c g_c(x)^p$, $p$ annealed $2 \to 0.4$: an increasingly literal count of active components.
-- **Hidden reconstruction** — the deletion-tested model must also match the original's *intermediate* activations, not just the final output.
+- **Hidden reconstruction** — the deletion-tested model must also match the original's intermediate activations, not just its final output.
 
-## Variable rank
+**Variable rank.** With caps $R_m > 1$, training pressure decides how much rank each component uses. Each step we draw a cutoff $k \in \{1,2,4,\dots,R\}$ and run the stochastic reconstruction with every component truncated to its first $k$ rank-1 terms (**nested ranks**) — components can't know how many terms they'll be allowed, so terms become importance-ordered and unused rank dies in the tail. A small usage-weighted penalty on term sizes (**rank trim**, $\sum (\rho_0 + \rho_c)(s^2+\epsilon^2)^{p/2}$ with $p=0.5$ and $\rho_c$ the firing rate) then removes leftover tail terms: frequent components must stay small, rare specialists may be large.
 
-With caps $R_m > 1$, training pressure decides how much rank each component uses:
+# Progress & Results
 
-- **Nested ranks.** Each step, draw a cutoff $k \in \{1,2,4,\dots,R\}$ and run the stochastic reconstruction with every component truncated to its first $k$ terms (faithfulness and evals use the full component). Components can't know how many terms they'll get, so terms become importance-ordered and unused rank dies in the tail. Packing two mechanisms into one component is punished automatically — the cutoff regularly truncates the second one while its gate is up.
-- **Rank trim.** Term sizes $s_{c,r}^{(m)} = \|a\| \|b\|$ are penalized as $\sum (\rho_0 + \rho_c)\, (s^2 + \epsilon^2)^{p/2}$ with $p = 0.5$ and $\rho_c$ the component's firing rate: sub-linear (counts terms rather than shrinking them), and usage-weighted so frequent components stay small while rare specialists may be large.
+All comparisons are against VPD, trained by us with identical code, targets, and budgets. The recurring metric is **CE-recovered**: keep only the components the gate marks important, delete everything else, and measure what share of the model's performance survives (100% = perfect).
 
-The textbook alternative — a Frobenius/nuclear-norm penalty — fails: under faithfulness its optimum is a few fat merged components, the exact failure it should prevent. This is close to APD's original simplicity penalty and explains part of its instability.
+**Sanity check.** On the classical toy model of superposition (5 features in 2 dimensions), the method recovers the known mechanisms nearly perfectly — mean cosine similarity 0.982 to ground truth, vs 0.927 for our matched VPD baseline — with about one component active per input, which is correct since about one feature is active per input.
 
-# Results
+**Cross-layer mechanisms (goal 2).** The real test is a 2-layer residual MLP with 100 known mechanisms, each deliberately spread across both layers. VPD needs its published post-hoc clustering step here, and that clustering has a knob (α) for how finely to split. What we found is a wall: at α=10 the baseline reaches 0.90 separation (each mechanism gets its own cluster) but cross-layer structure collapses to 0.06 — the clusters live in single layers. At α=1 it keeps some cross-layer structure (0.46) but separation falls to 0.66. No setting gives both. Our method gets both at once — separation 0.89–0.92 *and* perfect cross-layer structure, across 3 seeds, with no clustering step — because the shared gate makes cross-layer grouping something learned during training. Deleting everything except a single mechanism's component leaves that mechanism working (keep-only error 0.10–0.12, where "doing nothing" scores ≈0.6), so the components really do carry their mechanisms individually. This is a structural capability difference, not a tuning difference, and it's the strongest single result for the whole-network design.
 
-Baseline throughout: **VPD** (rank-1 per-matrix pieces, independent gates), trained by us with identical code, targets, and budgets. Metrics: **CE-recovered** — keep only gate-selected components; share of performance surviving (100% = perfect). **KL (masked)** — same test as output-distribution divergence. **KL (all-on)** — nothing deleted; must be ≈0 or the sum isn't faithful. **Separation** — each known mechanism gets its own component; **coverage** — all mechanisms get one. **Keep-only error** — delete all *but* a mechanism's component; does it still work ("do nothing" ≈ 0.6).
+**Variable rank (goal 1).** On the same toy with a rank cap of 8 (ground truth is rank 1, so a good method should *choose* rank ≈1), we learned that rank freedom with no counter-pressure quietly packs several mechanisms into one component's budget — separation drops from ~0.9 to 0.68. Nested ranks un-packs them (back to 0.91), and the trim then pushes the measured ranks down to a median of 2. The textbook alternative, a Frobenius/nuclear-norm penalty, fails outright — under the faithfulness constraint its optimum *is* a few fat merged components — which is worth noting because it is essentially APD's original simplicity penalty, and explains part of that method's instability.
 
-## Toy Model of Superposition
+**Scaling to a real language model.** On Pythia-14M (6 layers, MLPs included, all 24 weight matrices decomposed, ~800M training tokens per run on 2×H100), the rank-1 version of our method already matches the VPD baseline's sparsity while beating its reconstruction: 82.6% CE-recovered at 0.5% of components active per token, vs the baseline's 82.2% at 0.7% (replicated across 2 seeds). More interesting is what happened above that. Both methods plateau at roughly 82–86% recovery, and we established the plateau is budget-independent — 5× more training bought only ~7% relative improvement. When we enabled variable rank (cap 8, nested + trim), recovery jumped to **91.8%** with the masked KL divergence halved (1.16 → 0.59), at the same token budget. The ceiling was a rank-1 expressiveness limit, not a limit of the training objective. Worst-case robustness (an adversary picking the worst components to delete) also improved by about a third, though it remains the one axis where VPD is still clearly better than us. Inspecting the trained decomposition: only 4 components are always-on, holding ~25% of the weight energy — the "one giant component" failure mode did not occur — and MLP pieces saturate their rank cap while attention pieces use about half, which tells us MLP mechanisms want more rank than attention ones (the run currently in flight gives them a cap of 16).
 
-5 features in 2 dimensions, one rank-1 mechanism each: mean cosine similarity to ground truth **0.982** vs VPD's 0.927 (APD reports 0.998), with ~0.9 components active per input (correct: ~1 active feature). The sanity floor — one matrix, so the whole-network gate is untested here.
+**Do the components mean anything?** Ranking components by how much deleting each one damages the model at the positions where it fires, the top of the list is individual grammar rules: a component that fires on "an" and causally supports vowel-initial continuations (*important, early, example*); a preposition→"the" component (the largest single causal effect we found); a family of subject/verb agreement components (*is/are/was* after the corresponding subjects); a sentence-boundary component; a code-indentation component. The census also exposed the main structural flaw: redundancy — the "an" rule exists as three near-identical copies. Our anti-redundancy penalty works on a toy but is not yet effective at LM scale.
 
-## Cross Layer Mechanisms
+# What I've learned
 
-A 2-layer residual MLP (from the APD/SPD line) with 100 known mechanisms, each deliberately spread across both layers. VPD needs a post-hoc clustering step (knob α):
-
-| method | separation | coverage | cross-layer | keep-only ↓ |
-|---|---|---|---|---|
-| VPD + clustering, α=1 | 0.66 | — | 0.46 | 0.22 |
-| VPD + clustering, α=10 | 0.90 | — | **0.06** | 0.37 |
-| **ours, rank-1** (3 seeds) | **0.89–0.92** | **0.97–1.00** | **1.00** | **0.10–0.12** |
-
-The baseline hits a wall: clustering buys separation only by destroying cross-layer structure — no α gives both. Ours gets both at once with no clustering, because the shared gate makes cross-layer grouping learned during training. A structural capability difference, not a tuning difference.
-
-**Variable-rank ablations** (cap 8; ground truth rank 1, so the method should *choose* ≈1):
-
-| variant | separation | coverage | true rank (median) |
-|---|---|---|---|
-| cap only, no rank pressure | 0.68 | 0.99 | at cap |
-| Frobenius penalty | 0.17–0.61 | — | inert or merging |
-| nested alone | 0.91 | 0.99 | ~3 |
-| **nested + trim** | 0.90 | 0.93 | **2** |
-
-Rank freedom alone packs mechanisms together; nesting un-packs them; the trim removes the tail. ("True rank" = SVD of the materialized component.)
-
-## Scaling to a real language model
-
-Pythia-14M, all 24 matrices decomposed, ~800M tokens per run on 2×H100:
-
-| | VPD | ours, rank-1 (best) | **ours, nested+trim (cap 8, best)** |
-|---|---|---|---|
-| CE-recovered | 82.2% | ~85% | **91.8%** |
-| KL, masked ↓ | 1.46 | 1.16 | **0.59** |
-| KL, all-on ↓ | 0.014 | ~1e-5 | 0.0014 |
-| adversarial KL ↓ | **3.6** | 35.4 | 23.0 |
-| gates active/token | 0.72% | 0.54% | 1.5% |
-
-At rank-1 we already match the baseline's sparsity and beat its reconstruction (2 seeds). The headline: both methods previously plateaued at ~82–86% recovery, budget-independently (5× more training bought ~7% relative). Variable rank **breaks the ceiling** — it was a rank-1 expressiveness limit, not an objective limit. Adversarial robustness improved ~35% but remains our deficit. Anatomy: only 4 always-on components (~25% of weight energy) — no mega-component formed; MLP pieces saturate their cap while attention differentiates, motivating the per-type caps now running.
-
-**Do the components mean anything?** Ranking by causal damage-when-deleted (gate magnitude surfaces dead duplicates instead), the top census entries are individual grammar rules: an "an"→vowel-initial-word component, a preposition→"the" component (largest single causal effect), a subject/verb agreement family, a sentence-boundary component, a code-indentation component. Main flaw exposed: **redundancy** — the "an" rule exists in three near-identical copies; our anti-redundancy penalty works on a toy but not yet at LM scale.
+- **Rank pressure controls how big components are, never what they are.** Component identity has to come from elsewhere — the nested ordering, gate differentiation, or role-based losses. Every capacity-style penalty we tried either did nothing or merged components.
+- **Why original APD was unstable.** We rebuilt attribution-routed training in its strongest modern form (interaction-aware Shapley-style attribution, differentiable sparse selection instead of top-k, a causal-role simplicity criterion) and it still cannot match the trained gate — at matched training pressure it collapses, for a reason we can now state precisely: attribution must route on the components' structure, but components only develop structure if routing already concentrates gradient on them. A co-trained gate network escapes this bootstrap circle; a computed attribution rule does not. This answers "why this particular hybrid": APD's shape and VPD's training machinery are each doing irreplaceable work. Attribution remains genuinely useful as an *analysis* tool on already-trained decompositions.
+- **The honest limit: dense, always-on mechanisms.** On mechanisms every input exercises — an induction-only toy transformer, and the text-copying machinery of real LMs — no method variant we tested forms a dedicated component or small crew: not ours, not our VPD baseline, and not the published VPD decomposition of a 67M model that we verified has a single strong induction head (82% copy accuracy through one head). In that model the mechanism is recoverable only as a diffuse population of hundreds of small pieces whose joint deletion degrades copying, while deleting the twenty pieces that own most of the head's weight changes almost nothing. Sparsity and capacity pressures are blind here because these mechanisms differ from the always-on backbone by *role*, not by firing rate or size. Designing a role-based training pressure is the clearest next problem this project has surfaced.
 
 # Challenges
 
-## Cost
+The main practical challenge is cost: every training step runs the original model, a randomly-deleted copy, and an adversarially-deleted copy, and the component bank multiplies the parameter count — each Pythia-14M run is ~10–20 GPU-hours on 2×H100. Mid-project we made the training loop ~3.2× faster (tensor-core math, mixed-precision forwards with losses kept in fp32, bucketed gradient synchronization), which is what makes the remaining control runs cheap. Scaling past ~100M-parameter targets is an engineering problem rather than a conceptual one, but a real one.
 
-Every step runs the original, a randomly-deleted, and an adversarially-deleted model, and the component bank multiplies parameters — the Pythia runs are ~10–20 GPU-hours each on 2×H100. Mid-project we made the loop ~3.2× faster (tensor-core math, mixed-precision forwards with fp32 losses, bucketed gradient sync), which makes the remaining controls cheap. Scaling past ~100M parameters is an engineering problem, not a conceptual one, but real.
+# Final Stretch
 
-## The alternative we tested and rejected: attribution-routed training
+Three runs are in flight to finish nailing the claims: a larger decomposition with per-type rank caps (attention 8, MLP 16) at the full token budget; a control at exactly the rank-1 flagship's total parameter budget, which separates "variable rank helps" from "more parameters help"; and a second seed of the 91.8% headline number. After that, the priorities are the redundancy problem (making the anti-redundancy penalty work at LM scale) and automated labeling of the component census, so the monosemanticity claims become quantitative rather than hand-read.
 
-Could attribution (integrated-gradients / Shapley-style credit) replace the trained gate, as in original APD? We built the strongest version we could — interaction-aware subset attribution, sparse-but-differentiable selection instead of top-k, a causal-role simplicity criterion, all supporting terms matched. It recovers cross-layer structure but cannot match the trained mask, and at matched training pressure it collapses — three failure modes, one root cause: **attribution must route on component structure, but components only develop structure if routing already concentrates gradient** — a bootstrap circle only a co-trained gate escapes. We believe this reproduces why original APD was unstable (not its top-k). The negative result answers "why this hybrid": APD's shape and VPD's training are each doing irreplaceable work. Attribution stays useful as an *analysis* tool on trained decompositions.
-
-## The honest limit: dense, always-on mechanisms
-
-On mechanisms every input exercises — an induction-only toy transformer, and the text-copying machinery of real LMs — **no method variant we tested forms a dedicated component or crew**: not ours, not our VPD baseline, not the published VPD decomposition of a 67M model we verified has a single strong induction head. There, the mechanism is recoverable only as a diffuse population of hundreds of pieces whose joint deletion degrades copying (verified against matched random controls), while deleting the twenty pieces owning most of the head's weight changes almost nothing. Sparsity and capacity pressures are blind here because these mechanisms differ from the backbone by *role*, not firing rate or size — designing a role-based pressure is the clearest next problem.
-
-## Runs in flight
-
-1. **C=4096 with per-type caps (attention 8, MLP 16)**, full token budget.
-2. **C=512, cap 8 — the rank-1 flagship's exact piece budget**: the control separating "variable rank helps" from "more parameters help".
-3. **A second seed of the 91.8% run** (currently single-seed).
+By the end of the fellowship, I will have: a documented method combining APD's whole-network components with VPD's training machinery plus variable rank; head-to-head results against VPD on toys and a real LM, with the ceiling-break result seed-replicated and capacity-controlled; and a written account of the two negative results (attribution routing, dense mechanisms) that map where the method's boundaries are. The final deliverable is the method writeup and results, with the code public.
