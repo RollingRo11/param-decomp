@@ -194,19 +194,35 @@ def decompose_lm(model: nn.Module, pool: Tensor, cfg: ApdConfig, ci_cfg: VpdConf
         idx = torch.randint(0, pool.shape[0], (batch,), generator=g)
         return pool[idx].to(device)
 
+    # bf16 autocast for the heavy forwards (same pattern as the VPD stack in run.py): ~2x matmul
+    # throughput on tensor cores and halved activation memory (the [tokens, C, r] intermediates
+    # dominate at large C). Faithfulness, minimality, and the loss summation stay in fp32 outside
+    # the context; the KL/MSE reductions upcast via .float() inside kl_logits and the losses below.
+    use_amp = os.environ.get("AMP", "0") == "1" and device.type == "cuda"
+    import contextlib
+
+    def amp_ctx():
+        return torch.autocast("cuda", torch.bfloat16) if use_amp else contextlib.nullcontext()
+
+    if rank0 and use_amp:
+        print("bf16 autocast ON for forwards (losses fp32)", flush=True)
+
     for step in range(n_steps):
         p = cfg.p_start + (cfg.p_end - cfg.p_start) * (step / n_steps)
         ppgd_lr = cosine_lr(step, n_steps, ci_cfg.ppgd_lr, ci_cfg.ppgd_lr_final_frac, ci_cfg.ppgd_warmup_pct)
         idx = sample_batch()
         clear_masks(banks)
-        with torch.no_grad():
+        with torch.no_grad(), amp_ctx():
             target_logits = model(idx)
         acts = {n: b.last_input for n, b in banks.items()}
         refresh_caches(banks)
-        g_lower, g_upper = ci(acts)  # [B, S, C]
+        with amp_ctx():
+            g_lower, g_upper = ci(acts)  # [B, S, C]
+        g_lower, g_upper = g_lower.float(), g_upper.float()
         B, S = idx.shape
 
-        ppgd.warmup(model, banks, idx, target_logits, g_lower, ppgd_lr)  # inner adversarial ascent
+        with amp_ctx():
+            ppgd.warmup(model, banks, idx, target_logits, g_lower, ppgd_lr)  # inner adversarial ascent
 
         loss_faith = faithfulness_loss(banks)
         # stochastic-mask KL reconstruction (shared gate across modules). With subset routing (VPD
@@ -225,20 +241,24 @@ def decompose_lm(model: nn.Module, pool: Tensor, cfg: ApdConfig, ci_cfg: VpdConf
             rung = sample_rank_rung(max(b.r for b in banks.values()), g)
             for b in banks.values():
                 b.rank_keep = rung
-        loss_stoch = kl_logits(masked_forward(model, banks, idx, mask, deltas, subset), target_logits)
+        with amp_ctx():
+            stoch_logits = masked_forward(model, banks, idx, mask, deltas, subset)
+        loss_stoch = kl_logits(stoch_logits.float(), target_logits.float())
         # APD hidden-activation recon: match each masked module's output to its target-weights
         # output (cached during the target forward). Only masked modules contribute (unmasked = 0).
         loss_hidden = torch.zeros((), device=device)
         if cfg.coeff_hidden > 0:
             hid_mods = sorted(subset) if subset is not None else order
             for n in hid_mods:
-                tgt = banks[n].last_target_out
-                loss_hidden = loss_hidden + F.mse_loss(banks[n].last_masked_out, tgt) / (tgt.var() + 1e-8)
+                tgt = banks[n].last_target_out.float()
+                loss_hidden = loss_hidden + F.mse_loss(banks[n].last_masked_out.float(), tgt) / (tgt.var() + 1e-8)
             loss_hidden = loss_hidden / len(hid_mods)
         if cfg.nested_rank:
             for b in banks.values():
                 b.rank_keep = None
-        loss_ppgd = ppgd.recon_loss(model, banks, idx, target_logits, g_lower)  # adversarial recon
+        with amp_ctx():
+            loss_ppgd = ppgd.recon_loss(model, banks, idx, target_logits, g_lower)  # adversarial recon
+        loss_ppgd = loss_ppgd.float()
         loss_imp = importance_minimality_loss({"g": g_upper}, p, cfg.imp_eps, cfg.imp_beta, world)
         loss_simp = (simplicity_loss(banks, g_upper.mean(dim=(0, 1)), cfg)
                      if cfg.coeff_simplicity > 0 else torch.zeros((), device=device))
@@ -293,10 +313,20 @@ def decompose_lm(model: nn.Module, pool: Tensor, cfg: ApdConfig, ci_cfg: VpdConf
                 + cfg.coeff_frob * loss_frob + cfg.coeff_rank * loss_rank)
         ppgd_grads = torch.autograd.grad(loss_ppgd, ppgd._sources(), retain_graph=True)
         opt.zero_grad(); loss.backward()
-        if world > 1:  # data-parallel: average trainable grads; PGD sources stay per-rank
-            for prm in trainable:
-                if prm.grad is not None:
-                    dist.all_reduce(prm.grad, op=dist.ReduceOp.AVG)
+        if world > 1:  # data-parallel: average trainable grads; PGD sources stay per-rank.
+            # ONE flat-bucket all_reduce instead of ~100 per-parameter NCCL calls (launch latency
+            # dominated the sync); COMM_BF16=1 additionally halves the wire traffic — bf16 rounding
+            # of averaged grads is far below Adam's noise floor at these scales.
+            grads = [prm.grad for prm in trainable if prm.grad is not None]
+            flat = torch._utils._flatten_dense_tensors(grads)
+            if os.environ.get("COMM_BF16", "0") == "1":
+                flat16 = flat.to(torch.bfloat16)
+                dist.all_reduce(flat16, op=dist.ReduceOp.AVG)
+                flat = flat16.to(torch.float32)
+            else:
+                dist.all_reduce(flat, op=dist.ReduceOp.AVG)
+            for g_, s_ in zip(grads, torch._utils._unflatten_dense_tensors(flat, grads)):
+                g_.copy_(s_)
         if cfg.grad_clip > 0:  # VPD clips the component-factor grads (not the CI net)
             torch.nn.utils.clip_grad_norm_(comp_params, cfg.grad_clip)
         opt.step()
