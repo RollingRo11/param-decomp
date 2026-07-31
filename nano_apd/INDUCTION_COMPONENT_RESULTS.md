@@ -1,5 +1,8 @@
 # Cross-layer components for controlled induction
 
+The compact raw JSON reports are checked in under
+[`results/induction_components`](results/induction_components/README.md).
+
 ## What was trained
 
 The mechanism is **random-token induction**, not a semantic category such as apples or

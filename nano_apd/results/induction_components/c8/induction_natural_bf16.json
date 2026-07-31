@@ -1,0 +1,138 @@
+{
+  "artifact": "nano_apd/out/pythia-410m_induction_components_functional_v3_C8",
+  "purpose": "Check whether intact-model component ablations broadly perturb held-out natural text, which would be evidence against induction specificity.",
+  "cross_layer_policy": "Each component is ablated as one cross-layer object; layer breadth is not penalized or treated as polysemanticity.",
+  "natural_split": "val",
+  "n_sequences": 128,
+  "position_sampling": "uniform prediction positions 8 through seq_len-2",
+  "precision": "bf16",
+  "residual_natural_selected_kl": 0.0668955,
+  "component_summary": {
+    "median_natural_selected_kl": 0.0198209,
+    "max_natural_selected_kl": 0.0228579,
+    "max_natural_impact_component": 5
+  },
+  "components": [
+    {
+      "component": 0,
+      "natural_selected_kl": 0.0170959,
+      "natural_selected_kl_ci95": [
+        0.0140385,
+        0.0205833
+      ],
+      "natural_next_token_logprob_damage": 0.0071141,
+      "natural_abs_next_token_logprob_damage": 0.1243912,
+      "natural_prediction_flip_rate": 0.078125,
+      "induction_present_selected_kl": 0.051524,
+      "synthetic_absent_control_selected_kl": 0.038739,
+      "induction_to_natural_kl_ratio": 3.0138,
+      "induction_to_max_control_kl_ratio": 1.33
+    },
+    {
+      "component": 1,
+      "natural_selected_kl": 0.0199242,
+      "natural_selected_kl_ci95": [
+        0.0160315,
+        0.0249681
+      ],
+      "natural_next_token_logprob_damage": 0.0191404,
+      "natural_abs_next_token_logprob_damage": 0.1300858,
+      "natural_prediction_flip_rate": 0.0703125,
+      "induction_present_selected_kl": 0.057477,
+      "synthetic_absent_control_selected_kl": 0.044177,
+      "induction_to_natural_kl_ratio": 2.8848,
+      "induction_to_max_control_kl_ratio": 1.3011
+    },
+    {
+      "component": 2,
+      "natural_selected_kl": 0.0206463,
+      "natural_selected_kl_ci95": [
+        0.0161911,
+        0.0260271
+      ],
+      "natural_next_token_logprob_damage": 0.0135925,
+      "natural_abs_next_token_logprob_damage": 0.1414724,
+      "natural_prediction_flip_rate": 0.1015625,
+      "induction_present_selected_kl": 0.053301,
+      "synthetic_absent_control_selected_kl": 0.0407,
+      "induction_to_natural_kl_ratio": 2.5816,
+      "induction_to_max_control_kl_ratio": 1.3096
+    },
+    {
+      "component": 3,
+      "natural_selected_kl": 0.0171811,
+      "natural_selected_kl_ci95": [
+        0.0139165,
+        0.0208465
+      ],
+      "natural_next_token_logprob_damage": 0.0067323,
+      "natural_abs_next_token_logprob_damage": 0.1342384,
+      "natural_prediction_flip_rate": 0.0625,
+      "induction_present_selected_kl": 0.058671,
+      "synthetic_absent_control_selected_kl": 0.04114,
+      "induction_to_natural_kl_ratio": 3.4149,
+      "induction_to_max_control_kl_ratio": 1.4261
+    },
+    {
+      "component": 4,
+      "natural_selected_kl": 0.0198209,
+      "natural_selected_kl_ci95": [
+        0.0163765,
+        0.0238234
+      ],
+      "natural_next_token_logprob_damage": 0.0026484,
+      "natural_abs_next_token_logprob_damage": 0.1203996,
+      "natural_prediction_flip_rate": 0.0546875,
+      "induction_present_selected_kl": 0.068426,
+      "synthetic_absent_control_selected_kl": 0.044122,
+      "induction_to_natural_kl_ratio": 3.4522,
+      "induction_to_max_control_kl_ratio": 1.5508
+    },
+    {
+      "component": 5,
+      "natural_selected_kl": 0.0228579,
+      "natural_selected_kl_ci95": [
+        0.0170707,
+        0.0297075
+      ],
+      "natural_next_token_logprob_damage": -0.0160213,
+      "natural_abs_next_token_logprob_damage": 0.1283652,
+      "natural_prediction_flip_rate": 0.0625,
+      "induction_present_selected_kl": 0.076414,
+      "synthetic_absent_control_selected_kl": 0.046964,
+      "induction_to_natural_kl_ratio": 3.343,
+      "induction_to_max_control_kl_ratio": 1.6271
+    },
+    {
+      "component": 6,
+      "natural_selected_kl": 0.0182891,
+      "natural_selected_kl_ci95": [
+        0.0148201,
+        0.0222977
+      ],
+      "natural_next_token_logprob_damage": 0.0181656,
+      "natural_abs_next_token_logprob_damage": 0.1389109,
+      "natural_prediction_flip_rate": 0.0625,
+      "induction_present_selected_kl": 0.056987,
+      "synthetic_absent_control_selected_kl": 0.041508,
+      "induction_to_natural_kl_ratio": 3.1159,
+      "induction_to_max_control_kl_ratio": 1.3729
+    },
+    {
+      "component": 7,
+      "natural_selected_kl": 0.0210617,
+      "natural_selected_kl_ci95": [
+        0.0174589,
+        0.025768
+      ],
+      "natural_next_token_logprob_damage": 0.0252657,
+      "natural_abs_next_token_logprob_damage": 0.1282619,
+      "natural_prediction_flip_rate": 0.0546875,
+      "induction_present_selected_kl": 0.063595,
+      "synthetic_absent_control_selected_kl": 0.048906,
+      "induction_to_natural_kl_ratio": 3.0195,
+      "induction_to_max_control_kl_ratio": 1.3004
+    }
+  ],
+  "interpretation_guardrail": "Low average natural-text impact plus high controlled induction impact is evidence of task selectivity, not a proof of full natural-text monosemanticity; rare unmeasured functions may remain."
+}

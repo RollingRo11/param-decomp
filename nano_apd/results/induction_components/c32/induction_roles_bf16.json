@@ -1,0 +1,4877 @@
+{
+  "artifact": "nano_apd/out/pythia-410m_induction_components_functional_v4_C32",
+  "mechanism": "Random-token induction: an earlier cue->label demonstration makes a later repetition of the cue predict the label.",
+  "selection": "Rows are selected once for target-correct positive-gap standard induction, then reused without filtering for every intervention.",
+  "cross_layer_policy": "A component is one object across all editable matrices; layer/head breadth is neither penalized nor treated as polysemanticity.",
+  "n_pairs": 128,
+  "components": 32,
+  "precision": "bf16",
+  "variant_definitions": {
+    "present": [
+      "standard",
+      "short_lag",
+      "long_lag",
+      "two_demonstrations",
+      "counterfactual_label"
+    ],
+    "stress": [
+      "recent_conflict"
+    ],
+    "absent_controls": [
+      "source_cue_corrupt",
+      "destination_cue_corrupt"
+    ]
+  },
+  "component_functional_signatures": [
+    {
+      "component": 0,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.18371,
+      "absent_control_mean_abs_gap_damage": 0.070307,
+      "present_minus_absent_gap_damage": 0.11340300000000002,
+      "present_variant_mean_selected_kl": 0.050405,
+      "absent_control_mean_selected_kl": 0.044122,
+      "variant_gap_damage": {
+        "standard": 0.145792,
+        "short_lag": 0.125557,
+        "long_lag": 0.123632,
+        "two_demonstrations": 0.260273,
+        "counterfactual_label": 0.263295,
+        "recent_conflict": 0.259933,
+        "source_cue_corrupt": 0.07547,
+        "destination_cue_corrupt": 0.065144
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 1,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.148942,
+      "absent_control_mean_abs_gap_damage": 0.064072,
+      "present_minus_absent_gap_damage": 0.08486999999999999,
+      "present_variant_mean_selected_kl": 0.044991,
+      "absent_control_mean_selected_kl": 0.035347,
+      "variant_gap_damage": {
+        "standard": 0.165096,
+        "short_lag": 0.150227,
+        "long_lag": 0.080519,
+        "two_demonstrations": 0.295838,
+        "counterfactual_label": 0.05303,
+        "recent_conflict": 0.207082,
+        "source_cue_corrupt": 0.048651,
+        "destination_cue_corrupt": 0.079493
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 2,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.267944,
+      "absent_control_mean_abs_gap_damage": 0.088683,
+      "present_minus_absent_gap_damage": 0.179261,
+      "present_variant_mean_selected_kl": 0.051304,
+      "absent_control_mean_selected_kl": 0.038156,
+      "variant_gap_damage": {
+        "standard": 0.293535,
+        "short_lag": 0.176296,
+        "long_lag": 0.175501,
+        "two_demonstrations": 0.460515,
+        "counterfactual_label": 0.233872,
+        "recent_conflict": 0.362757,
+        "source_cue_corrupt": 0.078399,
+        "destination_cue_corrupt": 0.098968
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 3,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.224326,
+      "absent_control_mean_abs_gap_damage": 0.044201,
+      "present_minus_absent_gap_damage": 0.180125,
+      "present_variant_mean_selected_kl": 0.04477,
+      "absent_control_mean_selected_kl": 0.034649,
+      "variant_gap_damage": {
+        "standard": 0.270057,
+        "short_lag": 0.214211,
+        "long_lag": 0.210539,
+        "two_demonstrations": 0.274777,
+        "counterfactual_label": 0.152046,
+        "recent_conflict": 0.328864,
+        "source_cue_corrupt": 0.007865,
+        "destination_cue_corrupt": 0.080538
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 4,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 1.099717,
+      "absent_control_mean_abs_gap_damage": 0.156328,
+      "present_minus_absent_gap_damage": 0.943389,
+      "present_variant_mean_selected_kl": 0.100083,
+      "absent_control_mean_selected_kl": 0.06452,
+      "variant_gap_damage": {
+        "standard": 1.187195,
+        "short_lag": 0.774606,
+        "long_lag": 0.918787,
+        "two_demonstrations": 1.267293,
+        "counterfactual_label": 1.350704,
+        "recent_conflict": 1.320899,
+        "source_cue_corrupt": 0.15723,
+        "destination_cue_corrupt": 0.155425
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 5,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 1.353614,
+      "absent_control_mean_abs_gap_damage": 0.257061,
+      "present_minus_absent_gap_damage": 1.096553,
+      "present_variant_mean_selected_kl": 0.117454,
+      "absent_control_mean_selected_kl": 0.069183,
+      "variant_gap_damage": {
+        "standard": 1.475565,
+        "short_lag": 1.077049,
+        "long_lag": 1.093792,
+        "two_demonstrations": 1.695103,
+        "counterfactual_label": 1.426559,
+        "recent_conflict": 1.625539,
+        "source_cue_corrupt": 0.206489,
+        "destination_cue_corrupt": 0.307632
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 6,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.324443,
+      "absent_control_mean_abs_gap_damage": 0.056428,
+      "present_minus_absent_gap_damage": 0.268015,
+      "present_variant_mean_selected_kl": 0.048339,
+      "absent_control_mean_selected_kl": 0.03586,
+      "variant_gap_damage": {
+        "standard": 0.354575,
+        "short_lag": 0.182377,
+        "long_lag": 0.318895,
+        "two_demonstrations": 0.480291,
+        "counterfactual_label": 0.286076,
+        "recent_conflict": 0.430587,
+        "source_cue_corrupt": 0.010347,
+        "destination_cue_corrupt": 0.102509
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 7,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.249345,
+      "absent_control_mean_abs_gap_damage": 0.098053,
+      "present_minus_absent_gap_damage": 0.151292,
+      "present_variant_mean_selected_kl": 0.049274,
+      "absent_control_mean_selected_kl": 0.039643,
+      "variant_gap_damage": {
+        "standard": 0.267714,
+        "short_lag": 0.200785,
+        "long_lag": 0.248464,
+        "two_demonstrations": 0.282908,
+        "counterfactual_label": 0.246853,
+        "recent_conflict": 0.23374,
+        "source_cue_corrupt": 0.103237,
+        "destination_cue_corrupt": 0.092868
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 8,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 1.171664,
+      "absent_control_mean_abs_gap_damage": 0.191886,
+      "present_minus_absent_gap_damage": 0.979778,
+      "present_variant_mean_selected_kl": 0.120559,
+      "absent_control_mean_selected_kl": 0.094967,
+      "variant_gap_damage": {
+        "standard": 1.21786,
+        "short_lag": 0.862057,
+        "long_lag": 1.120504,
+        "two_demonstrations": 1.402791,
+        "counterfactual_label": 1.25511,
+        "recent_conflict": 1.323983,
+        "source_cue_corrupt": 0.181939,
+        "destination_cue_corrupt": 0.201834
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 9,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.295005,
+      "absent_control_mean_abs_gap_damage": 0.084439,
+      "present_minus_absent_gap_damage": 0.21056600000000003,
+      "present_variant_mean_selected_kl": 0.045406,
+      "absent_control_mean_selected_kl": 0.035998,
+      "variant_gap_damage": {
+        "standard": 0.317894,
+        "short_lag": 0.171452,
+        "long_lag": 0.27709,
+        "two_demonstrations": 0.446827,
+        "counterfactual_label": 0.261762,
+        "recent_conflict": 0.406949,
+        "source_cue_corrupt": 0.036536,
+        "destination_cue_corrupt": 0.132342
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 10,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.461539,
+      "absent_control_mean_abs_gap_damage": 0.205038,
+      "present_minus_absent_gap_damage": 0.256501,
+      "present_variant_mean_selected_kl": 0.087843,
+      "absent_control_mean_selected_kl": 0.070836,
+      "variant_gap_damage": {
+        "standard": 0.487807,
+        "short_lag": 0.403671,
+        "long_lag": 0.325293,
+        "two_demonstrations": 0.56686,
+        "counterfactual_label": 0.524062,
+        "recent_conflict": 0.601468,
+        "source_cue_corrupt": 0.219299,
+        "destination_cue_corrupt": 0.190776
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 11,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.24682,
+      "absent_control_mean_abs_gap_damage": 0.072056,
+      "present_minus_absent_gap_damage": 0.17476400000000003,
+      "present_variant_mean_selected_kl": 0.045348,
+      "absent_control_mean_selected_kl": 0.03536,
+      "variant_gap_damage": {
+        "standard": 0.241745,
+        "short_lag": 0.157928,
+        "long_lag": 0.212233,
+        "two_demonstrations": 0.352903,
+        "counterfactual_label": 0.269289,
+        "recent_conflict": 0.319182,
+        "source_cue_corrupt": 0.057148,
+        "destination_cue_corrupt": 0.086965
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 12,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.911295,
+      "absent_control_mean_abs_gap_damage": 0.187073,
+      "present_minus_absent_gap_damage": 0.7242219999999999,
+      "present_variant_mean_selected_kl": 0.089688,
+      "absent_control_mean_selected_kl": 0.062979,
+      "variant_gap_damage": {
+        "standard": 0.985358,
+        "short_lag": 0.705856,
+        "long_lag": 0.732161,
+        "two_demonstrations": 1.118995,
+        "counterfactual_label": 1.014106,
+        "recent_conflict": 1.083549,
+        "source_cue_corrupt": 0.146748,
+        "destination_cue_corrupt": 0.227398
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 13,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 1.273234,
+      "absent_control_mean_abs_gap_damage": 0.170395,
+      "present_minus_absent_gap_damage": 1.102839,
+      "present_variant_mean_selected_kl": 0.122028,
+      "absent_control_mean_selected_kl": 0.077425,
+      "variant_gap_damage": {
+        "standard": 1.283822,
+        "short_lag": 1.019897,
+        "long_lag": 1.143751,
+        "two_demonstrations": 1.517494,
+        "counterfactual_label": 1.401204,
+        "recent_conflict": 1.443162,
+        "source_cue_corrupt": 0.184994,
+        "destination_cue_corrupt": 0.155797
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 14,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.172015,
+      "absent_control_mean_abs_gap_damage": 0.056789,
+      "present_minus_absent_gap_damage": 0.115226,
+      "present_variant_mean_selected_kl": 0.046077,
+      "absent_control_mean_selected_kl": 0.03605,
+      "variant_gap_damage": {
+        "standard": 0.220829,
+        "short_lag": 0.116613,
+        "long_lag": 0.121038,
+        "two_demonstrations": 0.297434,
+        "counterfactual_label": 0.104161,
+        "recent_conflict": 0.207519,
+        "source_cue_corrupt": 0.081479,
+        "destination_cue_corrupt": 0.0321
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 15,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.241851,
+      "absent_control_mean_abs_gap_damage": 0.045401,
+      "present_minus_absent_gap_damage": 0.19645,
+      "present_variant_mean_selected_kl": 0.044532,
+      "absent_control_mean_selected_kl": 0.034589,
+      "variant_gap_damage": {
+        "standard": 0.238598,
+        "short_lag": 0.207481,
+        "long_lag": 0.13238,
+        "two_demonstrations": 0.383527,
+        "counterfactual_label": 0.247269,
+        "recent_conflict": 0.314398,
+        "source_cue_corrupt": 0.013911,
+        "destination_cue_corrupt": 0.07689
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 16,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.49817,
+      "absent_control_mean_abs_gap_damage": 0.095896,
+      "present_minus_absent_gap_damage": 0.402274,
+      "present_variant_mean_selected_kl": 0.070938,
+      "absent_control_mean_selected_kl": 0.062236,
+      "variant_gap_damage": {
+        "standard": 0.499945,
+        "short_lag": 0.321818,
+        "long_lag": 0.493383,
+        "two_demonstrations": 0.685075,
+        "counterfactual_label": 0.490631,
+        "recent_conflict": 0.573994,
+        "source_cue_corrupt": 0.113316,
+        "destination_cue_corrupt": 0.078476
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 17,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.237897,
+      "absent_control_mean_abs_gap_damage": 0.044805,
+      "present_minus_absent_gap_damage": 0.19309199999999999,
+      "present_variant_mean_selected_kl": 0.044867,
+      "absent_control_mean_selected_kl": 0.034504,
+      "variant_gap_damage": {
+        "standard": 0.246972,
+        "short_lag": 0.280029,
+        "long_lag": 0.097041,
+        "two_demonstrations": 0.341619,
+        "counterfactual_label": 0.223824,
+        "recent_conflict": 0.362833,
+        "source_cue_corrupt": 0.021305,
+        "destination_cue_corrupt": 0.068305
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 18,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.874223,
+      "absent_control_mean_abs_gap_damage": 0.123451,
+      "present_minus_absent_gap_damage": 0.750772,
+      "present_variant_mean_selected_kl": 0.077489,
+      "absent_control_mean_selected_kl": 0.058825,
+      "variant_gap_damage": {
+        "standard": 0.94878,
+        "short_lag": 0.535851,
+        "long_lag": 0.829321,
+        "two_demonstrations": 1.048137,
+        "counterfactual_label": 1.009027,
+        "recent_conflict": 1.019923,
+        "source_cue_corrupt": 0.10499,
+        "destination_cue_corrupt": 0.141912
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 19,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.294941,
+      "absent_control_mean_abs_gap_damage": 0.063733,
+      "present_minus_absent_gap_damage": 0.23120800000000002,
+      "present_variant_mean_selected_kl": 0.048666,
+      "absent_control_mean_selected_kl": 0.037812,
+      "variant_gap_damage": {
+        "standard": 0.28942,
+        "short_lag": 0.210957,
+        "long_lag": 0.281019,
+        "two_demonstrations": 0.442267,
+        "counterfactual_label": 0.251042,
+        "recent_conflict": 0.362761,
+        "source_cue_corrupt": -0.01503,
+        "destination_cue_corrupt": 0.112436
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 20,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.152604,
+      "absent_control_mean_abs_gap_damage": 0.081265,
+      "present_minus_absent_gap_damage": 0.07133899999999999,
+      "present_variant_mean_selected_kl": 0.04482,
+      "absent_control_mean_selected_kl": 0.03606,
+      "variant_gap_damage": {
+        "standard": 0.099814,
+        "short_lag": 0.169544,
+        "long_lag": 0.114294,
+        "two_demonstrations": 0.181909,
+        "counterfactual_label": 0.19746,
+        "recent_conflict": 0.16975,
+        "source_cue_corrupt": 0.051547,
+        "destination_cue_corrupt": 0.110983
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 21,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.220637,
+      "absent_control_mean_abs_gap_damage": 0.033299,
+      "present_minus_absent_gap_damage": 0.187338,
+      "present_variant_mean_selected_kl": 0.047189,
+      "absent_control_mean_selected_kl": 0.037466,
+      "variant_gap_damage": {
+        "standard": 0.233446,
+        "short_lag": 0.174122,
+        "long_lag": 0.138783,
+        "two_demonstrations": 0.359717,
+        "counterfactual_label": 0.197119,
+        "recent_conflict": 0.266712,
+        "source_cue_corrupt": 0.01675,
+        "destination_cue_corrupt": 0.049848
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 22,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.191946,
+      "absent_control_mean_abs_gap_damage": 0.070969,
+      "present_minus_absent_gap_damage": 0.120977,
+      "present_variant_mean_selected_kl": 0.044932,
+      "absent_control_mean_selected_kl": 0.034614,
+      "variant_gap_damage": {
+        "standard": 0.183508,
+        "short_lag": 0.143667,
+        "long_lag": 0.193111,
+        "two_demonstrations": 0.212019,
+        "counterfactual_label": 0.227423,
+        "recent_conflict": 0.224646,
+        "source_cue_corrupt": 0.078878,
+        "destination_cue_corrupt": 0.063059
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 23,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.909959,
+      "absent_control_mean_abs_gap_damage": 0.210807,
+      "present_minus_absent_gap_damage": 0.699152,
+      "present_variant_mean_selected_kl": 0.09527,
+      "absent_control_mean_selected_kl": 0.065568,
+      "variant_gap_damage": {
+        "standard": 0.903495,
+        "short_lag": 0.567529,
+        "long_lag": 0.741509,
+        "two_demonstrations": 1.400155,
+        "counterfactual_label": 0.937105,
+        "recent_conflict": 1.144814,
+        "source_cue_corrupt": 0.208386,
+        "destination_cue_corrupt": 0.213228
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 24,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.278821,
+      "absent_control_mean_abs_gap_damage": 0.069924,
+      "present_minus_absent_gap_damage": 0.208897,
+      "present_variant_mean_selected_kl": 0.047528,
+      "absent_control_mean_selected_kl": 0.035609,
+      "variant_gap_damage": {
+        "standard": 0.299321,
+        "short_lag": 0.221464,
+        "long_lag": 0.175312,
+        "two_demonstrations": 0.391426,
+        "counterfactual_label": 0.306583,
+        "recent_conflict": 0.452856,
+        "source_cue_corrupt": 0.067988,
+        "destination_cue_corrupt": 0.071859
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 25,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.295119,
+      "absent_control_mean_abs_gap_damage": 0.068088,
+      "present_minus_absent_gap_damage": 0.22703100000000004,
+      "present_variant_mean_selected_kl": 0.046487,
+      "absent_control_mean_selected_kl": 0.035549,
+      "variant_gap_damage": {
+        "standard": 0.290751,
+        "short_lag": 0.28511,
+        "long_lag": 0.175961,
+        "two_demonstrations": 0.425876,
+        "counterfactual_label": 0.297899,
+        "recent_conflict": 0.442775,
+        "source_cue_corrupt": 0.057355,
+        "destination_cue_corrupt": 0.078821
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 26,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.239317,
+      "absent_control_mean_abs_gap_damage": 0.060102,
+      "present_minus_absent_gap_damage": 0.179215,
+      "present_variant_mean_selected_kl": 0.052192,
+      "absent_control_mean_selected_kl": 0.041604,
+      "variant_gap_damage": {
+        "standard": 0.296122,
+        "short_lag": 0.174789,
+        "long_lag": 0.130919,
+        "two_demonstrations": 0.437789,
+        "counterfactual_label": 0.156967,
+        "recent_conflict": 0.364869,
+        "source_cue_corrupt": 0.074007,
+        "destination_cue_corrupt": 0.046198
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 27,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.20961,
+      "absent_control_mean_abs_gap_damage": 0.024561,
+      "present_minus_absent_gap_damage": 0.185049,
+      "present_variant_mean_selected_kl": 0.04777,
+      "absent_control_mean_selected_kl": 0.038112,
+      "variant_gap_damage": {
+        "standard": 0.191162,
+        "short_lag": 0.175797,
+        "long_lag": 0.155142,
+        "two_demonstrations": 0.318093,
+        "counterfactual_label": 0.207856,
+        "recent_conflict": 0.225391,
+        "source_cue_corrupt": -0.000942,
+        "destination_cue_corrupt": 0.04818
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 28,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.184783,
+      "absent_control_mean_abs_gap_damage": 0.041142,
+      "present_minus_absent_gap_damage": 0.14364100000000002,
+      "present_variant_mean_selected_kl": 0.044341,
+      "absent_control_mean_selected_kl": 0.034428,
+      "variant_gap_damage": {
+        "standard": 0.18464,
+        "short_lag": 0.160957,
+        "long_lag": 0.122622,
+        "two_demonstrations": 0.219491,
+        "counterfactual_label": 0.236205,
+        "recent_conflict": 0.306097,
+        "source_cue_corrupt": 0.053169,
+        "destination_cue_corrupt": 0.029115
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 29,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.370354,
+      "absent_control_mean_abs_gap_damage": 0.048203,
+      "present_minus_absent_gap_damage": 0.322151,
+      "present_variant_mean_selected_kl": 0.05153,
+      "absent_control_mean_selected_kl": 0.039681,
+      "variant_gap_damage": {
+        "standard": 0.456259,
+        "short_lag": 0.100578,
+        "long_lag": 0.34059,
+        "two_demonstrations": 0.503924,
+        "counterfactual_label": 0.450418,
+        "recent_conflict": 0.487838,
+        "source_cue_corrupt": 0.036951,
+        "destination_cue_corrupt": 0.059455
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 30,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.540329,
+      "absent_control_mean_abs_gap_damage": 0.081418,
+      "present_minus_absent_gap_damage": 0.45891099999999996,
+      "present_variant_mean_selected_kl": 0.080238,
+      "absent_control_mean_selected_kl": 0.065083,
+      "variant_gap_damage": {
+        "standard": 0.553393,
+        "short_lag": 0.292839,
+        "long_lag": 0.50452,
+        "two_demonstrations": 0.782041,
+        "counterfactual_label": 0.568851,
+        "recent_conflict": 0.685681,
+        "source_cue_corrupt": 0.074364,
+        "destination_cue_corrupt": 0.088472
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    },
+    {
+      "component": 31,
+      "present_variant_positive_sign_fraction": 1.0,
+      "present_variant_mean_gap_damage": 0.205458,
+      "absent_control_mean_abs_gap_damage": 0.034146,
+      "present_minus_absent_gap_damage": 0.171312,
+      "present_variant_mean_selected_kl": 0.046367,
+      "absent_control_mean_selected_kl": 0.035384,
+      "variant_gap_damage": {
+        "standard": 0.244424,
+        "short_lag": 0.142035,
+        "long_lag": 0.185029,
+        "two_demonstrations": 0.231107,
+        "counterfactual_label": 0.224695,
+        "recent_conflict": 0.180033,
+        "source_cue_corrupt": 0.022911,
+        "destination_cue_corrupt": 0.045382
+      },
+      "interpretation_guardrail": "Consistency across these interventions is evidence of induction selectivity, not proof of monosemanticity on arbitrary natural text."
+    }
+  ],
+  "variants": {
+    "standard": {
+      "category": "induction_present",
+      "reference_gap": 10.806356,
+      "reference_positive_accuracy": 1.0,
+      "routed_gap": 9.02484,
+      "residual_gap": 8.980776,
+      "mean_effective_components": 5.194675,
+      "mean_winner_share": 0.366815,
+      "components_owning_examples": 9,
+      "routed_selected_kl": 0.216726,
+      "residual_selected_kl": 0.22546,
+      "components": [
+        {
+          "component": 0,
+          "mean_gate_share": 0.008244,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.791663,
+          "mean_abs_credit": 1.24121,
+          "full_model_mean_gap_damage": 0.145792,
+          "full_model_gap_damage_ci95": [
+            0.012901,
+            0.277638
+          ],
+          "full_model_positive_damage_rate": 0.539062,
+          "full_model_selected_kl": 0.051712,
+          "routed_mean_gap_damage": -0.00321,
+          "routed_positive_damage_rate": 0.335938
+        },
+        {
+          "component": 1,
+          "mean_gate_share": 0.004381,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.550738,
+          "mean_abs_credit": 0.95317,
+          "full_model_mean_gap_damage": 0.165096,
+          "full_model_gap_damage_ci95": [
+            0.060711,
+            0.276172
+          ],
+          "full_model_positive_damage_rate": 0.601562,
+          "full_model_selected_kl": 0.045562,
+          "routed_mean_gap_damage": 0.00792,
+          "routed_positive_damage_rate": 0.296875
+        },
+        {
+          "component": 2,
+          "mean_gate_share": 0.007109,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.926322,
+          "mean_abs_credit": 1.216842,
+          "full_model_mean_gap_damage": 0.293535,
+          "full_model_gap_damage_ci95": [
+            0.159753,
+            0.428567
+          ],
+          "full_model_positive_damage_rate": 0.59375,
+          "full_model_selected_kl": 0.051196,
+          "routed_mean_gap_damage": 0.009757,
+          "routed_positive_damage_rate": 0.304688
+        },
+        {
+          "component": 3,
+          "mean_gate_share": 0.00586,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.641131,
+          "mean_abs_credit": 1.113897,
+          "full_model_mean_gap_damage": 0.270057,
+          "full_model_gap_damage_ci95": [
+            0.150951,
+            0.390258
+          ],
+          "full_model_positive_damage_rate": 0.640625,
+          "full_model_selected_kl": 0.047271,
+          "routed_mean_gap_damage": 0.015244,
+          "routed_positive_damage_rate": 0.3125
+        },
+        {
+          "component": 4,
+          "mean_gate_share": 0.111266,
+          "owner_fraction": 0.132812,
+          "mean_signed_credit": 2.030179,
+          "mean_abs_credit": 5.458368,
+          "full_model_mean_gap_damage": 1.187195,
+          "full_model_gap_damage_ci95": [
+            1.036375,
+            1.362378
+          ],
+          "full_model_positive_damage_rate": 0.945312,
+          "full_model_selected_kl": 0.104245,
+          "routed_mean_gap_damage": 0.009182,
+          "routed_positive_damage_rate": 0.492188
+        },
+        {
+          "component": 5,
+          "mean_gate_share": 0.149961,
+          "owner_fraction": 0.265625,
+          "mean_signed_credit": 5.385885,
+          "mean_abs_credit": 6.333686,
+          "full_model_mean_gap_damage": 1.475565,
+          "full_model_gap_damage_ci95": [
+            1.306069,
+            1.642527
+          ],
+          "full_model_positive_damage_rate": 0.953125,
+          "full_model_selected_kl": 0.120147,
+          "routed_mean_gap_damage": 0.027594,
+          "routed_positive_damage_rate": 0.515625
+        },
+        {
+          "component": 6,
+          "mean_gate_share": 0.004069,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.63349,
+          "mean_abs_credit": 0.981066,
+          "full_model_mean_gap_damage": 0.354575,
+          "full_model_gap_damage_ci95": [
+            0.228082,
+            0.478046
+          ],
+          "full_model_positive_damage_rate": 0.648438,
+          "full_model_selected_kl": 0.047998,
+          "routed_mean_gap_damage": 0.00791,
+          "routed_positive_damage_rate": 0.203125
+        },
+        {
+          "component": 7,
+          "mean_gate_share": 0.012607,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.074988,
+          "mean_abs_credit": 1.837516,
+          "full_model_mean_gap_damage": 0.267714,
+          "full_model_gap_damage_ci95": [
+            0.153568,
+            0.382572
+          ],
+          "full_model_positive_damage_rate": 0.664062,
+          "full_model_selected_kl": 0.047672,
+          "routed_mean_gap_damage": -0.011963,
+          "routed_positive_damage_rate": 0.328125
+        },
+        {
+          "component": 8,
+          "mean_gate_share": 0.106345,
+          "owner_fraction": 0.125,
+          "mean_signed_credit": 4.00961,
+          "mean_abs_credit": 4.905377,
+          "full_model_mean_gap_damage": 1.21786,
+          "full_model_gap_damage_ci95": [
+            1.055397,
+            1.38969
+          ],
+          "full_model_positive_damage_rate": 0.898438,
+          "full_model_selected_kl": 0.12112,
+          "routed_mean_gap_damage": 0.030935,
+          "routed_positive_damage_rate": 0.460938
+        },
+        {
+          "component": 9,
+          "mean_gate_share": 0.004997,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.795908,
+          "mean_abs_credit": 1.044006,
+          "full_model_mean_gap_damage": 0.317894,
+          "full_model_gap_damage_ci95": [
+            0.202814,
+            0.437573
+          ],
+          "full_model_positive_damage_rate": 0.703125,
+          "full_model_selected_kl": 0.04449,
+          "routed_mean_gap_damage": -0.00359,
+          "routed_positive_damage_rate": 0.296875
+        },
+        {
+          "component": 10,
+          "mean_gate_share": 0.094758,
+          "owner_fraction": 0.101562,
+          "mean_signed_credit": 0.591716,
+          "mean_abs_credit": 4.636804,
+          "full_model_mean_gap_damage": 0.487807,
+          "full_model_gap_damage_ci95": [
+            0.346998,
+            0.636262
+          ],
+          "full_model_positive_damage_rate": 0.710938,
+          "full_model_selected_kl": 0.089416,
+          "routed_mean_gap_damage": -0.014604,
+          "routed_positive_damage_rate": 0.429688
+        },
+        {
+          "component": 11,
+          "mean_gate_share": 0.002302,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.359691,
+          "mean_abs_credit": 0.691047,
+          "full_model_mean_gap_damage": 0.241745,
+          "full_model_gap_damage_ci95": [
+            0.104579,
+            0.36343
+          ],
+          "full_model_positive_damage_rate": 0.632812,
+          "full_model_selected_kl": 0.045478,
+          "routed_mean_gap_damage": 0.006888,
+          "routed_positive_damage_rate": 0.210938
+        },
+        {
+          "component": 12,
+          "mean_gate_share": 0.075645,
+          "owner_fraction": 0.070312,
+          "mean_signed_credit": 2.494139,
+          "mean_abs_credit": 4.320997,
+          "full_model_mean_gap_damage": 0.985358,
+          "full_model_gap_damage_ci95": [
+            0.849918,
+            1.126527
+          ],
+          "full_model_positive_damage_rate": 0.882812,
+          "full_model_selected_kl": 0.086955,
+          "routed_mean_gap_damage": 0.013963,
+          "routed_positive_damage_rate": 0.453125
+        },
+        {
+          "component": 13,
+          "mean_gate_share": 0.096257,
+          "owner_fraction": 0.125,
+          "mean_signed_credit": 1.79872,
+          "mean_abs_credit": 4.520893,
+          "full_model_mean_gap_damage": 1.283822,
+          "full_model_gap_damage_ci95": [
+            1.108354,
+            1.468413
+          ],
+          "full_model_positive_damage_rate": 0.898438,
+          "full_model_selected_kl": 0.117271,
+          "routed_mean_gap_damage": 0.000424,
+          "routed_positive_damage_rate": 0.421875
+        },
+        {
+          "component": 14,
+          "mean_gate_share": 0.006501,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.550752,
+          "mean_abs_credit": 1.121222,
+          "full_model_mean_gap_damage": 0.220829,
+          "full_model_gap_damage_ci95": [
+            0.101032,
+            0.342103
+          ],
+          "full_model_positive_damage_rate": 0.609375,
+          "full_model_selected_kl": 0.046704,
+          "routed_mean_gap_damage": -0.004838,
+          "routed_positive_damage_rate": 0.28125
+        },
+        {
+          "component": 15,
+          "mean_gate_share": 0.003778,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.404436,
+          "mean_abs_credit": 0.780341,
+          "full_model_mean_gap_damage": 0.238598,
+          "full_model_gap_damage_ci95": [
+            0.124817,
+            0.355856
+          ],
+          "full_model_positive_damage_rate": 0.59375,
+          "full_model_selected_kl": 0.044214,
+          "routed_mean_gap_damage": 0.002992,
+          "routed_positive_damage_rate": 0.179688
+        },
+        {
+          "component": 16,
+          "mean_gate_share": 0.072742,
+          "owner_fraction": 0.054688,
+          "mean_signed_credit": 1.392822,
+          "mean_abs_credit": 3.971628,
+          "full_model_mean_gap_damage": 0.499945,
+          "full_model_gap_damage_ci95": [
+            0.380301,
+            0.63908
+          ],
+          "full_model_positive_damage_rate": 0.765625,
+          "full_model_selected_kl": 0.069151,
+          "routed_mean_gap_damage": 0.008384,
+          "routed_positive_damage_rate": 0.46875
+        },
+        {
+          "component": 17,
+          "mean_gate_share": 0.002578,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.489035,
+          "mean_abs_credit": 0.783381,
+          "full_model_mean_gap_damage": 0.246972,
+          "full_model_gap_damage_ci95": [
+            0.127095,
+            0.367904
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.04446,
+          "routed_mean_gap_damage": 0.006822,
+          "routed_positive_damage_rate": 0.203125
+        },
+        {
+          "component": 18,
+          "mean_gate_share": 0.102066,
+          "owner_fraction": 0.085938,
+          "mean_signed_credit": 2.554276,
+          "mean_abs_credit": 5.189429,
+          "full_model_mean_gap_damage": 0.94878,
+          "full_model_gap_damage_ci95": [
+            0.792203,
+            1.098796
+          ],
+          "full_model_positive_damage_rate": 0.875,
+          "full_model_selected_kl": 0.075155,
+          "routed_mean_gap_damage": 0.017315,
+          "routed_positive_damage_rate": 0.484375
+        },
+        {
+          "component": 19,
+          "mean_gate_share": 0.008462,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.808001,
+          "mean_abs_credit": 1.245486,
+          "full_model_mean_gap_damage": 0.28942,
+          "full_model_gap_damage_ci95": [
+            0.168327,
+            0.409354
+          ],
+          "full_model_positive_damage_rate": 0.632812,
+          "full_model_selected_kl": 0.050344,
+          "routed_mean_gap_damage": 0.000789,
+          "routed_positive_damage_rate": 0.234375
+        },
+        {
+          "component": 20,
+          "mean_gate_share": 0.003835,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.605648,
+          "mean_abs_credit": 0.833618,
+          "full_model_mean_gap_damage": 0.099814,
+          "full_model_gap_damage_ci95": [
+            0.000235,
+            0.195749
+          ],
+          "full_model_positive_damage_rate": 0.546875,
+          "full_model_selected_kl": 0.043682,
+          "routed_mean_gap_damage": 0.004914,
+          "routed_positive_damage_rate": 0.226562
+        },
+        {
+          "component": 21,
+          "mean_gate_share": 0.004625,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.626392,
+          "mean_abs_credit": 0.992868,
+          "full_model_mean_gap_damage": 0.233446,
+          "full_model_gap_damage_ci95": [
+            0.112274,
+            0.354805
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.045698,
+          "routed_mean_gap_damage": -3.9e-05,
+          "routed_positive_damage_rate": 0.25
+        },
+        {
+          "component": 22,
+          "mean_gate_share": 0.002921,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.545209,
+          "mean_abs_credit": 0.778273,
+          "full_model_mean_gap_damage": 0.183508,
+          "full_model_gap_damage_ci95": [
+            0.073537,
+            0.293231
+          ],
+          "full_model_positive_damage_rate": 0.617188,
+          "full_model_selected_kl": 0.045406,
+          "routed_mean_gap_damage": 0.000944,
+          "routed_positive_damage_rate": 0.171875
+        },
+        {
+          "component": 23,
+          "mean_gate_share": 0.047379,
+          "owner_fraction": 0.039062,
+          "mean_signed_credit": 1.698164,
+          "mean_abs_credit": 3.284882,
+          "full_model_mean_gap_damage": 0.903495,
+          "full_model_gap_damage_ci95": [
+            0.77648,
+            1.02856
+          ],
+          "full_model_positive_damage_rate": 0.914062,
+          "full_model_selected_kl": 0.086793,
+          "routed_mean_gap_damage": 0.018082,
+          "routed_positive_damage_rate": 0.414062
+        },
+        {
+          "component": 24,
+          "mean_gate_share": 0.004661,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.593347,
+          "mean_abs_credit": 0.919433,
+          "full_model_mean_gap_damage": 0.299321,
+          "full_model_gap_damage_ci95": [
+            0.181164,
+            0.42634
+          ],
+          "full_model_positive_damage_rate": 0.664062,
+          "full_model_selected_kl": 0.04671,
+          "routed_mean_gap_damage": -0.000815,
+          "routed_positive_damage_rate": 0.171875
+        },
+        {
+          "component": 25,
+          "mean_gate_share": 0.00427,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.567026,
+          "mean_abs_credit": 0.960264,
+          "full_model_mean_gap_damage": 0.290751,
+          "full_model_gap_damage_ci95": [
+            0.176452,
+            0.417379
+          ],
+          "full_model_positive_damage_rate": 0.671875,
+          "full_model_selected_kl": 0.046989,
+          "routed_mean_gap_damage": -0.000614,
+          "routed_positive_damage_rate": 0.257812
+        },
+        {
+          "component": 26,
+          "mean_gate_share": 0.010586,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.028985,
+          "mean_abs_credit": 1.432985,
+          "full_model_mean_gap_damage": 0.296122,
+          "full_model_gap_damage_ci95": [
+            0.167821,
+            0.423573
+          ],
+          "full_model_positive_damage_rate": 0.578125,
+          "full_model_selected_kl": 0.051717,
+          "routed_mean_gap_damage": -0.002889,
+          "routed_positive_damage_rate": 0.320312
+        },
+        {
+          "component": 27,
+          "mean_gate_share": 0.005122,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.825661,
+          "mean_abs_credit": 1.079667,
+          "full_model_mean_gap_damage": 0.191162,
+          "full_model_gap_damage_ci95": [
+            0.069708,
+            0.320355
+          ],
+          "full_model_positive_damage_rate": 0.632812,
+          "full_model_selected_kl": 0.04625,
+          "routed_mean_gap_damage": -0.013556,
+          "routed_positive_damage_rate": 0.242188
+        },
+        {
+          "component": 28,
+          "mean_gate_share": 0.00304,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.591602,
+          "mean_abs_credit": 0.833655,
+          "full_model_mean_gap_damage": 0.18464,
+          "full_model_gap_damage_ci95": [
+            0.066998,
+            0.301145
+          ],
+          "full_model_positive_damage_rate": 0.601562,
+          "full_model_selected_kl": 0.042296,
+          "routed_mean_gap_damage": -0.000322,
+          "routed_positive_damage_rate": 0.203125
+        },
+        {
+          "component": 29,
+          "mean_gate_share": 0.012906,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.927618,
+          "mean_abs_credit": 1.753323,
+          "full_model_mean_gap_damage": 0.456259,
+          "full_model_gap_damage_ci95": [
+            0.333335,
+            0.598006
+          ],
+          "full_model_positive_damage_rate": 0.757812,
+          "full_model_selected_kl": 0.054421,
+          "routed_mean_gap_damage": 0.008686,
+          "routed_positive_damage_rate": 0.351562
+        },
+        {
+          "component": 30,
+          "mean_gate_share": 0.016618,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.798456,
+          "mean_abs_credit": 1.904379,
+          "full_model_mean_gap_damage": 0.553393,
+          "full_model_gap_damage_ci95": [
+            0.401226,
+            0.725141
+          ],
+          "full_model_positive_damage_rate": 0.703125,
+          "full_model_selected_kl": 0.080067,
+          "routed_mean_gap_damage": 0.010712,
+          "routed_positive_damage_rate": 0.335938
+        },
+        {
+          "component": 31,
+          "mean_gate_share": 0.004108,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.643612,
+          "mean_abs_credit": 0.874933,
+          "full_model_mean_gap_damage": 0.244424,
+          "full_model_gap_damage_ci95": [
+            0.122731,
+            0.353438
+          ],
+          "full_model_positive_damage_rate": 0.585938,
+          "full_model_selected_kl": 0.046949,
+          "routed_mean_gap_damage": 0.003577,
+          "routed_positive_damage_rate": 0.25
+        }
+      ]
+    },
+    "short_lag": {
+      "category": "induction_present",
+      "reference_gap": 8.37191,
+      "reference_positive_accuracy": 0.757812,
+      "routed_gap": 7.39498,
+      "residual_gap": 7.390438,
+      "mean_effective_components": 5.247427,
+      "mean_winner_share": 0.367185,
+      "components_owning_examples": 9,
+      "routed_selected_kl": 0.162649,
+      "residual_selected_kl": 0.17017,
+      "components": [
+        {
+          "component": 0,
+          "mean_gate_share": 0.008443,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.227923,
+          "mean_abs_credit": 1.311015,
+          "full_model_mean_gap_damage": 0.125557,
+          "full_model_gap_damage_ci95": [
+            0.028296,
+            0.223145
+          ],
+          "full_model_positive_damage_rate": 0.578125,
+          "full_model_selected_kl": 0.046289,
+          "routed_mean_gap_damage": -0.00069,
+          "routed_positive_damage_rate": 0.289062
+        },
+        {
+          "component": 1,
+          "mean_gate_share": 0.0049,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.648611,
+          "mean_abs_credit": 0.88289,
+          "full_model_mean_gap_damage": 0.150227,
+          "full_model_gap_damage_ci95": [
+            0.053889,
+            0.248515
+          ],
+          "full_model_positive_damage_rate": 0.632812,
+          "full_model_selected_kl": 0.043641,
+          "routed_mean_gap_damage": -0.004556,
+          "routed_positive_damage_rate": 0.195312
+        },
+        {
+          "component": 2,
+          "mean_gate_share": 0.00761,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.675133,
+          "mean_abs_credit": 1.125746,
+          "full_model_mean_gap_damage": 0.176296,
+          "full_model_gap_damage_ci95": [
+            0.070156,
+            0.275081
+          ],
+          "full_model_positive_damage_rate": 0.59375,
+          "full_model_selected_kl": 0.049296,
+          "routed_mean_gap_damage": -0.00044,
+          "routed_positive_damage_rate": 0.273438
+        },
+        {
+          "component": 3,
+          "mean_gate_share": 0.006466,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.31771,
+          "mean_abs_credit": 1.009791,
+          "full_model_mean_gap_damage": 0.214211,
+          "full_model_gap_damage_ci95": [
+            0.113469,
+            0.310296
+          ],
+          "full_model_positive_damage_rate": 0.6875,
+          "full_model_selected_kl": 0.04332,
+          "routed_mean_gap_damage": 0.000453,
+          "routed_positive_damage_rate": 0.21875
+        },
+        {
+          "component": 4,
+          "mean_gate_share": 0.114557,
+          "owner_fraction": 0.132812,
+          "mean_signed_credit": 2.544157,
+          "mean_abs_credit": 5.60076,
+          "full_model_mean_gap_damage": 0.774606,
+          "full_model_gap_damage_ci95": [
+            0.659702,
+            0.893381
+          ],
+          "full_model_positive_damage_rate": 0.875,
+          "full_model_selected_kl": 0.08305,
+          "routed_mean_gap_damage": 0.062927,
+          "routed_positive_damage_rate": 0.570312
+        },
+        {
+          "component": 5,
+          "mean_gate_share": 0.115985,
+          "owner_fraction": 0.164062,
+          "mean_signed_credit": 4.171995,
+          "mean_abs_credit": 5.394227,
+          "full_model_mean_gap_damage": 1.077049,
+          "full_model_gap_damage_ci95": [
+            0.925831,
+            1.2256
+          ],
+          "full_model_positive_damage_rate": 0.898438,
+          "full_model_selected_kl": 0.099016,
+          "routed_mean_gap_damage": 0.012214,
+          "routed_positive_damage_rate": 0.484375
+        },
+        {
+          "component": 6,
+          "mean_gate_share": 0.005575,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.355459,
+          "mean_abs_credit": 0.862272,
+          "full_model_mean_gap_damage": 0.182377,
+          "full_model_gap_damage_ci95": [
+            0.073993,
+            0.288809
+          ],
+          "full_model_positive_damage_rate": 0.640625,
+          "full_model_selected_kl": 0.047113,
+          "routed_mean_gap_damage": -0.001584,
+          "routed_positive_damage_rate": 0.15625
+        },
+        {
+          "component": 7,
+          "mean_gate_share": 0.013405,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.974162,
+          "mean_abs_credit": 1.506615,
+          "full_model_mean_gap_damage": 0.200785,
+          "full_model_gap_damage_ci95": [
+            0.097761,
+            0.319117
+          ],
+          "full_model_positive_damage_rate": 0.632812,
+          "full_model_selected_kl": 0.047457,
+          "routed_mean_gap_damage": 0.003453,
+          "routed_positive_damage_rate": 0.296875
+        },
+        {
+          "component": 8,
+          "mean_gate_share": 0.081447,
+          "owner_fraction": 0.09375,
+          "mean_signed_credit": 2.316772,
+          "mean_abs_credit": 4.481137,
+          "full_model_mean_gap_damage": 0.862057,
+          "full_model_gap_damage_ci95": [
+            0.723213,
+            1.00586
+          ],
+          "full_model_positive_damage_rate": 0.84375,
+          "full_model_selected_kl": 0.098854,
+          "routed_mean_gap_damage": 0.015955,
+          "routed_positive_damage_rate": 0.453125
+        },
+        {
+          "component": 9,
+          "mean_gate_share": 0.003629,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.578595,
+          "mean_abs_credit": 0.814213,
+          "full_model_mean_gap_damage": 0.171452,
+          "full_model_gap_damage_ci95": [
+            0.071283,
+            0.272451
+          ],
+          "full_model_positive_damage_rate": 0.59375,
+          "full_model_selected_kl": 0.043282,
+          "routed_mean_gap_damage": -0.004585,
+          "routed_positive_damage_rate": 0.164062
+        },
+        {
+          "component": 10,
+          "mean_gate_share": 0.104064,
+          "owner_fraction": 0.117188,
+          "mean_signed_credit": 0.466847,
+          "mean_abs_credit": 4.609442,
+          "full_model_mean_gap_damage": 0.403671,
+          "full_model_gap_damage_ci95": [
+            0.277242,
+            0.533513
+          ],
+          "full_model_positive_damage_rate": 0.703125,
+          "full_model_selected_kl": 0.081336,
+          "routed_mean_gap_damage": -0.034867,
+          "routed_positive_damage_rate": 0.257812
+        },
+        {
+          "component": 11,
+          "mean_gate_share": 0.002533,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.056682,
+          "mean_abs_credit": 0.650507,
+          "full_model_mean_gap_damage": 0.157928,
+          "full_model_gap_damage_ci95": [
+            0.052742,
+            0.272069
+          ],
+          "full_model_positive_damage_rate": 0.585938,
+          "full_model_selected_kl": 0.044498,
+          "routed_mean_gap_damage": -0.006302,
+          "routed_positive_damage_rate": 0.171875
+        },
+        {
+          "component": 12,
+          "mean_gate_share": 0.0983,
+          "owner_fraction": 0.15625,
+          "mean_signed_credit": 0.748196,
+          "mean_abs_credit": 4.050082,
+          "full_model_mean_gap_damage": 0.705856,
+          "full_model_gap_damage_ci95": [
+            0.579244,
+            0.839456
+          ],
+          "full_model_positive_damage_rate": 0.84375,
+          "full_model_selected_kl": 0.08276,
+          "routed_mean_gap_damage": 0.010194,
+          "routed_positive_damage_rate": 0.40625
+        },
+        {
+          "component": 13,
+          "mean_gate_share": 0.120509,
+          "owner_fraction": 0.140625,
+          "mean_signed_credit": -0.025109,
+          "mean_abs_credit": 5.372849,
+          "full_model_mean_gap_damage": 1.019897,
+          "full_model_gap_damage_ci95": [
+            0.865883,
+            1.174677
+          ],
+          "full_model_positive_damage_rate": 0.851562,
+          "full_model_selected_kl": 0.100989,
+          "routed_mean_gap_damage": -0.005402,
+          "routed_positive_damage_rate": 0.390625
+        },
+        {
+          "component": 14,
+          "mean_gate_share": 0.005478,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.420635,
+          "mean_abs_credit": 0.995445,
+          "full_model_mean_gap_damage": 0.116613,
+          "full_model_gap_damage_ci95": [
+            0.022368,
+            0.222907
+          ],
+          "full_model_positive_damage_rate": 0.570312,
+          "full_model_selected_kl": 0.043397,
+          "routed_mean_gap_damage": 0.013924,
+          "routed_positive_damage_rate": 0.289062
+        },
+        {
+          "component": 15,
+          "mean_gate_share": 0.003391,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.194801,
+          "mean_abs_credit": 0.684536,
+          "full_model_mean_gap_damage": 0.207481,
+          "full_model_gap_damage_ci95": [
+            0.111171,
+            0.304766
+          ],
+          "full_model_positive_damage_rate": 0.664062,
+          "full_model_selected_kl": 0.042852,
+          "routed_mean_gap_damage": 0.005402,
+          "routed_positive_damage_rate": 0.15625
+        },
+        {
+          "component": 16,
+          "mean_gate_share": 0.057236,
+          "owner_fraction": 0.015625,
+          "mean_signed_credit": 0.258177,
+          "mean_abs_credit": 3.848006,
+          "full_model_mean_gap_damage": 0.321818,
+          "full_model_gap_damage_ci95": [
+            0.206211,
+            0.439077
+          ],
+          "full_model_positive_damage_rate": 0.695312,
+          "full_model_selected_kl": 0.06498,
+          "routed_mean_gap_damage": 0.012008,
+          "routed_positive_damage_rate": 0.476562
+        },
+        {
+          "component": 17,
+          "mean_gate_share": 0.002791,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.29548,
+          "mean_abs_credit": 0.718912,
+          "full_model_mean_gap_damage": 0.280029,
+          "full_model_gap_damage_ci95": [
+            0.189826,
+            0.370358
+          ],
+          "full_model_positive_damage_rate": 0.703125,
+          "full_model_selected_kl": 0.043481,
+          "routed_mean_gap_damage": -0.009221,
+          "routed_positive_damage_rate": 0.171875
+        },
+        {
+          "component": 18,
+          "mean_gate_share": 0.090822,
+          "owner_fraction": 0.109375,
+          "mean_signed_credit": 2.022745,
+          "mean_abs_credit": 5.022656,
+          "full_model_mean_gap_damage": 0.535851,
+          "full_model_gap_damage_ci95": [
+            0.424523,
+            0.641367
+          ],
+          "full_model_positive_damage_rate": 0.828125,
+          "full_model_selected_kl": 0.065153,
+          "routed_mean_gap_damage": 0.010757,
+          "routed_positive_damage_rate": 0.429688
+        },
+        {
+          "component": 19,
+          "mean_gate_share": 0.006969,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.722955,
+          "mean_abs_credit": 1.102382,
+          "full_model_mean_gap_damage": 0.210957,
+          "full_model_gap_damage_ci95": [
+            0.120232,
+            0.305919
+          ],
+          "full_model_positive_damage_rate": 0.671875,
+          "full_model_selected_kl": 0.045023,
+          "routed_mean_gap_damage": -0.001389,
+          "routed_positive_damage_rate": 0.242188
+        },
+        {
+          "component": 20,
+          "mean_gate_share": 0.002264,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.458716,
+          "mean_abs_credit": 0.66557,
+          "full_model_mean_gap_damage": 0.169544,
+          "full_model_gap_damage_ci95": [
+            0.075122,
+            0.270344
+          ],
+          "full_model_positive_damage_rate": 0.65625,
+          "full_model_selected_kl": 0.044742,
+          "routed_mean_gap_damage": 0.00351,
+          "routed_positive_damage_rate": 0.1875
+        },
+        {
+          "component": 21,
+          "mean_gate_share": 0.005154,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.421373,
+          "mean_abs_credit": 1.028339,
+          "full_model_mean_gap_damage": 0.174122,
+          "full_model_gap_damage_ci95": [
+            0.079922,
+            0.267381
+          ],
+          "full_model_positive_damage_rate": 0.632812,
+          "full_model_selected_kl": 0.046308,
+          "routed_mean_gap_damage": -0.004817,
+          "routed_positive_damage_rate": 0.171875
+        },
+        {
+          "component": 22,
+          "mean_gate_share": 0.003314,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.28259,
+          "mean_abs_credit": 0.754683,
+          "full_model_mean_gap_damage": 0.143667,
+          "full_model_gap_damage_ci95": [
+            0.04466,
+            0.240557
+          ],
+          "full_model_positive_damage_rate": 0.578125,
+          "full_model_selected_kl": 0.04404,
+          "routed_mean_gap_damage": 0.000835,
+          "routed_positive_damage_rate": 0.1875
+        },
+        {
+          "component": 23,
+          "mean_gate_share": 0.068478,
+          "owner_fraction": 0.070312,
+          "mean_signed_credit": 0.683153,
+          "mean_abs_credit": 3.803782,
+          "full_model_mean_gap_damage": 0.567529,
+          "full_model_gap_damage_ci95": [
+            0.447213,
+            0.687285
+          ],
+          "full_model_positive_damage_rate": 0.804688,
+          "full_model_selected_kl": 0.081541,
+          "routed_mean_gap_damage": -0.001688,
+          "routed_positive_damage_rate": 0.429688
+        },
+        {
+          "component": 24,
+          "mean_gate_share": 0.004705,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.18788,
+          "mean_abs_credit": 0.942895,
+          "full_model_mean_gap_damage": 0.221464,
+          "full_model_gap_damage_ci95": [
+            0.128772,
+            0.314158
+          ],
+          "full_model_positive_damage_rate": 0.640625,
+          "full_model_selected_kl": 0.044676,
+          "routed_mean_gap_damage": -0.00174,
+          "routed_positive_damage_rate": 0.1875
+        },
+        {
+          "component": 25,
+          "mean_gate_share": 0.004438,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.399838,
+          "mean_abs_credit": 0.982025,
+          "full_model_mean_gap_damage": 0.28511,
+          "full_model_gap_damage_ci95": [
+            0.180709,
+            0.379639
+          ],
+          "full_model_positive_damage_rate": 0.695312,
+          "full_model_selected_kl": 0.044627,
+          "routed_mean_gap_damage": 0.01269,
+          "routed_positive_damage_rate": 0.257812
+        },
+        {
+          "component": 26,
+          "mean_gate_share": 0.009816,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.803026,
+          "mean_abs_credit": 1.293478,
+          "full_model_mean_gap_damage": 0.174789,
+          "full_model_gap_damage_ci95": [
+            0.06733,
+            0.284755
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.048279,
+          "routed_mean_gap_damage": -0.015503,
+          "routed_positive_damage_rate": 0.25
+        },
+        {
+          "component": 27,
+          "mean_gate_share": 0.004452,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.575689,
+          "mean_abs_credit": 0.904979,
+          "full_model_mean_gap_damage": 0.175797,
+          "full_model_gap_damage_ci95": [
+            0.081833,
+            0.278406
+          ],
+          "full_model_positive_damage_rate": 0.585938,
+          "full_model_selected_kl": 0.04543,
+          "routed_mean_gap_damage": 0.00438,
+          "routed_positive_damage_rate": 0.21875
+        },
+        {
+          "component": 28,
+          "mean_gate_share": 0.002726,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.411202,
+          "mean_abs_credit": 0.694861,
+          "full_model_mean_gap_damage": 0.160957,
+          "full_model_gap_damage_ci95": [
+            0.063051,
+            0.255444
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.042422,
+          "routed_mean_gap_damage": 0.002716,
+          "routed_positive_damage_rate": 0.179688
+        },
+        {
+          "component": 29,
+          "mean_gate_share": 0.012641,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.272421,
+          "mean_abs_credit": 1.439652,
+          "full_model_mean_gap_damage": 0.100578,
+          "full_model_gap_damage_ci95": [
+            -0.005225,
+            0.202333
+          ],
+          "full_model_positive_damage_rate": 0.5625,
+          "full_model_selected_kl": 0.04687,
+          "routed_mean_gap_damage": -0.002705,
+          "routed_positive_damage_rate": 0.289062
+        },
+        {
+          "component": 30,
+          "mean_gate_share": 0.023999,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.038254,
+          "mean_abs_credit": 2.301448,
+          "full_model_mean_gap_damage": 0.292839,
+          "full_model_gap_damage_ci95": [
+            0.142982,
+            0.432147
+          ],
+          "full_model_positive_damage_rate": 0.679688,
+          "full_model_selected_kl": 0.072513,
+          "routed_mean_gap_damage": -0.004124,
+          "routed_positive_damage_rate": 0.382812
+        },
+        {
+          "component": 31,
+          "mean_gate_share": 0.003904,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.415282,
+          "mean_abs_credit": 0.813729,
+          "full_model_mean_gap_damage": 0.142035,
+          "full_model_gap_damage_ci95": [
+            0.051489,
+            0.236999
+          ],
+          "full_model_positive_damage_rate": 0.609375,
+          "full_model_selected_kl": 0.043153,
+          "routed_mean_gap_damage": 0.010101,
+          "routed_positive_damage_rate": 0.203125
+        }
+      ]
+    },
+    "long_lag": {
+      "category": "induction_present",
+      "reference_gap": 9.55258,
+      "reference_positive_accuracy": 0.90625,
+      "routed_gap": 8.426098,
+      "residual_gap": 8.476561,
+      "mean_effective_components": 5.277522,
+      "mean_winner_share": 0.357359,
+      "components_owning_examples": 9,
+      "routed_selected_kl": 0.203846,
+      "residual_selected_kl": 0.208947,
+      "components": [
+        {
+          "component": 0,
+          "mean_gate_share": 0.007031,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.38005,
+          "mean_abs_credit": 1.237756,
+          "full_model_mean_gap_damage": 0.123632,
+          "full_model_gap_damage_ci95": [
+            -0.004927,
+            0.258531
+          ],
+          "full_model_positive_damage_rate": 0.546875,
+          "full_model_selected_kl": 0.048876,
+          "routed_mean_gap_damage": -0.002121,
+          "routed_positive_damage_rate": 0.34375
+        },
+        {
+          "component": 1,
+          "mean_gate_share": 0.004393,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.63024,
+          "mean_abs_credit": 0.997762,
+          "full_model_mean_gap_damage": 0.080519,
+          "full_model_gap_damage_ci95": [
+            -0.039319,
+            0.204316
+          ],
+          "full_model_positive_damage_rate": 0.570312,
+          "full_model_selected_kl": 0.041918,
+          "routed_mean_gap_damage": -0.003769,
+          "routed_positive_damage_rate": 0.203125
+        },
+        {
+          "component": 2,
+          "mean_gate_share": 0.006592,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.666919,
+          "mean_abs_credit": 1.235283,
+          "full_model_mean_gap_damage": 0.175501,
+          "full_model_gap_damage_ci95": [
+            0.047439,
+            0.310177
+          ],
+          "full_model_positive_damage_rate": 0.585938,
+          "full_model_selected_kl": 0.048861,
+          "routed_mean_gap_damage": 0.002506,
+          "routed_positive_damage_rate": 0.304688
+        },
+        {
+          "component": 3,
+          "mean_gate_share": 0.006065,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.549101,
+          "mean_abs_credit": 1.110015,
+          "full_model_mean_gap_damage": 0.210539,
+          "full_model_gap_damage_ci95": [
+            0.081084,
+            0.342742
+          ],
+          "full_model_positive_damage_rate": 0.640625,
+          "full_model_selected_kl": 0.043241,
+          "routed_mean_gap_damage": -0.002087,
+          "routed_positive_damage_rate": 0.25
+        },
+        {
+          "component": 4,
+          "mean_gate_share": 0.111251,
+          "owner_fraction": 0.132812,
+          "mean_signed_credit": 1.262876,
+          "mean_abs_credit": 5.720785,
+          "full_model_mean_gap_damage": 0.918787,
+          "full_model_gap_damage_ci95": [
+            0.77605,
+            1.068604
+          ],
+          "full_model_positive_damage_rate": 0.898438,
+          "full_model_selected_kl": 0.094555,
+          "routed_mean_gap_damage": 0.00783,
+          "routed_positive_damage_rate": 0.445312
+        },
+        {
+          "component": 5,
+          "mean_gate_share": 0.130666,
+          "owner_fraction": 0.1875,
+          "mean_signed_credit": 4.310484,
+          "mean_abs_credit": 5.898731,
+          "full_model_mean_gap_damage": 1.093792,
+          "full_model_gap_damage_ci95": [
+            0.926944,
+            1.256641
+          ],
+          "full_model_positive_damage_rate": 0.90625,
+          "full_model_selected_kl": 0.109844,
+          "routed_mean_gap_damage": -0.001003,
+          "routed_positive_damage_rate": 0.390625
+        },
+        {
+          "component": 6,
+          "mean_gate_share": 0.00395,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.468906,
+          "mean_abs_credit": 0.95632,
+          "full_model_mean_gap_damage": 0.318895,
+          "full_model_gap_damage_ci95": [
+            0.195897,
+            0.439632
+          ],
+          "full_model_positive_damage_rate": 0.671875,
+          "full_model_selected_kl": 0.047214,
+          "routed_mean_gap_damage": -0.008552,
+          "routed_positive_damage_rate": 0.15625
+        },
+        {
+          "component": 7,
+          "mean_gate_share": 0.015396,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.86909,
+          "mean_abs_credit": 1.882505,
+          "full_model_mean_gap_damage": 0.248464,
+          "full_model_gap_damage_ci95": [
+            0.116826,
+            0.386459
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.050661,
+          "routed_mean_gap_damage": -0.010149,
+          "routed_positive_damage_rate": 0.296875
+        },
+        {
+          "component": 8,
+          "mean_gate_share": 0.082987,
+          "owner_fraction": 0.078125,
+          "mean_signed_credit": 2.835141,
+          "mean_abs_credit": 4.53129,
+          "full_model_mean_gap_damage": 1.120504,
+          "full_model_gap_damage_ci95": [
+            0.948555,
+            1.300273
+          ],
+          "full_model_positive_damage_rate": 0.875,
+          "full_model_selected_kl": 0.122305,
+          "routed_mean_gap_damage": 0.007614,
+          "routed_positive_damage_rate": 0.421875
+        },
+        {
+          "component": 9,
+          "mean_gate_share": 0.005037,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.735803,
+          "mean_abs_credit": 1.033127,
+          "full_model_mean_gap_damage": 0.27709,
+          "full_model_gap_damage_ci95": [
+            0.144122,
+            0.416407
+          ],
+          "full_model_positive_damage_rate": 0.632812,
+          "full_model_selected_kl": 0.045804,
+          "routed_mean_gap_damage": -0.004013,
+          "routed_positive_damage_rate": 0.257812
+        },
+        {
+          "component": 10,
+          "mean_gate_share": 0.105187,
+          "owner_fraction": 0.117188,
+          "mean_signed_credit": 0.414741,
+          "mean_abs_credit": 5.322496,
+          "full_model_mean_gap_damage": 0.325293,
+          "full_model_gap_damage_ci95": [
+            0.177,
+            0.486212
+          ],
+          "full_model_positive_damage_rate": 0.640625,
+          "full_model_selected_kl": 0.088668,
+          "routed_mean_gap_damage": -0.033924,
+          "routed_positive_damage_rate": 0.335938
+        },
+        {
+          "component": 11,
+          "mean_gate_share": 0.002763,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.242903,
+          "mean_abs_credit": 0.800237,
+          "full_model_mean_gap_damage": 0.212233,
+          "full_model_gap_damage_ci95": [
+            0.101259,
+            0.320557
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.043519,
+          "routed_mean_gap_damage": -0.004272,
+          "routed_positive_damage_rate": 0.195312
+        },
+        {
+          "component": 12,
+          "mean_gate_share": 0.100278,
+          "owner_fraction": 0.117188,
+          "mean_signed_credit": 1.650318,
+          "mean_abs_credit": 5.165468,
+          "full_model_mean_gap_damage": 0.732161,
+          "full_model_gap_damage_ci95": [
+            0.583258,
+            0.885683
+          ],
+          "full_model_positive_damage_rate": 0.828125,
+          "full_model_selected_kl": 0.081621,
+          "routed_mean_gap_damage": 0.013161,
+          "routed_positive_damage_rate": 0.4375
+        },
+        {
+          "component": 13,
+          "mean_gate_share": 0.108627,
+          "owner_fraction": 0.148438,
+          "mean_signed_credit": 1.777394,
+          "mean_abs_credit": 4.775319,
+          "full_model_mean_gap_damage": 1.143751,
+          "full_model_gap_damage_ci95": [
+            0.951714,
+            1.33581
+          ],
+          "full_model_positive_damage_rate": 0.867188,
+          "full_model_selected_kl": 0.116163,
+          "routed_mean_gap_damage": -0.027635,
+          "routed_positive_damage_rate": 0.359375
+        },
+        {
+          "component": 14,
+          "mean_gate_share": 0.00619,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.626075,
+          "mean_abs_credit": 1.13204,
+          "full_model_mean_gap_damage": 0.121038,
+          "full_model_gap_damage_ci95": [
+            -0.009515,
+            0.255306
+          ],
+          "full_model_positive_damage_rate": 0.570312,
+          "full_model_selected_kl": 0.046442,
+          "routed_mean_gap_damage": -0.003899,
+          "routed_positive_damage_rate": 0.25
+        },
+        {
+          "component": 15,
+          "mean_gate_share": 0.003274,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.268824,
+          "mean_abs_credit": 0.767419,
+          "full_model_mean_gap_damage": 0.13238,
+          "full_model_gap_damage_ci95": [
+            0.003057,
+            0.256568
+          ],
+          "full_model_positive_damage_rate": 0.554688,
+          "full_model_selected_kl": 0.044018,
+          "routed_mean_gap_damage": -0.016682,
+          "routed_positive_damage_rate": 0.132812
+        },
+        {
+          "component": 16,
+          "mean_gate_share": 0.063887,
+          "owner_fraction": 0.054688,
+          "mean_signed_credit": 0.485117,
+          "mean_abs_credit": 4.15091,
+          "full_model_mean_gap_damage": 0.493383,
+          "full_model_gap_damage_ci95": [
+            0.348179,
+            0.622214
+          ],
+          "full_model_positive_damage_rate": 0.726562,
+          "full_model_selected_kl": 0.073329,
+          "routed_mean_gap_damage": -0.020248,
+          "routed_positive_damage_rate": 0.335938
+        },
+        {
+          "component": 17,
+          "mean_gate_share": 0.002388,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.44122,
+          "mean_abs_credit": 0.74115,
+          "full_model_mean_gap_damage": 0.097041,
+          "full_model_gap_damage_ci95": [
+            -0.005685,
+            0.211265
+          ],
+          "full_model_positive_damage_rate": 0.546875,
+          "full_model_selected_kl": 0.042233,
+          "routed_mean_gap_damage": -0.007187,
+          "routed_positive_damage_rate": 0.15625
+        },
+        {
+          "component": 18,
+          "mean_gate_share": 0.089014,
+          "owner_fraction": 0.125,
+          "mean_signed_credit": 3.033026,
+          "mean_abs_credit": 5.102991,
+          "full_model_mean_gap_damage": 0.829321,
+          "full_model_gap_damage_ci95": [
+            0.68102,
+            0.970268
+          ],
+          "full_model_positive_damage_rate": 0.820312,
+          "full_model_selected_kl": 0.076932,
+          "routed_mean_gap_damage": -0.006384,
+          "routed_positive_damage_rate": 0.390625
+        },
+        {
+          "component": 19,
+          "mean_gate_share": 0.007143,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.736696,
+          "mean_abs_credit": 1.169551,
+          "full_model_mean_gap_damage": 0.281019,
+          "full_model_gap_damage_ci95": [
+            0.151791,
+            0.414649
+          ],
+          "full_model_positive_damage_rate": 0.59375,
+          "full_model_selected_kl": 0.045382,
+          "routed_mean_gap_damage": -0.019192,
+          "routed_positive_damage_rate": 0.203125
+        },
+        {
+          "component": 20,
+          "mean_gate_share": 0.003745,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.519745,
+          "mean_abs_credit": 0.896696,
+          "full_model_mean_gap_damage": 0.114294,
+          "full_model_gap_damage_ci95": [
+            -0.008228,
+            0.228264
+          ],
+          "full_model_positive_damage_rate": 0.578125,
+          "full_model_selected_kl": 0.043711,
+          "routed_mean_gap_damage": -0.003664,
+          "routed_positive_damage_rate": 0.257812
+        },
+        {
+          "component": 21,
+          "mean_gate_share": 0.003569,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.468959,
+          "mean_abs_credit": 0.825454,
+          "full_model_mean_gap_damage": 0.138783,
+          "full_model_gap_damage_ci95": [
+            0.004429,
+            0.277115
+          ],
+          "full_model_positive_damage_rate": 0.578125,
+          "full_model_selected_kl": 0.047709,
+          "routed_mean_gap_damage": 0.001968,
+          "routed_positive_damage_rate": 0.195312
+        },
+        {
+          "component": 22,
+          "mean_gate_share": 0.003632,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.383466,
+          "mean_abs_credit": 0.909721,
+          "full_model_mean_gap_damage": 0.193111,
+          "full_model_gap_damage_ci95": [
+            0.072987,
+            0.312349
+          ],
+          "full_model_positive_damage_rate": 0.632812,
+          "full_model_selected_kl": 0.045079,
+          "routed_mean_gap_damage": -0.000263,
+          "routed_positive_damage_rate": 0.21875
+        },
+        {
+          "component": 23,
+          "mean_gate_share": 0.058452,
+          "owner_fraction": 0.039062,
+          "mean_signed_credit": 1.562533,
+          "mean_abs_credit": 3.918396,
+          "full_model_mean_gap_damage": 0.741509,
+          "full_model_gap_damage_ci95": [
+            0.580972,
+            0.904878
+          ],
+          "full_model_positive_damage_rate": 0.828125,
+          "full_model_selected_kl": 0.093233,
+          "routed_mean_gap_damage": -0.009594,
+          "routed_positive_damage_rate": 0.382812
+        },
+        {
+          "component": 24,
+          "mean_gate_share": 0.004717,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.548815,
+          "mean_abs_credit": 0.981745,
+          "full_model_mean_gap_damage": 0.175312,
+          "full_model_gap_damage_ci95": [
+            0.047752,
+            0.315163
+          ],
+          "full_model_positive_damage_rate": 0.554688,
+          "full_model_selected_kl": 0.045325,
+          "routed_mean_gap_damage": 0.003838,
+          "routed_positive_damage_rate": 0.273438
+        },
+        {
+          "component": 25,
+          "mean_gate_share": 0.004398,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.554446,
+          "mean_abs_credit": 1.004045,
+          "full_model_mean_gap_damage": 0.175961,
+          "full_model_gap_damage_ci95": [
+            0.065077,
+            0.288864
+          ],
+          "full_model_positive_damage_rate": 0.601562,
+          "full_model_selected_kl": 0.044753,
+          "routed_mean_gap_damage": -0.001492,
+          "routed_positive_damage_rate": 0.265625
+        },
+        {
+          "component": 26,
+          "mean_gate_share": 0.009983,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.637873,
+          "mean_abs_credit": 1.297077,
+          "full_model_mean_gap_damage": 0.130919,
+          "full_model_gap_damage_ci95": [
+            0.001743,
+            0.256194
+          ],
+          "full_model_positive_damage_rate": 0.546875,
+          "full_model_selected_kl": 0.05278,
+          "routed_mean_gap_damage": -0.001896,
+          "routed_positive_damage_rate": 0.25
+        },
+        {
+          "component": 27,
+          "mean_gate_share": 0.004016,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.368699,
+          "mean_abs_credit": 0.893689,
+          "full_model_mean_gap_damage": 0.155142,
+          "full_model_gap_damage_ci95": [
+            0.02143,
+            0.283165
+          ],
+          "full_model_positive_damage_rate": 0.59375,
+          "full_model_selected_kl": 0.0468,
+          "routed_mean_gap_damage": -0.014908,
+          "routed_positive_damage_rate": 0.171875
+        },
+        {
+          "component": 28,
+          "mean_gate_share": 0.002572,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.293088,
+          "mean_abs_credit": 0.78609,
+          "full_model_mean_gap_damage": 0.122622,
+          "full_model_gap_damage_ci95": [
+            -0.006054,
+            0.2411
+          ],
+          "full_model_positive_damage_rate": 0.609375,
+          "full_model_selected_kl": 0.04328,
+          "routed_mean_gap_damage": -0.013947,
+          "routed_positive_damage_rate": 0.140625
+        },
+        {
+          "component": 29,
+          "mean_gate_share": 0.017392,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.578347,
+          "mean_abs_credit": 2.123457,
+          "full_model_mean_gap_damage": 0.34059,
+          "full_model_gap_damage_ci95": [
+            0.217116,
+            0.467323
+          ],
+          "full_model_positive_damage_rate": 0.695312,
+          "full_model_selected_kl": 0.050246,
+          "routed_mean_gap_damage": 0.002815,
+          "routed_positive_damage_rate": 0.390625
+        },
+        {
+          "component": 30,
+          "mean_gate_share": 0.021423,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.632661,
+          "mean_abs_credit": 2.264,
+          "full_model_mean_gap_damage": 0.50452,
+          "full_model_gap_damage_ci95": [
+            0.350737,
+            0.679891
+          ],
+          "full_model_positive_damage_rate": 0.6875,
+          "full_model_selected_kl": 0.080595,
+          "routed_mean_gap_damage": -0.010841,
+          "routed_positive_damage_rate": 0.335938
+        },
+        {
+          "component": 31,
+          "mean_gate_share": 0.003981,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.496644,
+          "mean_abs_credit": 0.945262,
+          "full_model_mean_gap_damage": 0.185029,
+          "full_model_gap_damage_ci95": [
+            0.059471,
+            0.299171
+          ],
+          "full_model_positive_damage_rate": 0.5625,
+          "full_model_selected_kl": 0.045089,
+          "routed_mean_gap_damage": -0.004423,
+          "routed_positive_damage_rate": 0.210938
+        }
+      ]
+    },
+    "two_demonstrations": {
+      "category": "induction_present",
+      "reference_gap": 14.055489,
+      "reference_positive_accuracy": 1.0,
+      "routed_gap": 12.148605,
+      "residual_gap": 12.202767,
+      "mean_effective_components": 5.274221,
+      "mean_winner_share": 0.359066,
+      "components_owning_examples": 10,
+      "routed_selected_kl": 0.252582,
+      "residual_selected_kl": 0.257375,
+      "components": [
+        {
+          "component": 0,
+          "mean_gate_share": 0.009424,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.378271,
+          "mean_abs_credit": 1.81413,
+          "full_model_mean_gap_damage": 0.260273,
+          "full_model_gap_damage_ci95": [
+            0.131661,
+            0.397783
+          ],
+          "full_model_positive_damage_rate": 0.648438,
+          "full_model_selected_kl": 0.052051,
+          "routed_mean_gap_damage": -0.031456,
+          "routed_positive_damage_rate": 0.1875
+        },
+        {
+          "component": 1,
+          "mean_gate_share": 0.004709,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.854727,
+          "mean_abs_credit": 1.285412,
+          "full_model_mean_gap_damage": 0.295838,
+          "full_model_gap_damage_ci95": [
+            0.181717,
+            0.41869
+          ],
+          "full_model_positive_damage_rate": 0.671875,
+          "full_model_selected_kl": 0.049063,
+          "routed_mean_gap_damage": -0.019235,
+          "routed_positive_damage_rate": 0.203125
+        },
+        {
+          "component": 2,
+          "mean_gate_share": 0.008513,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.378317,
+          "mean_abs_credit": 1.736476,
+          "full_model_mean_gap_damage": 0.460515,
+          "full_model_gap_damage_ci95": [
+            0.348074,
+            0.577383
+          ],
+          "full_model_positive_damage_rate": 0.773438,
+          "full_model_selected_kl": 0.054382,
+          "routed_mean_gap_damage": -0.011381,
+          "routed_positive_damage_rate": 0.226562
+        },
+        {
+          "component": 3,
+          "mean_gate_share": 0.005472,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.676933,
+          "mean_abs_credit": 1.443495,
+          "full_model_mean_gap_damage": 0.274777,
+          "full_model_gap_damage_ci95": [
+            0.157431,
+            0.399758
+          ],
+          "full_model_positive_damage_rate": 0.601562,
+          "full_model_selected_kl": 0.045912,
+          "routed_mean_gap_damage": -0.002092,
+          "routed_positive_damage_rate": 0.289062
+        },
+        {
+          "component": 4,
+          "mean_gate_share": 0.1231,
+          "owner_fraction": 0.203125,
+          "mean_signed_credit": 2.949881,
+          "mean_abs_credit": 7.769029,
+          "full_model_mean_gap_damage": 1.267293,
+          "full_model_gap_damage_ci95": [
+            1.119098,
+            1.424025
+          ],
+          "full_model_positive_damage_rate": 0.914062,
+          "full_model_selected_kl": 0.118806,
+          "routed_mean_gap_damage": 0.015315,
+          "routed_positive_damage_rate": 0.515625
+        },
+        {
+          "component": 5,
+          "mean_gate_share": 0.141905,
+          "owner_fraction": 0.242188,
+          "mean_signed_credit": 6.655923,
+          "mean_abs_credit": 8.071364,
+          "full_model_mean_gap_damage": 1.695103,
+          "full_model_gap_damage_ci95": [
+            1.528737,
+            1.856002
+          ],
+          "full_model_positive_damage_rate": 0.953125,
+          "full_model_selected_kl": 0.146384,
+          "routed_mean_gap_damage": -0.006816,
+          "routed_positive_damage_rate": 0.476562
+        },
+        {
+          "component": 6,
+          "mean_gate_share": 0.005233,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.583458,
+          "mean_abs_credit": 1.264456,
+          "full_model_mean_gap_damage": 0.480291,
+          "full_model_gap_damage_ci95": [
+            0.361996,
+            0.595575
+          ],
+          "full_model_positive_damage_rate": 0.726562,
+          "full_model_selected_kl": 0.052152,
+          "routed_mean_gap_damage": -0.025749,
+          "routed_positive_damage_rate": 0.15625
+        },
+        {
+          "component": 7,
+          "mean_gate_share": 0.016292,
+          "owner_fraction": 0.007812,
+          "mean_signed_credit": 1.341512,
+          "mean_abs_credit": 2.438946,
+          "full_model_mean_gap_damage": 0.282908,
+          "full_model_gap_damage_ci95": [
+            0.153392,
+            0.441876
+          ],
+          "full_model_positive_damage_rate": 0.632812,
+          "full_model_selected_kl": 0.050542,
+          "routed_mean_gap_damage": -0.009718,
+          "routed_positive_damage_rate": 0.328125
+        },
+        {
+          "component": 8,
+          "mean_gate_share": 0.083445,
+          "owner_fraction": 0.070312,
+          "mean_signed_credit": 3.818398,
+          "mean_abs_credit": 5.687379,
+          "full_model_mean_gap_damage": 1.402791,
+          "full_model_gap_damage_ci95": [
+            1.252496,
+            1.562685
+          ],
+          "full_model_positive_damage_rate": 0.945312,
+          "full_model_selected_kl": 0.138433,
+          "routed_mean_gap_damage": 0.015728,
+          "routed_positive_damage_rate": 0.453125
+        },
+        {
+          "component": 9,
+          "mean_gate_share": 0.004086,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.017105,
+          "mean_abs_credit": 1.200286,
+          "full_model_mean_gap_damage": 0.446827,
+          "full_model_gap_damage_ci95": [
+            0.312069,
+            0.573849
+          ],
+          "full_model_positive_damage_rate": 0.726562,
+          "full_model_selected_kl": 0.047555,
+          "routed_mean_gap_damage": -0.008253,
+          "routed_positive_damage_rate": 0.1875
+        },
+        {
+          "component": 10,
+          "mean_gate_share": 0.093977,
+          "owner_fraction": 0.109375,
+          "mean_signed_credit": 2.150578,
+          "mean_abs_credit": 5.921141,
+          "full_model_mean_gap_damage": 0.56686,
+          "full_model_gap_damage_ci95": [
+            0.400121,
+            0.727601
+          ],
+          "full_model_positive_damage_rate": 0.71875,
+          "full_model_selected_kl": 0.091155,
+          "routed_mean_gap_damage": -0.064652,
+          "routed_positive_damage_rate": 0.335938
+        },
+        {
+          "component": 11,
+          "mean_gate_share": 0.003226,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.287567,
+          "mean_abs_credit": 1.095874,
+          "full_model_mean_gap_damage": 0.352903,
+          "full_model_gap_damage_ci95": [
+            0.234126,
+            0.482876
+          ],
+          "full_model_positive_damage_rate": 0.703125,
+          "full_model_selected_kl": 0.048173,
+          "routed_mean_gap_damage": -0.006002,
+          "routed_positive_damage_rate": 0.203125
+        },
+        {
+          "component": 12,
+          "mean_gate_share": 0.100202,
+          "owner_fraction": 0.109375,
+          "mean_signed_credit": 2.532347,
+          "mean_abs_credit": 6.690917,
+          "full_model_mean_gap_damage": 1.118995,
+          "full_model_gap_damage_ci95": [
+            0.957512,
+            1.291598
+          ],
+          "full_model_positive_damage_rate": 0.875,
+          "full_model_selected_kl": 0.107438,
+          "routed_mean_gap_damage": -0.018694,
+          "routed_positive_damage_rate": 0.40625
+        },
+        {
+          "component": 13,
+          "mean_gate_share": 0.076356,
+          "owner_fraction": 0.078125,
+          "mean_signed_credit": 2.421391,
+          "mean_abs_credit": 5.341941,
+          "full_model_mean_gap_damage": 1.517494,
+          "full_model_gap_damage_ci95": [
+            1.310955,
+            1.709215
+          ],
+          "full_model_positive_damage_rate": 0.921875,
+          "full_model_selected_kl": 0.153902,
+          "routed_mean_gap_damage": -0.039286,
+          "routed_positive_damage_rate": 0.296875
+        },
+        {
+          "component": 14,
+          "mean_gate_share": 0.007911,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.583816,
+          "mean_abs_credit": 1.534968,
+          "full_model_mean_gap_damage": 0.297434,
+          "full_model_gap_damage_ci95": [
+            0.172321,
+            0.420329
+          ],
+          "full_model_positive_damage_rate": 0.65625,
+          "full_model_selected_kl": 0.047655,
+          "routed_mean_gap_damage": -0.005522,
+          "routed_positive_damage_rate": 0.234375
+        },
+        {
+          "component": 15,
+          "mean_gate_share": 0.003123,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.4607,
+          "mean_abs_credit": 0.953302,
+          "full_model_mean_gap_damage": 0.383527,
+          "full_model_gap_damage_ci95": [
+            0.277229,
+            0.502986
+          ],
+          "full_model_positive_damage_rate": 0.664062,
+          "full_model_selected_kl": 0.046197,
+          "routed_mean_gap_damage": -0.004944,
+          "routed_positive_damage_rate": 0.148438
+        },
+        {
+          "component": 16,
+          "mean_gate_share": 0.070215,
+          "owner_fraction": 0.046875,
+          "mean_signed_credit": 0.939854,
+          "mean_abs_credit": 5.915495,
+          "full_model_mean_gap_damage": 0.685075,
+          "full_model_gap_damage_ci95": [
+            0.542708,
+            0.828576
+          ],
+          "full_model_positive_damage_rate": 0.773438,
+          "full_model_selected_kl": 0.075848,
+          "routed_mean_gap_damage": -0.046917,
+          "routed_positive_damage_rate": 0.351562
+        },
+        {
+          "component": 17,
+          "mean_gate_share": 0.003675,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.75534,
+          "mean_abs_credit": 1.098196,
+          "full_model_mean_gap_damage": 0.341619,
+          "full_model_gap_damage_ci95": [
+            0.2239,
+            0.470871
+          ],
+          "full_model_positive_damage_rate": 0.71875,
+          "full_model_selected_kl": 0.048778,
+          "routed_mean_gap_damage": -0.014937,
+          "routed_positive_damage_rate": 0.21875
+        },
+        {
+          "component": 18,
+          "mean_gate_share": 0.104123,
+          "owner_fraction": 0.109375,
+          "mean_signed_credit": 4.520282,
+          "mean_abs_credit": 7.301064,
+          "full_model_mean_gap_damage": 1.048137,
+          "full_model_gap_damage_ci95": [
+            0.912679,
+            1.186949
+          ],
+          "full_model_positive_damage_rate": 0.914062,
+          "full_model_selected_kl": 0.087708,
+          "routed_mean_gap_damage": -0.033262,
+          "routed_positive_damage_rate": 0.34375
+        },
+        {
+          "component": 19,
+          "mean_gate_share": 0.008555,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.13411,
+          "mean_abs_credit": 1.561788,
+          "full_model_mean_gap_damage": 0.442267,
+          "full_model_gap_damage_ci95": [
+            0.323239,
+            0.563827
+          ],
+          "full_model_positive_damage_rate": 0.710938,
+          "full_model_selected_kl": 0.053256,
+          "routed_mean_gap_damage": 0.00168,
+          "routed_positive_damage_rate": 0.28125
+        },
+        {
+          "component": 20,
+          "mean_gate_share": 0.003425,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.935598,
+          "mean_abs_credit": 1.15126,
+          "full_model_mean_gap_damage": 0.181909,
+          "full_model_gap_damage_ci95": [
+            0.063406,
+            0.291901
+          ],
+          "full_model_positive_damage_rate": 0.585938,
+          "full_model_selected_kl": 0.044409,
+          "routed_mean_gap_damage": -0.019108,
+          "routed_positive_damage_rate": 0.1875
+        },
+        {
+          "component": 21,
+          "mean_gate_share": 0.004664,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.013451,
+          "mean_abs_credit": 1.395148,
+          "full_model_mean_gap_damage": 0.359717,
+          "full_model_gap_damage_ci95": [
+            0.233812,
+            0.476777
+          ],
+          "full_model_positive_damage_rate": 0.671875,
+          "full_model_selected_kl": 0.048626,
+          "routed_mean_gap_damage": 0.003019,
+          "routed_positive_damage_rate": 0.25
+        },
+        {
+          "component": 22,
+          "mean_gate_share": 0.003547,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.673661,
+          "mean_abs_credit": 1.045486,
+          "full_model_mean_gap_damage": 0.212019,
+          "full_model_gap_damage_ci95": [
+            0.086724,
+            0.334313
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.045488,
+          "routed_mean_gap_damage": -0.003853,
+          "routed_positive_damage_rate": 0.164062
+        },
+        {
+          "component": 23,
+          "mean_gate_share": 0.051053,
+          "owner_fraction": 0.023438,
+          "mean_signed_credit": 2.663446,
+          "mean_abs_credit": 4.344195,
+          "full_model_mean_gap_damage": 1.400155,
+          "full_model_gap_damage_ci95": [
+            1.251337,
+            1.567498
+          ],
+          "full_model_positive_damage_rate": 0.96875,
+          "full_model_selected_kl": 0.124029,
+          "routed_mean_gap_damage": -0.042303,
+          "routed_positive_damage_rate": 0.296875
+        },
+        {
+          "component": 24,
+          "mean_gate_share": 0.004302,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.601655,
+          "mean_abs_credit": 1.134114,
+          "full_model_mean_gap_damage": 0.391426,
+          "full_model_gap_damage_ci95": [
+            0.272818,
+            0.511112
+          ],
+          "full_model_positive_damage_rate": 0.734375,
+          "full_model_selected_kl": 0.05266,
+          "routed_mean_gap_damage": -0.014172,
+          "routed_positive_damage_rate": 0.140625
+        },
+        {
+          "component": 25,
+          "mean_gate_share": 0.003758,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.708715,
+          "mean_abs_credit": 1.190228,
+          "full_model_mean_gap_damage": 0.425876,
+          "full_model_gap_damage_ci95": [
+            0.295004,
+            0.55851
+          ],
+          "full_model_positive_damage_rate": 0.75,
+          "full_model_selected_kl": 0.049193,
+          "routed_mean_gap_damage": -0.018883,
+          "routed_positive_damage_rate": 0.179688
+        },
+        {
+          "component": 26,
+          "mean_gate_share": 0.010692,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.266312,
+          "mean_abs_credit": 1.993426,
+          "full_model_mean_gap_damage": 0.437789,
+          "full_model_gap_damage_ci95": [
+            0.300572,
+            0.590198
+          ],
+          "full_model_positive_damage_rate": 0.71875,
+          "full_model_selected_kl": 0.054863,
+          "routed_mean_gap_damage": 0.006758,
+          "routed_positive_damage_rate": 0.296875
+        },
+        {
+          "component": 27,
+          "mean_gate_share": 0.006399,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.209042,
+          "mean_abs_credit": 1.56511,
+          "full_model_mean_gap_damage": 0.318093,
+          "full_model_gap_damage_ci95": [
+            0.191717,
+            0.445023
+          ],
+          "full_model_positive_damage_rate": 0.695312,
+          "full_model_selected_kl": 0.051749,
+          "routed_mean_gap_damage": -0.031416,
+          "routed_positive_damage_rate": 0.1875
+        },
+        {
+          "component": 28,
+          "mean_gate_share": 0.004074,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.783918,
+          "mean_abs_credit": 1.14679,
+          "full_model_mean_gap_damage": 0.219491,
+          "full_model_gap_damage_ci95": [
+            0.093016,
+            0.352117
+          ],
+          "full_model_positive_damage_rate": 0.617188,
+          "full_model_selected_kl": 0.046799,
+          "routed_mean_gap_damage": -0.014286,
+          "routed_positive_damage_rate": 0.210938
+        },
+        {
+          "component": 29,
+          "mean_gate_share": 0.012328,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.862591,
+          "mean_abs_credit": 2.070174,
+          "full_model_mean_gap_damage": 0.503924,
+          "full_model_gap_damage_ci95": [
+            0.379468,
+            0.630827
+          ],
+          "full_model_positive_damage_rate": 0.773438,
+          "full_model_selected_kl": 0.051394,
+          "routed_mean_gap_damage": -0.013279,
+          "routed_positive_damage_rate": 0.234375
+        },
+        {
+          "component": 30,
+          "mean_gate_share": 0.017909,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.399316,
+          "mean_abs_credit": 2.628921,
+          "full_model_mean_gap_damage": 0.782041,
+          "full_model_gap_damage_ci95": [
+            0.618789,
+            0.95016
+          ],
+          "full_model_positive_damage_rate": 0.765625,
+          "full_model_selected_kl": 0.089816,
+          "routed_mean_gap_damage": -0.025816,
+          "routed_positive_damage_rate": 0.320312
+        },
+        {
+          "component": 31,
+          "mean_gate_share": 0.004311,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.803796,
+          "mean_abs_credit": 1.149116,
+          "full_model_mean_gap_damage": 0.231107,
+          "full_model_gap_damage_ci95": [
+            0.093872,
+            0.381941
+          ],
+          "full_model_positive_damage_rate": 0.59375,
+          "full_model_selected_kl": 0.049868,
+          "routed_mean_gap_damage": -0.00592,
+          "routed_positive_damage_rate": 0.179688
+        }
+      ]
+    },
+    "counterfactual_label": {
+      "category": "induction_present",
+      "reference_gap": 10.08864,
+      "reference_positive_accuracy": 0.5625,
+      "routed_gap": 8.392558,
+      "residual_gap": 8.340896,
+      "mean_effective_components": 5.025219,
+      "mean_winner_share": 0.37894,
+      "components_owning_examples": 9,
+      "routed_selected_kl": 0.202212,
+      "residual_selected_kl": 0.212533,
+      "components": [
+        {
+          "component": 0,
+          "mean_gate_share": 0.007634,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.905127,
+          "mean_abs_credit": 1.658675,
+          "full_model_mean_gap_damage": 0.263295,
+          "full_model_gap_damage_ci95": [
+            0.144331,
+            0.38074
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.053096,
+          "routed_mean_gap_damage": 0.001494,
+          "routed_positive_damage_rate": 0.296875
+        },
+        {
+          "component": 1,
+          "mean_gate_share": 0.005484,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.784266,
+          "mean_abs_credit": 1.150111,
+          "full_model_mean_gap_damage": 0.05303,
+          "full_model_gap_damage_ci95": [
+            -0.044248,
+            0.155596
+          ],
+          "full_model_positive_damage_rate": 0.5625,
+          "full_model_selected_kl": 0.044774,
+          "routed_mean_gap_damage": 0.021235,
+          "routed_positive_damage_rate": 0.273438
+        },
+        {
+          "component": 2,
+          "mean_gate_share": 0.007734,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.0163,
+          "mean_abs_credit": 1.427561,
+          "full_model_mean_gap_damage": 0.233872,
+          "full_model_gap_damage_ci95": [
+            0.111561,
+            0.344812
+          ],
+          "full_model_positive_damage_rate": 0.609375,
+          "full_model_selected_kl": 0.052786,
+          "routed_mean_gap_damage": 0.007414,
+          "routed_positive_damage_rate": 0.289062
+        },
+        {
+          "component": 3,
+          "mean_gate_share": 0.004735,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.654695,
+          "mean_abs_credit": 1.114207,
+          "full_model_mean_gap_damage": 0.152046,
+          "full_model_gap_damage_ci95": [
+            0.040198,
+            0.259834
+          ],
+          "full_model_positive_damage_rate": 0.570312,
+          "full_model_selected_kl": 0.044108,
+          "routed_mean_gap_damage": 0.002972,
+          "routed_positive_damage_rate": 0.234375
+        },
+        {
+          "component": 4,
+          "mean_gate_share": 0.110006,
+          "owner_fraction": 0.117188,
+          "mean_signed_credit": 3.321655,
+          "mean_abs_credit": 6.454049,
+          "full_model_mean_gap_damage": 1.350704,
+          "full_model_gap_damage_ci95": [
+            1.21072,
+            1.492484
+          ],
+          "full_model_positive_damage_rate": 0.960938,
+          "full_model_selected_kl": 0.099759,
+          "routed_mean_gap_damage": 0.012166,
+          "routed_positive_damage_rate": 0.484375
+        },
+        {
+          "component": 5,
+          "mean_gate_share": 0.139218,
+          "owner_fraction": 0.234375,
+          "mean_signed_credit": 5.858287,
+          "mean_abs_credit": 7.057424,
+          "full_model_mean_gap_damage": 1.426559,
+          "full_model_gap_damage_ci95": [
+            1.270616,
+            1.585217
+          ],
+          "full_model_positive_damage_rate": 0.945312,
+          "full_model_selected_kl": 0.111879,
+          "routed_mean_gap_damage": 0.033776,
+          "routed_positive_damage_rate": 0.515625
+        },
+        {
+          "component": 6,
+          "mean_gate_share": 0.004082,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.577341,
+          "mean_abs_credit": 0.987929,
+          "full_model_mean_gap_damage": 0.286076,
+          "full_model_gap_damage_ci95": [
+            0.185281,
+            0.397451
+          ],
+          "full_model_positive_damage_rate": 0.679688,
+          "full_model_selected_kl": 0.047219,
+          "routed_mean_gap_damage": 0.009995,
+          "routed_positive_damage_rate": 0.242188
+        },
+        {
+          "component": 7,
+          "mean_gate_share": 0.011679,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.26354,
+          "mean_abs_credit": 1.918814,
+          "full_model_mean_gap_damage": 0.246853,
+          "full_model_gap_damage_ci95": [
+            0.13898,
+            0.359596
+          ],
+          "full_model_positive_damage_rate": 0.710938,
+          "full_model_selected_kl": 0.050037,
+          "routed_mean_gap_damage": 0.002926,
+          "routed_positive_damage_rate": 0.351562
+        },
+        {
+          "component": 8,
+          "mean_gate_share": 0.097767,
+          "owner_fraction": 0.101562,
+          "mean_signed_credit": 2.756115,
+          "mean_abs_credit": 5.757128,
+          "full_model_mean_gap_damage": 1.25511,
+          "full_model_gap_damage_ci95": [
+            1.094996,
+            1.41176
+          ],
+          "full_model_positive_damage_rate": 0.90625,
+          "full_model_selected_kl": 0.122082,
+          "routed_mean_gap_damage": 0.011584,
+          "routed_positive_damage_rate": 0.429688
+        },
+        {
+          "component": 9,
+          "mean_gate_share": 0.004035,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.777216,
+          "mean_abs_credit": 1.046947,
+          "full_model_mean_gap_damage": 0.261762,
+          "full_model_gap_damage_ci95": [
+            0.154357,
+            0.36138
+          ],
+          "full_model_positive_damage_rate": 0.703125,
+          "full_model_selected_kl": 0.045901,
+          "routed_mean_gap_damage": -0.001155,
+          "routed_positive_damage_rate": 0.226562
+        },
+        {
+          "component": 10,
+          "mean_gate_share": 0.106173,
+          "owner_fraction": 0.132812,
+          "mean_signed_credit": 1.398559,
+          "mean_abs_credit": 6.059601,
+          "full_model_mean_gap_damage": 0.524062,
+          "full_model_gap_damage_ci95": [
+            0.380197,
+            0.670814
+          ],
+          "full_model_positive_damage_rate": 0.773438,
+          "full_model_selected_kl": 0.088641,
+          "routed_mean_gap_damage": -0.010129,
+          "routed_positive_damage_rate": 0.359375
+        },
+        {
+          "component": 11,
+          "mean_gate_share": 0.003559,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.38799,
+          "mean_abs_credit": 0.935738,
+          "full_model_mean_gap_damage": 0.269289,
+          "full_model_gap_damage_ci95": [
+            0.164399,
+            0.379297
+          ],
+          "full_model_positive_damage_rate": 0.609375,
+          "full_model_selected_kl": 0.045072,
+          "routed_mean_gap_damage": 0.009478,
+          "routed_positive_damage_rate": 0.234375
+        },
+        {
+          "component": 12,
+          "mean_gate_share": 0.086833,
+          "owner_fraction": 0.078125,
+          "mean_signed_credit": 2.760174,
+          "mean_abs_credit": 5.68334,
+          "full_model_mean_gap_damage": 1.014106,
+          "full_model_gap_damage_ci95": [
+            0.858644,
+            1.178671
+          ],
+          "full_model_positive_damage_rate": 0.867188,
+          "full_model_selected_kl": 0.089666,
+          "routed_mean_gap_damage": 0.011019,
+          "routed_positive_damage_rate": 0.46875
+        },
+        {
+          "component": 13,
+          "mean_gate_share": 0.096779,
+          "owner_fraction": 0.140625,
+          "mean_signed_credit": 0.047868,
+          "mean_abs_credit": 5.07612,
+          "full_model_mean_gap_damage": 1.401204,
+          "full_model_gap_damage_ci95": [
+            1.222924,
+            1.602945
+          ],
+          "full_model_positive_damage_rate": 0.875,
+          "full_model_selected_kl": 0.121815,
+          "routed_mean_gap_damage": 0.00492,
+          "routed_positive_damage_rate": 0.515625
+        },
+        {
+          "component": 14,
+          "mean_gate_share": 0.005281,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.749949,
+          "mean_abs_credit": 1.206173,
+          "full_model_mean_gap_damage": 0.104161,
+          "full_model_gap_damage_ci95": [
+            -0.0087,
+            0.224101
+          ],
+          "full_model_positive_damage_rate": 0.570312,
+          "full_model_selected_kl": 0.046186,
+          "routed_mean_gap_damage": 0.003674,
+          "routed_positive_damage_rate": 0.265625
+        },
+        {
+          "component": 15,
+          "mean_gate_share": 0.003878,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.428954,
+          "mean_abs_credit": 0.907529,
+          "full_model_mean_gap_damage": 0.247269,
+          "full_model_gap_damage_ci95": [
+            0.13839,
+            0.35111
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.045378,
+          "routed_mean_gap_damage": -0.003136,
+          "routed_positive_damage_rate": 0.1875
+        },
+        {
+          "component": 16,
+          "mean_gate_share": 0.060263,
+          "owner_fraction": 0.023438,
+          "mean_signed_credit": 0.490823,
+          "mean_abs_credit": 4.755817,
+          "full_model_mean_gap_damage": 0.490631,
+          "full_model_gap_damage_ci95": [
+            0.36503,
+            0.618185
+          ],
+          "full_model_positive_damage_rate": 0.734375,
+          "full_model_selected_kl": 0.071383,
+          "routed_mean_gap_damage": -0.006788,
+          "routed_positive_damage_rate": 0.367188
+        },
+        {
+          "component": 17,
+          "mean_gate_share": 0.002706,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.496632,
+          "mean_abs_credit": 0.939712,
+          "full_model_mean_gap_damage": 0.223824,
+          "full_model_gap_damage_ci95": [
+            0.118651,
+            0.332768
+          ],
+          "full_model_positive_damage_rate": 0.601562,
+          "full_model_selected_kl": 0.045385,
+          "routed_mean_gap_damage": -0.000627,
+          "routed_positive_damage_rate": 0.242188
+        },
+        {
+          "component": 18,
+          "mean_gate_share": 0.097431,
+          "owner_fraction": 0.132812,
+          "mean_signed_credit": 2.943025,
+          "mean_abs_credit": 5.799721,
+          "full_model_mean_gap_damage": 1.009027,
+          "full_model_gap_damage_ci95": [
+            0.855155,
+            1.163329
+          ],
+          "full_model_positive_damage_rate": 0.898438,
+          "full_model_selected_kl": 0.082495,
+          "routed_mean_gap_damage": 0.004597,
+          "routed_positive_damage_rate": 0.390625
+        },
+        {
+          "component": 19,
+          "mean_gate_share": 0.007063,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.888178,
+          "mean_abs_credit": 1.320395,
+          "full_model_mean_gap_damage": 0.251042,
+          "full_model_gap_damage_ci95": [
+            0.146254,
+            0.360596
+          ],
+          "full_model_positive_damage_rate": 0.695312,
+          "full_model_selected_kl": 0.049326,
+          "routed_mean_gap_damage": -0.001998,
+          "routed_positive_damage_rate": 0.25
+        },
+        {
+          "component": 20,
+          "mean_gate_share": 0.003306,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.629649,
+          "mean_abs_credit": 0.935803,
+          "full_model_mean_gap_damage": 0.19746,
+          "full_model_gap_damage_ci95": [
+            0.079239,
+            0.31633
+          ],
+          "full_model_positive_damage_rate": 0.601562,
+          "full_model_selected_kl": 0.047555,
+          "routed_mean_gap_damage": -0.007637,
+          "routed_positive_damage_rate": 0.1875
+        },
+        {
+          "component": 21,
+          "mean_gate_share": 0.00497,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.604079,
+          "mean_abs_credit": 1.204976,
+          "full_model_mean_gap_damage": 0.197119,
+          "full_model_gap_damage_ci95": [
+            0.074557,
+            0.310966
+          ],
+          "full_model_positive_damage_rate": 0.5625,
+          "full_model_selected_kl": 0.047605,
+          "routed_mean_gap_damage": -0.004524,
+          "routed_positive_damage_rate": 0.242188
+        },
+        {
+          "component": 22,
+          "mean_gate_share": 0.003456,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.515373,
+          "mean_abs_credit": 0.976971,
+          "full_model_mean_gap_damage": 0.227423,
+          "full_model_gap_damage_ci95": [
+            0.123351,
+            0.33287
+          ],
+          "full_model_positive_damage_rate": 0.671875,
+          "full_model_selected_kl": 0.044646,
+          "routed_mean_gap_damage": 5.6e-05,
+          "routed_positive_damage_rate": 0.210938
+        },
+        {
+          "component": 23,
+          "mean_gate_share": 0.064721,
+          "owner_fraction": 0.039062,
+          "mean_signed_credit": 1.288392,
+          "mean_abs_credit": 4.318632,
+          "full_model_mean_gap_damage": 0.937105,
+          "full_model_gap_damage_ci95": [
+            0.804206,
+            1.081704
+          ],
+          "full_model_positive_damage_rate": 0.867188,
+          "full_model_selected_kl": 0.090755,
+          "routed_mean_gap_damage": -0.003433,
+          "routed_positive_damage_rate": 0.429688
+        },
+        {
+          "component": 24,
+          "mean_gate_share": 0.003885,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.36117,
+          "mean_abs_credit": 0.969505,
+          "full_model_mean_gap_damage": 0.306583,
+          "full_model_gap_damage_ci95": [
+            0.203176,
+            0.407723
+          ],
+          "full_model_positive_damage_rate": 0.695312,
+          "full_model_selected_kl": 0.048271,
+          "routed_mean_gap_damage": 0.007025,
+          "routed_positive_damage_rate": 0.25
+        },
+        {
+          "component": 25,
+          "mean_gate_share": 0.004492,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.61146,
+          "mean_abs_credit": 1.195594,
+          "full_model_mean_gap_damage": 0.297899,
+          "full_model_gap_damage_ci95": [
+            0.171036,
+            0.412225
+          ],
+          "full_model_positive_damage_rate": 0.695312,
+          "full_model_selected_kl": 0.046872,
+          "routed_mean_gap_damage": 0.011794,
+          "routed_positive_damage_rate": 0.28125
+        },
+        {
+          "component": 26,
+          "mean_gate_share": 0.008224,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.876625,
+          "mean_abs_credit": 1.384254,
+          "full_model_mean_gap_damage": 0.156967,
+          "full_model_gap_damage_ci95": [
+            0.039725,
+            0.275696
+          ],
+          "full_model_positive_damage_rate": 0.632812,
+          "full_model_selected_kl": 0.053321,
+          "routed_mean_gap_damage": -0.00056,
+          "routed_positive_damage_rate": 0.3125
+        },
+        {
+          "component": 27,
+          "mean_gate_share": 0.004289,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.672337,
+          "mean_abs_credit": 1.042958,
+          "full_model_mean_gap_damage": 0.207856,
+          "full_model_gap_damage_ci95": [
+            0.097279,
+            0.323802
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.048623,
+          "routed_mean_gap_damage": -0.006347,
+          "routed_positive_damage_rate": 0.21875
+        },
+        {
+          "component": 28,
+          "mean_gate_share": 0.003345,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.599184,
+          "mean_abs_credit": 0.874301,
+          "full_model_mean_gap_damage": 0.236205,
+          "full_model_gap_damage_ci95": [
+            0.133459,
+            0.332196
+          ],
+          "full_model_positive_damage_rate": 0.679688,
+          "full_model_selected_kl": 0.046908,
+          "routed_mean_gap_damage": -0.00856,
+          "routed_positive_damage_rate": 0.117188
+        },
+        {
+          "component": 29,
+          "mean_gate_share": 0.012946,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.745679,
+          "mean_abs_credit": 1.846076,
+          "full_model_mean_gap_damage": 0.450418,
+          "full_model_gap_damage_ci95": [
+            0.329073,
+            0.575833
+          ],
+          "full_model_positive_damage_rate": 0.710938,
+          "full_model_selected_kl": 0.05472,
+          "routed_mean_gap_damage": 0.000781,
+          "routed_positive_damage_rate": 0.296875
+        },
+        {
+          "component": 30,
+          "mean_gate_share": 0.020841,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.525952,
+          "mean_abs_credit": 2.417829,
+          "full_model_mean_gap_damage": 0.568851,
+          "full_model_gap_damage_ci95": [
+            0.408008,
+            0.72251
+          ],
+          "full_model_positive_damage_rate": 0.726562,
+          "full_model_selected_kl": 0.078201,
+          "routed_mean_gap_damage": -0.0108,
+          "routed_positive_damage_rate": 0.351562
+        },
+        {
+          "component": 31,
+          "mean_gate_share": 0.003183,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.425388,
+          "mean_abs_credit": 0.861166,
+          "full_model_mean_gap_damage": 0.224695,
+          "full_model_gap_damage_ci95": [
+            0.136711,
+            0.321157
+          ],
+          "full_model_positive_damage_rate": 0.664062,
+          "full_model_selected_kl": 0.046776,
+          "routed_mean_gap_damage": -0.000496,
+          "routed_positive_damage_rate": 0.203125
+        }
+      ]
+    },
+    "recent_conflict": {
+      "category": "stress",
+      "reference_gap": 10.287404,
+      "reference_positive_accuracy": 0.273438,
+      "routed_gap": 8.644015,
+      "residual_gap": 8.648335,
+      "mean_effective_components": 5.407079,
+      "mean_winner_share": 0.345933,
+      "components_owning_examples": 10,
+      "routed_selected_kl": 0.189772,
+      "residual_selected_kl": 0.19725,
+      "components": [
+        {
+          "component": 0,
+          "mean_gate_share": 0.007498,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.865884,
+          "mean_abs_credit": 1.450202,
+          "full_model_mean_gap_damage": 0.259933,
+          "full_model_gap_damage_ci95": [
+            0.137902,
+            0.402306
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.048796,
+          "routed_mean_gap_damage": -0.014733,
+          "routed_positive_damage_rate": 0.234375
+        },
+        {
+          "component": 1,
+          "mean_gate_share": 0.00497,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.633572,
+          "mean_abs_credit": 1.106818,
+          "full_model_mean_gap_damage": 0.207082,
+          "full_model_gap_damage_ci95": [
+            0.075384,
+            0.335447
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.045785,
+          "routed_mean_gap_damage": -0.010777,
+          "routed_positive_damage_rate": 0.226562
+        },
+        {
+          "component": 2,
+          "mean_gate_share": 0.008713,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.777026,
+          "mean_abs_credit": 1.507505,
+          "full_model_mean_gap_damage": 0.362757,
+          "full_model_gap_damage_ci95": [
+            0.229611,
+            0.511727
+          ],
+          "full_model_positive_damage_rate": 0.65625,
+          "full_model_selected_kl": 0.050592,
+          "routed_mean_gap_damage": -0.009282,
+          "routed_positive_damage_rate": 0.257812
+        },
+        {
+          "component": 3,
+          "mean_gate_share": 0.004004,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.449054,
+          "mean_abs_credit": 1.031145,
+          "full_model_mean_gap_damage": 0.328864,
+          "full_model_gap_damage_ci95": [
+            0.193964,
+            0.463462
+          ],
+          "full_model_positive_damage_rate": 0.640625,
+          "full_model_selected_kl": 0.045376,
+          "routed_mean_gap_damage": 0.000915,
+          "routed_positive_damage_rate": 0.265625
+        },
+        {
+          "component": 4,
+          "mean_gate_share": 0.111938,
+          "owner_fraction": 0.15625,
+          "mean_signed_credit": 1.509756,
+          "mean_abs_credit": 6.569421,
+          "full_model_mean_gap_damage": 1.320899,
+          "full_model_gap_damage_ci95": [
+            1.151099,
+            1.48612
+          ],
+          "full_model_positive_damage_rate": 0.921875,
+          "full_model_selected_kl": 0.097027,
+          "routed_mean_gap_damage": 0.035481,
+          "routed_positive_damage_rate": 0.445312
+        },
+        {
+          "component": 5,
+          "mean_gate_share": 0.143446,
+          "owner_fraction": 0.226562,
+          "mean_signed_credit": 6.185284,
+          "mean_abs_credit": 6.96298,
+          "full_model_mean_gap_damage": 1.625539,
+          "full_model_gap_damage_ci95": [
+            1.412836,
+            1.827276
+          ],
+          "full_model_positive_damage_rate": 0.945312,
+          "full_model_selected_kl": 0.112144,
+          "routed_mean_gap_damage": 0.028232,
+          "routed_positive_damage_rate": 0.507812
+        },
+        {
+          "component": 6,
+          "mean_gate_share": 0.005804,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.378232,
+          "mean_abs_credit": 1.053429,
+          "full_model_mean_gap_damage": 0.430587,
+          "full_model_gap_damage_ci95": [
+            0.299594,
+            0.576004
+          ],
+          "full_model_positive_damage_rate": 0.734375,
+          "full_model_selected_kl": 0.049825,
+          "routed_mean_gap_damage": -0.014486,
+          "routed_positive_damage_rate": 0.203125
+        },
+        {
+          "component": 7,
+          "mean_gate_share": 0.011806,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.124708,
+          "mean_abs_credit": 2.011605,
+          "full_model_mean_gap_damage": 0.23374,
+          "full_model_gap_damage_ci95": [
+            0.108285,
+            0.358756
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.051543,
+          "routed_mean_gap_damage": -0.017213,
+          "routed_positive_damage_rate": 0.289062
+        },
+        {
+          "component": 8,
+          "mean_gate_share": 0.091435,
+          "owner_fraction": 0.085938,
+          "mean_signed_credit": 2.195462,
+          "mean_abs_credit": 5.530317,
+          "full_model_mean_gap_damage": 1.323983,
+          "full_model_gap_damage_ci95": [
+            1.149248,
+            1.508191
+          ],
+          "full_model_positive_damage_rate": 0.890625,
+          "full_model_selected_kl": 0.114489,
+          "routed_mean_gap_damage": 0.008678,
+          "routed_positive_damage_rate": 0.476562
+        },
+        {
+          "component": 9,
+          "mean_gate_share": 0.003868,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.761778,
+          "mean_abs_credit": 1.007409,
+          "full_model_mean_gap_damage": 0.406949,
+          "full_model_gap_damage_ci95": [
+            0.287347,
+            0.512881
+          ],
+          "full_model_positive_damage_rate": 0.742188,
+          "full_model_selected_kl": 0.046765,
+          "routed_mean_gap_damage": -0.013838,
+          "routed_positive_damage_rate": 0.1875
+        },
+        {
+          "component": 10,
+          "mean_gate_share": 0.085111,
+          "owner_fraction": 0.0625,
+          "mean_signed_credit": 1.031946,
+          "mean_abs_credit": 5.574716,
+          "full_model_mean_gap_damage": 0.601468,
+          "full_model_gap_damage_ci95": [
+            0.451965,
+            0.750115
+          ],
+          "full_model_positive_damage_rate": 0.757812,
+          "full_model_selected_kl": 0.087262,
+          "routed_mean_gap_damage": -0.053641,
+          "routed_positive_damage_rate": 0.289062
+        },
+        {
+          "component": 11,
+          "mean_gate_share": 0.003554,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.096995,
+          "mean_abs_credit": 0.914262,
+          "full_model_mean_gap_damage": 0.319182,
+          "full_model_gap_damage_ci95": [
+            0.169786,
+            0.460895
+          ],
+          "full_model_positive_damage_rate": 0.617188,
+          "full_model_selected_kl": 0.046015,
+          "routed_mean_gap_damage": 0.008182,
+          "routed_positive_damage_rate": 0.21875
+        },
+        {
+          "component": 12,
+          "mean_gate_share": 0.106994,
+          "owner_fraction": 0.140625,
+          "mean_signed_credit": 1.548612,
+          "mean_abs_credit": 6.201904,
+          "full_model_mean_gap_damage": 1.083549,
+          "full_model_gap_damage_ci95": [
+            0.932058,
+            1.244544
+          ],
+          "full_model_positive_damage_rate": 0.921875,
+          "full_model_selected_kl": 0.090296,
+          "routed_mean_gap_damage": 0.021763,
+          "routed_positive_damage_rate": 0.453125
+        },
+        {
+          "component": 13,
+          "mean_gate_share": 0.094202,
+          "owner_fraction": 0.132812,
+          "mean_signed_credit": 2.013362,
+          "mean_abs_credit": 5.393303,
+          "full_model_mean_gap_damage": 1.443162,
+          "full_model_gap_damage_ci95": [
+            1.252746,
+            1.650265
+          ],
+          "full_model_positive_damage_rate": 0.929688,
+          "full_model_selected_kl": 0.118151,
+          "routed_mean_gap_damage": -0.020405,
+          "routed_positive_damage_rate": 0.382812
+        },
+        {
+          "component": 14,
+          "mean_gate_share": 0.005679,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.764407,
+          "mean_abs_credit": 1.112184,
+          "full_model_mean_gap_damage": 0.207519,
+          "full_model_gap_damage_ci95": [
+            0.084124,
+            0.346318
+          ],
+          "full_model_positive_damage_rate": 0.59375,
+          "full_model_selected_kl": 0.047799,
+          "routed_mean_gap_damage": -0.011926,
+          "routed_positive_damage_rate": 0.203125
+        },
+        {
+          "component": 15,
+          "mean_gate_share": 0.002658,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.309205,
+          "mean_abs_credit": 0.76539,
+          "full_model_mean_gap_damage": 0.314398,
+          "full_model_gap_damage_ci95": [
+            0.189323,
+            0.444927
+          ],
+          "full_model_positive_damage_rate": 0.703125,
+          "full_model_selected_kl": 0.046663,
+          "routed_mean_gap_damage": -0.008552,
+          "routed_positive_damage_rate": 0.15625
+        },
+        {
+          "component": 16,
+          "mean_gate_share": 0.057702,
+          "owner_fraction": 0.039062,
+          "mean_signed_credit": 0.702076,
+          "mean_abs_credit": 4.169458,
+          "full_model_mean_gap_damage": 0.573994,
+          "full_model_gap_damage_ci95": [
+            0.427018,
+            0.715195
+          ],
+          "full_model_positive_damage_rate": 0.742188,
+          "full_model_selected_kl": 0.0687,
+          "routed_mean_gap_damage": -0.030717,
+          "routed_positive_damage_rate": 0.335938
+        },
+        {
+          "component": 17,
+          "mean_gate_share": 0.002997,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.636526,
+          "mean_abs_credit": 1.003008,
+          "full_model_mean_gap_damage": 0.362833,
+          "full_model_gap_damage_ci95": [
+            0.256272,
+            0.473935
+          ],
+          "full_model_positive_damage_rate": 0.6875,
+          "full_model_selected_kl": 0.045654,
+          "routed_mean_gap_damage": -0.010784,
+          "routed_positive_damage_rate": 0.1875
+        },
+        {
+          "component": 18,
+          "mean_gate_share": 0.102838,
+          "owner_fraction": 0.117188,
+          "mean_signed_credit": 3.686038,
+          "mean_abs_credit": 5.948218,
+          "full_model_mean_gap_damage": 1.019923,
+          "full_model_gap_damage_ci95": [
+            0.862774,
+            1.18872
+          ],
+          "full_model_positive_damage_rate": 0.867188,
+          "full_model_selected_kl": 0.06936,
+          "routed_mean_gap_damage": 0.012161,
+          "routed_positive_damage_rate": 0.4375
+        },
+        {
+          "component": 19,
+          "mean_gate_share": 0.008343,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.962214,
+          "mean_abs_credit": 1.388181,
+          "full_model_mean_gap_damage": 0.362761,
+          "full_model_gap_damage_ci95": [
+            0.24418,
+            0.48848
+          ],
+          "full_model_positive_damage_rate": 0.6875,
+          "full_model_selected_kl": 0.048779,
+          "routed_mean_gap_damage": -0.00683,
+          "routed_positive_damage_rate": 0.25
+        },
+        {
+          "component": 20,
+          "mean_gate_share": 0.003288,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.703119,
+          "mean_abs_credit": 0.867244,
+          "full_model_mean_gap_damage": 0.16975,
+          "full_model_gap_damage_ci95": [
+            0.040976,
+            0.290801
+          ],
+          "full_model_positive_damage_rate": 0.585938,
+          "full_model_selected_kl": 0.046034,
+          "routed_mean_gap_damage": -0.004643,
+          "routed_positive_damage_rate": 0.140625
+        },
+        {
+          "component": 21,
+          "mean_gate_share": 0.004517,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.814569,
+          "mean_abs_credit": 1.195474,
+          "full_model_mean_gap_damage": 0.266712,
+          "full_model_gap_damage_ci95": [
+            0.142528,
+            0.383345
+          ],
+          "full_model_positive_damage_rate": 0.609375,
+          "full_model_selected_kl": 0.046529,
+          "routed_mean_gap_damage": -0.0095,
+          "routed_positive_damage_rate": 0.21875
+        },
+        {
+          "component": 22,
+          "mean_gate_share": 0.003558,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.567669,
+          "mean_abs_credit": 0.981095,
+          "full_model_mean_gap_damage": 0.224646,
+          "full_model_gap_damage_ci95": [
+            0.103888,
+            0.339747
+          ],
+          "full_model_positive_damage_rate": 0.65625,
+          "full_model_selected_kl": 0.045457,
+          "routed_mean_gap_damage": -0.017365,
+          "routed_positive_damage_rate": 0.140625
+        },
+        {
+          "component": 23,
+          "mean_gate_share": 0.053945,
+          "owner_fraction": 0.03125,
+          "mean_signed_credit": 2.567437,
+          "mean_abs_credit": 4.066907,
+          "full_model_mean_gap_damage": 1.144814,
+          "full_model_gap_damage_ci95": [
+            0.995464,
+            1.297214
+          ],
+          "full_model_positive_damage_rate": 0.929688,
+          "full_model_selected_kl": 0.096874,
+          "routed_mean_gap_damage": -0.008913,
+          "routed_positive_damage_rate": 0.390625
+        },
+        {
+          "component": 24,
+          "mean_gate_share": 0.005065,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.398113,
+          "mean_abs_credit": 0.913662,
+          "full_model_mean_gap_damage": 0.452856,
+          "full_model_gap_damage_ci95": [
+            0.328671,
+            0.58838
+          ],
+          "full_model_positive_damage_rate": 0.742188,
+          "full_model_selected_kl": 0.047999,
+          "routed_mean_gap_damage": -0.000447,
+          "routed_positive_damage_rate": 0.195312
+        },
+        {
+          "component": 25,
+          "mean_gate_share": 0.004894,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.49715,
+          "mean_abs_credit": 1.179986,
+          "full_model_mean_gap_damage": 0.442775,
+          "full_model_gap_damage_ci95": [
+            0.322159,
+            0.581773
+          ],
+          "full_model_positive_damage_rate": 0.726562,
+          "full_model_selected_kl": 0.048059,
+          "routed_mean_gap_damage": -0.003984,
+          "routed_positive_damage_rate": 0.234375
+        },
+        {
+          "component": 26,
+          "mean_gate_share": 0.013731,
+          "owner_fraction": 0.007812,
+          "mean_signed_credit": 0.8026,
+          "mean_abs_credit": 1.654239,
+          "full_model_mean_gap_damage": 0.364869,
+          "full_model_gap_damage_ci95": [
+            0.246239,
+            0.491542
+          ],
+          "full_model_positive_damage_rate": 0.65625,
+          "full_model_selected_kl": 0.054867,
+          "routed_mean_gap_damage": -0.017914,
+          "routed_positive_damage_rate": 0.242188
+        },
+        {
+          "component": 27,
+          "mean_gate_share": 0.0051,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.790698,
+          "mean_abs_credit": 1.217346,
+          "full_model_mean_gap_damage": 0.225391,
+          "full_model_gap_damage_ci95": [
+            0.097306,
+            0.354302
+          ],
+          "full_model_positive_damage_rate": 0.664062,
+          "full_model_selected_kl": 0.047201,
+          "routed_mean_gap_damage": -0.033733,
+          "routed_positive_damage_rate": 0.179688
+        },
+        {
+          "component": 28,
+          "mean_gate_share": 0.003206,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.594116,
+          "mean_abs_credit": 0.902567,
+          "full_model_mean_gap_damage": 0.306097,
+          "full_model_gap_damage_ci95": [
+            0.175309,
+            0.453851
+          ],
+          "full_model_positive_damage_rate": 0.65625,
+          "full_model_selected_kl": 0.044574,
+          "routed_mean_gap_damage": -0.00338,
+          "routed_positive_damage_rate": 0.210938
+        },
+        {
+          "component": 29,
+          "mean_gate_share": 0.013313,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.489246,
+          "mean_abs_credit": 1.850366,
+          "full_model_mean_gap_damage": 0.487838,
+          "full_model_gap_damage_ci95": [
+            0.341577,
+            0.628923
+          ],
+          "full_model_positive_damage_rate": 0.65625,
+          "full_model_selected_kl": 0.052881,
+          "routed_mean_gap_damage": 0.009215,
+          "routed_positive_damage_rate": 0.351562
+        },
+        {
+          "component": 30,
+          "mean_gate_share": 0.02231,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 1.269776,
+          "mean_abs_credit": 2.445019,
+          "full_model_mean_gap_damage": 0.685681,
+          "full_model_gap_damage_ci95": [
+            0.528244,
+            0.845427
+          ],
+          "full_model_positive_damage_rate": 0.765625,
+          "full_model_selected_kl": 0.081684,
+          "routed_mean_gap_damage": -0.025027,
+          "routed_positive_damage_rate": 0.34375
+        },
+        {
+          "component": 31,
+          "mean_gate_share": 0.003511,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.522368,
+          "mean_abs_credit": 0.92275,
+          "full_model_mean_gap_damage": 0.180033,
+          "full_model_gap_damage_ci95": [
+            0.034632,
+            0.344064
+          ],
+          "full_model_positive_damage_rate": 0.578125,
+          "full_model_selected_kl": 0.047876,
+          "routed_mean_gap_damage": -0.004684,
+          "routed_positive_damage_rate": 0.203125
+        }
+      ]
+    },
+    "source_cue_corrupt": {
+      "category": "induction_absent_control",
+      "reference_gap": 1.446617,
+      "reference_positive_accuracy": 0.0,
+      "routed_gap": 1.276697,
+      "residual_gap": 1.248945,
+      "mean_effective_components": 5.025568,
+      "mean_winner_share": 0.385681,
+      "components_owning_examples": 9,
+      "routed_selected_kl": 0.119434,
+      "residual_selected_kl": 0.125492,
+      "components": [
+        {
+          "component": 0,
+          "mean_gate_share": 0.008329,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.100242,
+          "mean_abs_credit": 1.016021,
+          "full_model_mean_gap_damage": 0.07547,
+          "full_model_gap_damage_ci95": [
+            -0.012495,
+            0.159628
+          ],
+          "full_model_positive_damage_rate": 0.570312,
+          "full_model_selected_kl": 0.040795,
+          "routed_mean_gap_damage": 0.002665,
+          "routed_positive_damage_rate": 0.320312
+        },
+        {
+          "component": 1,
+          "mean_gate_share": 0.00465,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.088762,
+          "mean_abs_credit": 0.723412,
+          "full_model_mean_gap_damage": 0.048651,
+          "full_model_gap_damage_ci95": [
+            -0.032455,
+            0.136615
+          ],
+          "full_model_positive_damage_rate": 0.5,
+          "full_model_selected_kl": 0.034234,
+          "routed_mean_gap_damage": -0.001863,
+          "routed_positive_damage_rate": 0.210938
+        },
+        {
+          "component": 2,
+          "mean_gate_share": 0.009582,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.318753,
+          "mean_abs_credit": 0.995529,
+          "full_model_mean_gap_damage": 0.078399,
+          "full_model_gap_damage_ci95": [
+            -0.001095,
+            0.166301
+          ],
+          "full_model_positive_damage_rate": 0.523438,
+          "full_model_selected_kl": 0.037655,
+          "routed_mean_gap_damage": -0.005165,
+          "routed_positive_damage_rate": 0.265625
+        },
+        {
+          "component": 3,
+          "mean_gate_share": 0.005903,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.092175,
+          "mean_abs_credit": 0.745894,
+          "full_model_mean_gap_damage": 0.007865,
+          "full_model_gap_damage_ci95": [
+            -0.069526,
+            0.087393
+          ],
+          "full_model_positive_damage_rate": 0.539062,
+          "full_model_selected_kl": 0.03383,
+          "routed_mean_gap_damage": -0.000501,
+          "routed_positive_damage_rate": 0.21875
+        },
+        {
+          "component": 4,
+          "mean_gate_share": 0.083175,
+          "owner_fraction": 0.09375,
+          "mean_signed_credit": -0.042961,
+          "mean_abs_credit": 3.394561,
+          "full_model_mean_gap_damage": 0.15723,
+          "full_model_gap_damage_ci95": [
+            0.068041,
+            0.249486
+          ],
+          "full_model_positive_damage_rate": 0.601562,
+          "full_model_selected_kl": 0.064837,
+          "routed_mean_gap_damage": -0.003778,
+          "routed_positive_damage_rate": 0.398438
+        },
+        {
+          "component": 5,
+          "mean_gate_share": 0.081334,
+          "owner_fraction": 0.0625,
+          "mean_signed_credit": -0.041089,
+          "mean_abs_credit": 3.106246,
+          "full_model_mean_gap_damage": 0.206489,
+          "full_model_gap_damage_ci95": [
+            0.107016,
+            0.305988
+          ],
+          "full_model_positive_damage_rate": 0.609375,
+          "full_model_selected_kl": 0.071204,
+          "routed_mean_gap_damage": 0.00346,
+          "routed_positive_damage_rate": 0.445312
+        },
+        {
+          "component": 6,
+          "mean_gate_share": 0.003394,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.06025,
+          "mean_abs_credit": 0.592216,
+          "full_model_mean_gap_damage": 0.010347,
+          "full_model_gap_damage_ci95": [
+            -0.081595,
+            0.098287
+          ],
+          "full_model_positive_damage_rate": 0.492188,
+          "full_model_selected_kl": 0.035686,
+          "routed_mean_gap_damage": 0.012726,
+          "routed_positive_damage_rate": 0.226562
+        },
+        {
+          "component": 7,
+          "mean_gate_share": 0.01125,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.11175,
+          "mean_abs_credit": 1.154502,
+          "full_model_mean_gap_damage": 0.103237,
+          "full_model_gap_damage_ci95": [
+            0.003779,
+            0.209249
+          ],
+          "full_model_positive_damage_rate": 0.546875,
+          "full_model_selected_kl": 0.04068,
+          "routed_mean_gap_damage": 0.00723,
+          "routed_positive_damage_rate": 0.320312
+        },
+        {
+          "component": 8,
+          "mean_gate_share": 0.099392,
+          "owner_fraction": 0.09375,
+          "mean_signed_credit": -0.271191,
+          "mean_abs_credit": 3.802457,
+          "full_model_mean_gap_damage": 0.181939,
+          "full_model_gap_damage_ci95": [
+            0.076827,
+            0.292434
+          ],
+          "full_model_positive_damage_rate": 0.617188,
+          "full_model_selected_kl": 0.089694,
+          "routed_mean_gap_damage": 0.021284,
+          "routed_positive_damage_rate": 0.507812
+        },
+        {
+          "component": 9,
+          "mean_gate_share": 0.003878,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.054969,
+          "mean_abs_credit": 0.548668,
+          "full_model_mean_gap_damage": 0.036536,
+          "full_model_gap_damage_ci95": [
+            -0.063198,
+            0.137317
+          ],
+          "full_model_positive_damage_rate": 0.539062,
+          "full_model_selected_kl": 0.036034,
+          "routed_mean_gap_damage": 0.004776,
+          "routed_positive_damage_rate": 0.226562
+        },
+        {
+          "component": 10,
+          "mean_gate_share": 0.131491,
+          "owner_fraction": 0.210938,
+          "mean_signed_credit": 0.142745,
+          "mean_abs_credit": 4.618482,
+          "full_model_mean_gap_damage": 0.219299,
+          "full_model_gap_damage_ci95": [
+            0.117253,
+            0.314348
+          ],
+          "full_model_positive_damage_rate": 0.65625,
+          "full_model_selected_kl": 0.068882,
+          "routed_mean_gap_damage": 0.018682,
+          "routed_positive_damage_rate": 0.46875
+        },
+        {
+          "component": 11,
+          "mean_gate_share": 0.002208,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.093671,
+          "mean_abs_credit": 0.469651,
+          "full_model_mean_gap_damage": 0.057148,
+          "full_model_gap_damage_ci95": [
+            -0.032335,
+            0.143032
+          ],
+          "full_model_positive_damage_rate": 0.53125,
+          "full_model_selected_kl": 0.035896,
+          "routed_mean_gap_damage": 0.008747,
+          "routed_positive_damage_rate": 0.179688
+        },
+        {
+          "component": 12,
+          "mean_gate_share": 0.074786,
+          "owner_fraction": 0.085938,
+          "mean_signed_credit": 0.189508,
+          "mean_abs_credit": 3.257848,
+          "full_model_mean_gap_damage": 0.146748,
+          "full_model_gap_damage_ci95": [
+            0.045084,
+            0.255466
+          ],
+          "full_model_positive_damage_rate": 0.601562,
+          "full_model_selected_kl": 0.060752,
+          "routed_mean_gap_damage": 0.026607,
+          "routed_positive_damage_rate": 0.53125
+        },
+        {
+          "component": 13,
+          "mean_gate_share": 0.125432,
+          "owner_fraction": 0.171875,
+          "mean_signed_credit": 0.636322,
+          "mean_abs_credit": 4.386709,
+          "full_model_mean_gap_damage": 0.184994,
+          "full_model_gap_damage_ci95": [
+            0.09407,
+            0.283697
+          ],
+          "full_model_positive_damage_rate": 0.625,
+          "full_model_selected_kl": 0.077391,
+          "routed_mean_gap_damage": 0.013899,
+          "routed_positive_damage_rate": 0.453125
+        },
+        {
+          "component": 14,
+          "mean_gate_share": 0.004427,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.119652,
+          "mean_abs_credit": 0.690181,
+          "full_model_mean_gap_damage": 0.081479,
+          "full_model_gap_damage_ci95": [
+            -0.006539,
+            0.1703
+          ],
+          "full_model_positive_damage_rate": 0.539062,
+          "full_model_selected_kl": 0.036108,
+          "routed_mean_gap_damage": 0.004477,
+          "routed_positive_damage_rate": 0.226562
+        },
+        {
+          "component": 15,
+          "mean_gate_share": 0.002309,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.174191,
+          "mean_abs_credit": 0.511838,
+          "full_model_mean_gap_damage": 0.013911,
+          "full_model_gap_damage_ci95": [
+            -0.07505,
+            0.100447
+          ],
+          "full_model_positive_damage_rate": 0.523438,
+          "full_model_selected_kl": 0.034949,
+          "routed_mean_gap_damage": 0.00853,
+          "routed_positive_damage_rate": 0.21875
+        },
+        {
+          "component": 16,
+          "mean_gate_share": 0.096548,
+          "owner_fraction": 0.078125,
+          "mean_signed_credit": -0.201224,
+          "mean_abs_credit": 3.75034,
+          "full_model_mean_gap_damage": 0.113316,
+          "full_model_gap_damage_ci95": [
+            0.006383,
+            0.225846
+          ],
+          "full_model_positive_damage_rate": 0.5625,
+          "full_model_selected_kl": 0.059826,
+          "routed_mean_gap_damage": 0.010264,
+          "routed_positive_damage_rate": 0.4375
+        },
+        {
+          "component": 17,
+          "mean_gate_share": 0.003768,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.104445,
+          "mean_abs_credit": 0.623679,
+          "full_model_mean_gap_damage": 0.021305,
+          "full_model_gap_damage_ci95": [
+            -0.076247,
+            0.121258
+          ],
+          "full_model_positive_damage_rate": 0.5,
+          "full_model_selected_kl": 0.033721,
+          "routed_mean_gap_damage": -0.000496,
+          "routed_positive_damage_rate": 0.265625
+        },
+        {
+          "component": 18,
+          "mean_gate_share": 0.111703,
+          "owner_fraction": 0.164062,
+          "mean_signed_credit": 0.694175,
+          "mean_abs_credit": 3.774972,
+          "full_model_mean_gap_damage": 0.10499,
+          "full_model_gap_damage_ci95": [
+            0.015768,
+            0.190268
+          ],
+          "full_model_positive_damage_rate": 0.632812,
+          "full_model_selected_kl": 0.055785,
+          "routed_mean_gap_damage": 0.015333,
+          "routed_positive_damage_rate": 0.460938
+        },
+        {
+          "component": 19,
+          "mean_gate_share": 0.00625,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.110257,
+          "mean_abs_credit": 0.831072,
+          "full_model_mean_gap_damage": -0.01503,
+          "full_model_gap_damage_ci95": [
+            -0.10539,
+            0.071618
+          ],
+          "full_model_positive_damage_rate": 0.476562,
+          "full_model_selected_kl": 0.038104,
+          "routed_mean_gap_damage": 0.012002,
+          "routed_positive_damage_rate": 0.34375
+        },
+        {
+          "component": 20,
+          "mean_gate_share": 0.002735,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.009161,
+          "mean_abs_credit": 0.4603,
+          "full_model_mean_gap_damage": 0.051547,
+          "full_model_gap_damage_ci95": [
+            -0.044764,
+            0.141845
+          ],
+          "full_model_positive_damage_rate": 0.515625,
+          "full_model_selected_kl": 0.036055,
+          "routed_mean_gap_damage": -0.006104,
+          "routed_positive_damage_rate": 0.101562
+        },
+        {
+          "component": 21,
+          "mean_gate_share": 0.003758,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.227613,
+          "mean_abs_credit": 0.61607,
+          "full_model_mean_gap_damage": 0.01675,
+          "full_model_gap_damage_ci95": [
+            -0.072406,
+            0.109849
+          ],
+          "full_model_positive_damage_rate": 0.546875,
+          "full_model_selected_kl": 0.03725,
+          "routed_mean_gap_damage": 0.003505,
+          "routed_positive_damage_rate": 0.242188
+        },
+        {
+          "component": 22,
+          "mean_gate_share": 0.003137,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.044303,
+          "mean_abs_credit": 0.541718,
+          "full_model_mean_gap_damage": 0.078878,
+          "full_model_gap_damage_ci95": [
+            -0.002395,
+            0.167345
+          ],
+          "full_model_positive_damage_rate": 0.546875,
+          "full_model_selected_kl": 0.034106,
+          "routed_mean_gap_damage": 0.004839,
+          "routed_positive_damage_rate": 0.195312
+        },
+        {
+          "component": 23,
+          "mean_gate_share": 0.058607,
+          "owner_fraction": 0.039062,
+          "mean_signed_credit": 0.25769,
+          "mean_abs_credit": 3.003062,
+          "full_model_mean_gap_damage": 0.208386,
+          "full_model_gap_damage_ci95": [
+            0.128549,
+            0.294016
+          ],
+          "full_model_positive_damage_rate": 0.640625,
+          "full_model_selected_kl": 0.065808,
+          "routed_mean_gap_damage": -0.005955,
+          "routed_positive_damage_rate": 0.421875
+        },
+        {
+          "component": 24,
+          "mean_gate_share": 0.002023,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.03711,
+          "mean_abs_credit": 0.465933,
+          "full_model_mean_gap_damage": 0.067988,
+          "full_model_gap_damage_ci95": [
+            -0.031026,
+            0.165391
+          ],
+          "full_model_positive_damage_rate": 0.546875,
+          "full_model_selected_kl": 0.035599,
+          "routed_mean_gap_damage": -0.002052,
+          "routed_positive_damage_rate": 0.140625
+        },
+        {
+          "component": 25,
+          "mean_gate_share": 0.004282,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.028422,
+          "mean_abs_credit": 0.649452,
+          "full_model_mean_gap_damage": 0.057355,
+          "full_model_gap_damage_ci95": [
+            -0.026787,
+            0.144871
+          ],
+          "full_model_positive_damage_rate": 0.523438,
+          "full_model_selected_kl": 0.035871,
+          "routed_mean_gap_damage": -0.010594,
+          "routed_positive_damage_rate": 0.171875
+        },
+        {
+          "component": 26,
+          "mean_gate_share": 0.007872,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.095884,
+          "mean_abs_credit": 0.898443,
+          "full_model_mean_gap_damage": 0.074007,
+          "full_model_gap_damage_ci95": [
+            -0.028989,
+            0.180049
+          ],
+          "full_model_positive_damage_rate": 0.546875,
+          "full_model_selected_kl": 0.042126,
+          "routed_mean_gap_damage": 0.018699,
+          "routed_positive_damage_rate": 0.328125
+        },
+        {
+          "component": 27,
+          "mean_gate_share": 0.003361,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.007902,
+          "mean_abs_credit": 0.589839,
+          "full_model_mean_gap_damage": -0.000942,
+          "full_model_gap_damage_ci95": [
+            -0.09024,
+            0.091953
+          ],
+          "full_model_positive_damage_rate": 0.5,
+          "full_model_selected_kl": 0.03881,
+          "routed_mean_gap_damage": 0.002663,
+          "routed_positive_damage_rate": 0.226562
+        },
+        {
+          "component": 28,
+          "mean_gate_share": 0.002318,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.096828,
+          "mean_abs_credit": 0.505841,
+          "full_model_mean_gap_damage": 0.053169,
+          "full_model_gap_damage_ci95": [
+            -0.055953,
+            0.170179
+          ],
+          "full_model_positive_damage_rate": 0.507812,
+          "full_model_selected_kl": 0.034013,
+          "routed_mean_gap_damage": 0.002655,
+          "routed_positive_damage_rate": 0.132812
+        },
+        {
+          "component": 29,
+          "mean_gate_share": 0.010051,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.262227,
+          "mean_abs_credit": 0.97832,
+          "full_model_mean_gap_damage": 0.036951,
+          "full_model_gap_damage_ci95": [
+            -0.049894,
+            0.125562
+          ],
+          "full_model_positive_damage_rate": 0.523438,
+          "full_model_selected_kl": 0.038914,
+          "routed_mean_gap_damage": 0.003185,
+          "routed_positive_damage_rate": 0.296875
+        },
+        {
+          "component": 30,
+          "mean_gate_share": 0.029571,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.09204,
+          "mean_abs_credit": 1.879875,
+          "full_model_mean_gap_damage": 0.074364,
+          "full_model_gap_damage_ci95": [
+            -0.018418,
+            0.179592
+          ],
+          "full_model_positive_damage_rate": 0.507812,
+          "full_model_selected_kl": 0.065869,
+          "routed_mean_gap_damage": -0.00032,
+          "routed_positive_damage_rate": 0.382812
+        },
+        {
+          "component": 31,
+          "mean_gate_share": 0.002474,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.03552,
+          "mean_abs_credit": 0.54991,
+          "full_model_mean_gap_damage": 0.022911,
+          "full_model_gap_damage_ci95": [
+            -0.069108,
+            0.112821
+          ],
+          "full_model_positive_damage_rate": 0.492188,
+          "full_model_selected_kl": 0.035527,
+          "routed_mean_gap_damage": -0.000452,
+          "routed_positive_damage_rate": 0.15625
+        }
+      ]
+    },
+    "destination_cue_corrupt": {
+      "category": "induction_absent_control",
+      "reference_gap": 1.563061,
+      "reference_positive_accuracy": 0.0,
+      "routed_gap": 1.328202,
+      "residual_gap": 1.334732,
+      "mean_effective_components": 4.931211,
+      "mean_winner_share": 0.379028,
+      "components_owning_examples": 9,
+      "routed_selected_kl": 0.121331,
+      "residual_selected_kl": 0.130316,
+      "components": [
+        {
+          "component": 0,
+          "mean_gate_share": 0.006963,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.144014,
+          "mean_abs_credit": 1.023868,
+          "full_model_mean_gap_damage": 0.065144,
+          "full_model_gap_damage_ci95": [
+            -0.026638,
+            0.169496
+          ],
+          "full_model_positive_damage_rate": 0.539062,
+          "full_model_selected_kl": 0.047449,
+          "routed_mean_gap_damage": -0.010653,
+          "routed_positive_damage_rate": 0.328125
+        },
+        {
+          "component": 1,
+          "mean_gate_share": 0.004844,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.023837,
+          "mean_abs_credit": 0.641177,
+          "full_model_mean_gap_damage": 0.079493,
+          "full_model_gap_damage_ci95": [
+            -0.020263,
+            0.173139
+          ],
+          "full_model_positive_damage_rate": 0.554688,
+          "full_model_selected_kl": 0.036461,
+          "routed_mean_gap_damage": 0.008535,
+          "routed_positive_damage_rate": 0.21875
+        },
+        {
+          "component": 2,
+          "mean_gate_share": 0.007348,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.052177,
+          "mean_abs_credit": 0.923414,
+          "full_model_mean_gap_damage": 0.098968,
+          "full_model_gap_damage_ci95": [
+            -0.001454,
+            0.1965
+          ],
+          "full_model_positive_damage_rate": 0.5625,
+          "full_model_selected_kl": 0.038656,
+          "routed_mean_gap_damage": -0.000278,
+          "routed_positive_damage_rate": 0.265625
+        },
+        {
+          "component": 3,
+          "mean_gate_share": 0.006217,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.005203,
+          "mean_abs_credit": 0.833871,
+          "full_model_mean_gap_damage": 0.080538,
+          "full_model_gap_damage_ci95": [
+            -0.015992,
+            0.178367
+          ],
+          "full_model_positive_damage_rate": 0.554688,
+          "full_model_selected_kl": 0.035468,
+          "routed_mean_gap_damage": 0.007975,
+          "routed_positive_damage_rate": 0.304688
+        },
+        {
+          "component": 4,
+          "mean_gate_share": 0.061181,
+          "owner_fraction": 0.03125,
+          "mean_signed_credit": 0.20262,
+          "mean_abs_credit": 2.986853,
+          "full_model_mean_gap_damage": 0.155425,
+          "full_model_gap_damage_ci95": [
+            0.055384,
+            0.26941
+          ],
+          "full_model_positive_damage_rate": 0.585938,
+          "full_model_selected_kl": 0.064204,
+          "routed_mean_gap_damage": 0.000118,
+          "routed_positive_damage_rate": 0.390625
+        },
+        {
+          "component": 5,
+          "mean_gate_share": 0.090262,
+          "owner_fraction": 0.09375,
+          "mean_signed_credit": 0.719457,
+          "mean_abs_credit": 3.419208,
+          "full_model_mean_gap_damage": 0.307632,
+          "full_model_gap_damage_ci95": [
+            0.206752,
+            0.417744
+          ],
+          "full_model_positive_damage_rate": 0.71875,
+          "full_model_selected_kl": 0.067162,
+          "routed_mean_gap_damage": -0.000552,
+          "routed_positive_damage_rate": 0.398438
+        },
+        {
+          "component": 6,
+          "mean_gate_share": 0.004654,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.045928,
+          "mean_abs_credit": 0.62232,
+          "full_model_mean_gap_damage": 0.102509,
+          "full_model_gap_damage_ci95": [
+            0.008306,
+            0.188258
+          ],
+          "full_model_positive_damage_rate": 0.609375,
+          "full_model_selected_kl": 0.036033,
+          "routed_mean_gap_damage": -0.006304,
+          "routed_positive_damage_rate": 0.15625
+        },
+        {
+          "component": 7,
+          "mean_gate_share": 0.012804,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.003616,
+          "mean_abs_credit": 1.263042,
+          "full_model_mean_gap_damage": 0.092868,
+          "full_model_gap_damage_ci95": [
+            -0.004444,
+            0.197755
+          ],
+          "full_model_positive_damage_rate": 0.546875,
+          "full_model_selected_kl": 0.038606,
+          "routed_mean_gap_damage": -0.002161,
+          "routed_positive_damage_rate": 0.328125
+        },
+        {
+          "component": 8,
+          "mean_gate_share": 0.076011,
+          "owner_fraction": 0.078125,
+          "mean_signed_credit": 0.163999,
+          "mean_abs_credit": 3.081902,
+          "full_model_mean_gap_damage": 0.201834,
+          "full_model_gap_damage_ci95": [
+            0.09344,
+            0.318639
+          ],
+          "full_model_positive_damage_rate": 0.585938,
+          "full_model_selected_kl": 0.100239,
+          "routed_mean_gap_damage": 0.003267,
+          "routed_positive_damage_rate": 0.382812
+        },
+        {
+          "component": 9,
+          "mean_gate_share": 0.002896,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.06868,
+          "mean_abs_credit": 0.591592,
+          "full_model_mean_gap_damage": 0.132342,
+          "full_model_gap_damage_ci95": [
+            0.042438,
+            0.224972
+          ],
+          "full_model_positive_damage_rate": 0.609375,
+          "full_model_selected_kl": 0.035962,
+          "routed_mean_gap_damage": 0.000751,
+          "routed_positive_damage_rate": 0.21875
+        },
+        {
+          "component": 10,
+          "mean_gate_share": 0.15017,
+          "owner_fraction": 0.226562,
+          "mean_signed_credit": 0.033789,
+          "mean_abs_credit": 4.953736,
+          "full_model_mean_gap_damage": 0.190776,
+          "full_model_gap_damage_ci95": [
+            0.067813,
+            0.307147
+          ],
+          "full_model_positive_damage_rate": 0.601562,
+          "full_model_selected_kl": 0.07279,
+          "routed_mean_gap_damage": 3.1e-05,
+          "routed_positive_damage_rate": 0.453125
+        },
+        {
+          "component": 11,
+          "mean_gate_share": 0.003607,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.052891,
+          "mean_abs_credit": 0.515217,
+          "full_model_mean_gap_damage": 0.086965,
+          "full_model_gap_damage_ci95": [
+            -0.005898,
+            0.190787
+          ],
+          "full_model_positive_damage_rate": 0.515625,
+          "full_model_selected_kl": 0.034824,
+          "routed_mean_gap_damage": -0.000958,
+          "routed_positive_damage_rate": 0.179688
+        },
+        {
+          "component": 12,
+          "mean_gate_share": 0.096747,
+          "owner_fraction": 0.109375,
+          "mean_signed_credit": 0.344069,
+          "mean_abs_credit": 3.996266,
+          "full_model_mean_gap_damage": 0.227398,
+          "full_model_gap_damage_ci95": [
+            0.13849,
+            0.32497
+          ],
+          "full_model_positive_damage_rate": 0.664062,
+          "full_model_selected_kl": 0.065205,
+          "routed_mean_gap_damage": -0.003316,
+          "routed_positive_damage_rate": 0.398438
+        },
+        {
+          "component": 13,
+          "mean_gate_share": 0.15492,
+          "owner_fraction": 0.273438,
+          "mean_signed_credit": 0.275568,
+          "mean_abs_credit": 4.601588,
+          "full_model_mean_gap_damage": 0.155797,
+          "full_model_gap_damage_ci95": [
+            0.055059,
+            0.261159
+          ],
+          "full_model_positive_damage_rate": 0.585938,
+          "full_model_selected_kl": 0.077459,
+          "routed_mean_gap_damage": -0.003949,
+          "routed_positive_damage_rate": 0.421875
+        },
+        {
+          "component": 14,
+          "mean_gate_share": 0.004181,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.013545,
+          "mean_abs_credit": 0.785589,
+          "full_model_mean_gap_damage": 0.0321,
+          "full_model_gap_damage_ci95": [
+            -0.060666,
+            0.137315
+          ],
+          "full_model_positive_damage_rate": 0.492188,
+          "full_model_selected_kl": 0.035992,
+          "routed_mean_gap_damage": -0.002523,
+          "routed_positive_damage_rate": 0.28125
+        },
+        {
+          "component": 15,
+          "mean_gate_share": 0.002617,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.184742,
+          "mean_abs_credit": 0.541169,
+          "full_model_mean_gap_damage": 0.07689,
+          "full_model_gap_damage_ci95": [
+            -0.02555,
+            0.17621
+          ],
+          "full_model_positive_damage_rate": 0.554688,
+          "full_model_selected_kl": 0.034228,
+          "routed_mean_gap_damage": 0.003489,
+          "routed_positive_damage_rate": 0.195312
+        },
+        {
+          "component": 16,
+          "mean_gate_share": 0.079639,
+          "owner_fraction": 0.085938,
+          "mean_signed_credit": 0.27957,
+          "mean_abs_credit": 3.576253,
+          "full_model_mean_gap_damage": 0.078476,
+          "full_model_gap_damage_ci95": [
+            -0.024107,
+            0.174443
+          ],
+          "full_model_positive_damage_rate": 0.554688,
+          "full_model_selected_kl": 0.064645,
+          "routed_mean_gap_damage": -0.003856,
+          "routed_positive_damage_rate": 0.414062
+        },
+        {
+          "component": 17,
+          "mean_gate_share": 0.002992,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.000645,
+          "mean_abs_credit": 0.548764,
+          "full_model_mean_gap_damage": 0.068305,
+          "full_model_gap_damage_ci95": [
+            -0.022644,
+            0.168619
+          ],
+          "full_model_positive_damage_rate": 0.5625,
+          "full_model_selected_kl": 0.035286,
+          "routed_mean_gap_damage": -0.003577,
+          "routed_positive_damage_rate": 0.1875
+        },
+        {
+          "component": 18,
+          "mean_gate_share": 0.079688,
+          "owner_fraction": 0.078125,
+          "mean_signed_credit": 0.472824,
+          "mean_abs_credit": 3.588,
+          "full_model_mean_gap_damage": 0.141912,
+          "full_model_gap_damage_ci95": [
+            0.047441,
+            0.233178
+          ],
+          "full_model_positive_damage_rate": 0.664062,
+          "full_model_selected_kl": 0.061865,
+          "routed_mean_gap_damage": 0.007201,
+          "routed_positive_damage_rate": 0.382812
+        },
+        {
+          "component": 19,
+          "mean_gate_share": 0.007626,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.074584,
+          "mean_abs_credit": 0.809713,
+          "full_model_mean_gap_damage": 0.112436,
+          "full_model_gap_damage_ci95": [
+            0.022074,
+            0.21489
+          ],
+          "full_model_positive_damage_rate": 0.570312,
+          "full_model_selected_kl": 0.03752,
+          "routed_mean_gap_damage": 0.002765,
+          "routed_positive_damage_rate": 0.242188
+        },
+        {
+          "component": 20,
+          "mean_gate_share": 0.002949,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.151937,
+          "mean_abs_credit": 0.514883,
+          "full_model_mean_gap_damage": 0.110983,
+          "full_model_gap_damage_ci95": [
+            0.023821,
+            0.204512
+          ],
+          "full_model_positive_damage_rate": 0.546875,
+          "full_model_selected_kl": 0.036065,
+          "routed_mean_gap_damage": 0.002874,
+          "routed_positive_damage_rate": 0.179688
+        },
+        {
+          "component": 21,
+          "mean_gate_share": 0.004156,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.112807,
+          "mean_abs_credit": 0.687224,
+          "full_model_mean_gap_damage": 0.049848,
+          "full_model_gap_damage_ci95": [
+            -0.04677,
+            0.1513
+          ],
+          "full_model_positive_damage_rate": 0.507812,
+          "full_model_selected_kl": 0.037682,
+          "routed_mean_gap_damage": -0.020352,
+          "routed_positive_damage_rate": 0.179688
+        },
+        {
+          "component": 22,
+          "mean_gate_share": 0.004182,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.056058,
+          "mean_abs_credit": 0.683903,
+          "full_model_mean_gap_damage": 0.063059,
+          "full_model_gap_damage_ci95": [
+            -0.03513,
+            0.159362
+          ],
+          "full_model_positive_damage_rate": 0.539062,
+          "full_model_selected_kl": 0.035123,
+          "routed_mean_gap_damage": 0.018589,
+          "routed_positive_damage_rate": 0.25
+        },
+        {
+          "component": 23,
+          "mean_gate_share": 0.070277,
+          "owner_fraction": 0.023438,
+          "mean_signed_credit": 0.082799,
+          "mean_abs_credit": 3.590619,
+          "full_model_mean_gap_damage": 0.213228,
+          "full_model_gap_damage_ci95": [
+            0.101112,
+            0.314463
+          ],
+          "full_model_positive_damage_rate": 0.617188,
+          "full_model_selected_kl": 0.065328,
+          "routed_mean_gap_damage": -0.008971,
+          "routed_positive_damage_rate": 0.320312
+        },
+        {
+          "component": 24,
+          "mean_gate_share": 0.002645,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.013251,
+          "mean_abs_credit": 0.501322,
+          "full_model_mean_gap_damage": 0.071859,
+          "full_model_gap_damage_ci95": [
+            -0.02933,
+            0.172835
+          ],
+          "full_model_positive_damage_rate": 0.515625,
+          "full_model_selected_kl": 0.03562,
+          "routed_mean_gap_damage": 0.002005,
+          "routed_positive_damage_rate": 0.15625
+        },
+        {
+          "component": 25,
+          "mean_gate_share": 0.003513,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.151849,
+          "mean_abs_credit": 0.574177,
+          "full_model_mean_gap_damage": 0.078821,
+          "full_model_gap_damage_ci95": [
+            -0.015127,
+            0.177087
+          ],
+          "full_model_positive_damage_rate": 0.554688,
+          "full_model_selected_kl": 0.035226,
+          "routed_mean_gap_damage": -0.003239,
+          "routed_positive_damage_rate": 0.179688
+        },
+        {
+          "component": 26,
+          "mean_gate_share": 0.010244,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.232347,
+          "mean_abs_credit": 0.938442,
+          "full_model_mean_gap_damage": 0.046198,
+          "full_model_gap_damage_ci95": [
+            -0.056253,
+            0.13745
+          ],
+          "full_model_positive_damage_rate": 0.507812,
+          "full_model_selected_kl": 0.041082,
+          "routed_mean_gap_damage": 0.000998,
+          "routed_positive_damage_rate": 0.265625
+        },
+        {
+          "component": 27,
+          "mean_gate_share": 0.003124,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.208155,
+          "mean_abs_credit": 0.56322,
+          "full_model_mean_gap_damage": 0.04818,
+          "full_model_gap_damage_ci95": [
+            -0.05199,
+            0.149651
+          ],
+          "full_model_positive_damage_rate": 0.539062,
+          "full_model_selected_kl": 0.037414,
+          "routed_mean_gap_damage": -0.003153,
+          "routed_positive_damage_rate": 0.15625
+        },
+        {
+          "component": 28,
+          "mean_gate_share": 0.002098,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.035796,
+          "mean_abs_credit": 0.456278,
+          "full_model_mean_gap_damage": 0.029115,
+          "full_model_gap_damage_ci95": [
+            -0.070585,
+            0.121775
+          ],
+          "full_model_positive_damage_rate": 0.515625,
+          "full_model_selected_kl": 0.034844,
+          "routed_mean_gap_damage": -0.001848,
+          "routed_positive_damage_rate": 0.109375
+        },
+        {
+          "component": 29,
+          "mean_gate_share": 0.007735,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.069504,
+          "mean_abs_credit": 1.040511,
+          "full_model_mean_gap_damage": 0.059455,
+          "full_model_gap_damage_ci95": [
+            -0.040388,
+            0.164187
+          ],
+          "full_model_positive_damage_rate": 0.523438,
+          "full_model_selected_kl": 0.040448,
+          "routed_mean_gap_damage": 0.009583,
+          "routed_positive_damage_rate": 0.351562
+        },
+        {
+          "component": 30,
+          "mean_gate_share": 0.030265,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": -0.118656,
+          "mean_abs_credit": 2.114863,
+          "full_model_mean_gap_damage": 0.088472,
+          "full_model_gap_damage_ci95": [
+            -0.032889,
+            0.198457
+          ],
+          "full_model_positive_damage_rate": 0.539062,
+          "full_model_selected_kl": 0.064297,
+          "routed_mean_gap_damage": 0.011927,
+          "routed_positive_damage_rate": 0.421875
+        },
+        {
+          "component": 31,
+          "mean_gate_share": 0.003443,
+          "owner_fraction": 0.0,
+          "mean_signed_credit": 0.168257,
+          "mean_abs_credit": 0.521401,
+          "full_model_mean_gap_damage": 0.045382,
+          "full_model_gap_damage_ci95": [
+            -0.047,
+            0.144833
+          ],
+          "full_model_positive_damage_rate": 0.5625,
+          "full_model_selected_kl": 0.035241,
+          "routed_mean_gap_damage": -0.001519,
+          "routed_positive_damage_rate": 0.1875
+        }
+      ]
+    }
+  }
+}

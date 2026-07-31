@@ -1,0 +1,2170 @@
+{
+  "artifact": "nano_apd/out/pythia-410m_induction_components_functional_v4_C16",
+  "precision": "bf16",
+  "n_pairs": 128,
+  "eligible_count": 50,
+  "model": "EleutherAI/pythia-410m",
+  "components": 16,
+  "rank": 1,
+  "cross_layer": {
+    "modules": 96,
+    "layers": 24,
+    "component_index_shared_across_modules": true
+  },
+  "routing": {
+    "normalization": "sum",
+    "mean_effective_components": 5.157848,
+    "mean_winner_share": 0.355915,
+    "components_owning_examples": 10
+  },
+  "behavior": {
+    "target_gap": 10.845498,
+    "routed_gap": 9.948367,
+    "residual_gap": 9.622275,
+    "target_positive_accuracy": 1.0,
+    "routed_positive_accuracy": 0.64,
+    "residual_positive_accuracy": 0.64,
+    "routed_selected_kl": 0.221625,
+    "residual_matched_negative_kl": 0.276504
+  },
+  "necessity_rule": {
+    "owned": "top owner or share >= 0.12",
+    "minimum_owned_examples": 5,
+    "requirements": "bootstrap CI lower bound > 0 and gap-damage rate above 0.05 >= 50%",
+    "components_passing": 0
+  },
+  "components_detail": [
+    {
+      "component": 0,
+      "owned_examples": 5,
+      "mean_share_on_owned": 0.214031,
+      "max_share": 0.288121,
+      "mean_gap_damage": 0.189063,
+      "gap_damage_ci95": [
+        -0.010937,
+        0.378125
+      ],
+      "necessity_rate": 0.8,
+      "prediction_flip_rate": 0.2,
+      "matched_negative_kl": 0.164204,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        19,
+        20,
+        18,
+        21,
+        23
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 18,
+          "head": 8
+        },
+        {
+          "layer": 10,
+          "head": 0
+        },
+        {
+          "layer": 8,
+          "head": 10
+        },
+        {
+          "layer": 10,
+          "head": 10
+        },
+        {
+          "layer": 1,
+          "head": 9
+        },
+        {
+          "layer": 11,
+          "head": 2
+        },
+        {
+          "layer": 6,
+          "head": 6
+        },
+        {
+          "layer": 12,
+          "head": 13
+        }
+      ],
+      "piece_mass_effective_layers": 23.7658
+    },
+    {
+      "component": 1,
+      "owned_examples": 2,
+      "mean_share_on_owned": 0.13215,
+      "max_share": 0.132975,
+      "mean_gap_damage": -0.023438,
+      "gap_damage_ci95": [
+        -0.296875,
+        0.25
+      ],
+      "necessity_rate": 0.5,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.182263,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.22.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        19,
+        14,
+        20,
+        22
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 7,
+          "head": 1
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 1,
+          "head": 4
+        },
+        {
+          "layer": 8,
+          "head": 10
+        },
+        {
+          "layer": 18,
+          "head": 8
+        },
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 8,
+          "head": 13
+        },
+        {
+          "layer": 8,
+          "head": 6
+        }
+      ],
+      "piece_mass_effective_layers": 23.7885
+    },
+    {
+      "component": 2,
+      "owned_examples": 1,
+      "mean_share_on_owned": 0.136728,
+      "max_share": 0.136728,
+      "mean_gap_damage": 0.25,
+      "gap_damage_ci95": [
+        0.25,
+        0.25
+      ],
+      "necessity_rate": 1.0,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.270502,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        19,
+        20,
+        21,
+        17,
+        18
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 0,
+          "head": 3
+        },
+        {
+          "layer": 11,
+          "head": 2
+        },
+        {
+          "layer": 13,
+          "head": 12
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 11,
+          "head": 15
+        },
+        {
+          "layer": 8,
+          "head": 13
+        }
+      ],
+      "piece_mass_effective_layers": 23.7382
+    },
+    {
+      "component": 3,
+      "owned_examples": 0,
+      "mean_share_on_owned": null,
+      "max_share": 0.097385,
+      "mean_gap_damage": null,
+      "gap_damage_ci95": [
+        null,
+        null
+      ],
+      "necessity_rate": null,
+      "prediction_flip_rate": null,
+      "matched_negative_kl": null,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        20,
+        14,
+        19,
+        23
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 7,
+          "head": 0
+        },
+        {
+          "layer": 7,
+          "head": 1
+        },
+        {
+          "layer": 19,
+          "head": 2
+        },
+        {
+          "layer": 12,
+          "head": 13
+        },
+        {
+          "layer": 1,
+          "head": 9
+        },
+        {
+          "layer": 7,
+          "head": 4
+        },
+        {
+          "layer": 12,
+          "head": 0
+        }
+      ],
+      "piece_mass_effective_layers": 23.8421
+    },
+    {
+      "component": 4,
+      "owned_examples": 10,
+      "mean_share_on_owned": 0.243371,
+      "max_share": 0.449089,
+      "mean_gap_damage": 0.073364,
+      "gap_damage_ci95": [
+        -0.187812,
+        0.312048
+      ],
+      "necessity_rate": 0.5,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.308328,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        19,
+        20,
+        21,
+        18,
+        17
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 7,
+          "head": 4
+        },
+        {
+          "layer": 7,
+          "head": 0
+        },
+        {
+          "layer": 7,
+          "head": 1
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 12,
+          "head": 0
+        },
+        {
+          "layer": 9,
+          "head": 14
+        },
+        {
+          "layer": 2,
+          "head": 9
+        }
+      ],
+      "piece_mass_effective_layers": 23.6246
+    },
+    {
+      "component": 5,
+      "owned_examples": 0,
+      "mean_share_on_owned": null,
+      "max_share": 0.055299,
+      "mean_gap_damage": null,
+      "gap_damage_ci95": [
+        null,
+        null
+      ],
+      "necessity_rate": null,
+      "prediction_flip_rate": null,
+      "matched_negative_kl": null,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        14,
+        20,
+        16,
+        21,
+        10
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 8,
+          "head": 6
+        },
+        {
+          "layer": 8,
+          "head": 2
+        },
+        {
+          "layer": 5,
+          "head": 14
+        },
+        {
+          "layer": 11,
+          "head": 2
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 20,
+          "head": 1
+        },
+        {
+          "layer": 12,
+          "head": 13
+        },
+        {
+          "layer": 20,
+          "head": 11
+        }
+      ],
+      "piece_mass_effective_layers": 23.6999
+    },
+    {
+      "component": 6,
+      "owned_examples": 6,
+      "mean_share_on_owned": 0.174401,
+      "max_share": 0.280108,
+      "mean_gap_damage": 0.164062,
+      "gap_damage_ci95": [
+        -0.072917,
+        0.398568
+      ],
+      "necessity_rate": 0.5,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.314723,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        19,
+        21,
+        18,
+        16,
+        20
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 13,
+          "head": 14
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 1,
+          "head": 4
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 5,
+          "head": 7
+        },
+        {
+          "layer": 7,
+          "head": 1
+        },
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 11,
+          "head": 1
+        }
+      ],
+      "piece_mass_effective_layers": 23.7236
+    },
+    {
+      "component": 7,
+      "owned_examples": 5,
+      "mean_share_on_owned": 0.171176,
+      "max_share": 0.250225,
+      "mean_gap_damage": -0.113037,
+      "gap_damage_ci95": [
+        -0.25835,
+        0.032275
+      ],
+      "necessity_rate": 0.2,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.155568,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.22.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        19,
+        21,
+        14,
+        22,
+        23
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 10,
+          "head": 7
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 9,
+          "head": 4
+        },
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 10,
+          "head": 0
+        },
+        {
+          "layer": 9,
+          "head": 6
+        },
+        {
+          "layer": 10,
+          "head": 6
+        },
+        {
+          "layer": 11,
+          "head": 14
+        }
+      ],
+      "piece_mass_effective_layers": 23.7374
+    },
+    {
+      "component": 8,
+      "owned_examples": 12,
+      "mean_share_on_owned": 0.21526,
+      "max_share": 0.341002,
+      "mean_gap_damage": 0.043783,
+      "gap_damage_ci95": [
+        -0.134782,
+        0.226318
+      ],
+      "necessity_rate": 0.5,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.164279,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.16.attention.query_key_value",
+        "gpt_neox.layers.22.attention.query_key_value",
+        "gpt_neox.layers.15.mlp.dense_4h_to_h"
+      ],
+      "top_credit_layers": [
+        14,
+        16,
+        19,
+        18,
+        22
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 1,
+          "head": 15
+        },
+        {
+          "layer": 8,
+          "head": 12
+        },
+        {
+          "layer": 18,
+          "head": 8
+        },
+        {
+          "layer": 9,
+          "head": 2
+        },
+        {
+          "layer": 1,
+          "head": 9
+        },
+        {
+          "layer": 14,
+          "head": 11
+        },
+        {
+          "layer": 5,
+          "head": 2
+        }
+      ],
+      "piece_mass_effective_layers": 23.603
+    },
+    {
+      "component": 9,
+      "owned_examples": 3,
+      "mean_share_on_owned": 0.27544,
+      "max_share": 0.329555,
+      "mean_gap_damage": 0.197591,
+      "gap_damage_ci95": [
+        -0.493164,
+        1.164062
+      ],
+      "necessity_rate": 0.3333,
+      "prediction_flip_rate": 0.3333,
+      "matched_negative_kl": 0.324384,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value",
+        "gpt_neox.layers.16.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        17,
+        23,
+        20,
+        16
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 11,
+          "head": 2
+        },
+        {
+          "layer": 7,
+          "head": 0
+        },
+        {
+          "layer": 11,
+          "head": 15
+        },
+        {
+          "layer": 7,
+          "head": 7
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 16,
+          "head": 14
+        },
+        {
+          "layer": 15,
+          "head": 8
+        },
+        {
+          "layer": 7,
+          "head": 14
+        }
+      ],
+      "piece_mass_effective_layers": 23.7831
+    },
+    {
+      "component": 10,
+      "owned_examples": 0,
+      "mean_share_on_owned": null,
+      "max_share": 0.11241,
+      "mean_gap_damage": null,
+      "gap_damage_ci95": [
+        null,
+        null
+      ],
+      "necessity_rate": null,
+      "prediction_flip_rate": null,
+      "matched_negative_kl": null,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value",
+        "gpt_neox.layers.22.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        17,
+        18,
+        19,
+        16
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 18,
+          "head": 8
+        },
+        {
+          "layer": 0,
+          "head": 5
+        },
+        {
+          "layer": 7,
+          "head": 0
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 5,
+          "head": 7
+        },
+        {
+          "layer": 9,
+          "head": 12
+        },
+        {
+          "layer": 11,
+          "head": 2
+        }
+      ],
+      "piece_mass_effective_layers": 23.6534
+    },
+    {
+      "component": 11,
+      "owned_examples": 23,
+      "mean_share_on_owned": 0.294027,
+      "max_share": 0.74899,
+      "mean_gap_damage": -0.016984,
+      "gap_damage_ci95": [
+        -0.138778,
+        0.123663
+      ],
+      "necessity_rate": 0.3913,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.233072,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.16.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        19,
+        21,
+        16,
+        14,
+        20
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 10,
+          "head": 7
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 11,
+          "head": 6
+        },
+        {
+          "layer": 15,
+          "head": 8
+        },
+        {
+          "layer": 7,
+          "head": 2
+        },
+        {
+          "layer": 10,
+          "head": 0
+        },
+        {
+          "layer": 1,
+          "head": 12
+        },
+        {
+          "layer": 7,
+          "head": 0
+        }
+      ],
+      "piece_mass_effective_layers": 23.7094
+    },
+    {
+      "component": 12,
+      "owned_examples": 18,
+      "mean_share_on_owned": 0.296941,
+      "max_share": 0.621733,
+      "mean_gap_damage": 0.204373,
+      "gap_damage_ci95": [
+        -0.040788,
+        0.439578
+      ],
+      "necessity_rate": 0.6111,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.216525,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.22.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        19,
+        22,
+        14,
+        18
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 0,
+          "head": 3
+        },
+        {
+          "layer": 5,
+          "head": 7
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 9,
+          "head": 4
+        },
+        {
+          "layer": 9,
+          "head": 7
+        },
+        {
+          "layer": 1,
+          "head": 9
+        },
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 18,
+          "head": 8
+        }
+      ],
+      "piece_mass_effective_layers": 23.8217
+    },
+    {
+      "component": 13,
+      "owned_examples": 0,
+      "mean_share_on_owned": null,
+      "max_share": 0.074996,
+      "mean_gap_damage": null,
+      "gap_damage_ci95": [
+        null,
+        null
+      ],
+      "necessity_rate": null,
+      "prediction_flip_rate": null,
+      "matched_negative_kl": null,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        20,
+        19,
+        17,
+        14
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 11,
+          "head": 2
+        },
+        {
+          "layer": 8,
+          "head": 2
+        },
+        {
+          "layer": 9,
+          "head": 3
+        },
+        {
+          "layer": 8,
+          "head": 14
+        },
+        {
+          "layer": 0,
+          "head": 0
+        },
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 7,
+          "head": 4
+        }
+      ],
+      "piece_mass_effective_layers": 23.6601
+    },
+    {
+      "component": 14,
+      "owned_examples": 5,
+      "mean_share_on_owned": 0.165964,
+      "max_share": 0.252359,
+      "mean_gap_damage": 0.165454,
+      "gap_damage_ci95": [
+        -0.097046,
+        0.447031
+      ],
+      "necessity_rate": 0.6,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.207948,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.22.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        20,
+        22,
+        18,
+        19
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 17,
+          "head": 1
+        },
+        {
+          "layer": 11,
+          "head": 2
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 20,
+          "head": 14
+        },
+        {
+          "layer": 0,
+          "head": 3
+        },
+        {
+          "layer": 17,
+          "head": 10
+        },
+        {
+          "layer": 9,
+          "head": 6
+        },
+        {
+          "layer": 0,
+          "head": 14
+        }
+      ],
+      "piece_mass_effective_layers": 23.746
+    },
+    {
+      "component": 15,
+      "owned_examples": 31,
+      "mean_share_on_owned": 0.276293,
+      "max_share": 0.561798,
+      "mean_gap_damage": 0.130911,
+      "gap_damage_ci95": [
+        -0.023302,
+        0.319963
+      ],
+      "necessity_rate": 0.5484,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.24504,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        19,
+        17,
+        21,
+        18,
+        23
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 18,
+          "head": 10
+        },
+        {
+          "layer": 11,
+          "head": 15
+        },
+        {
+          "layer": 18,
+          "head": 8
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 18,
+          "head": 12
+        },
+        {
+          "layer": 8,
+          "head": 9
+        },
+        {
+          "layer": 0,
+          "head": 3
+        },
+        {
+          "layer": 0,
+          "head": 5
+        }
+      ],
+      "piece_mass_effective_layers": 23.7313
+    }
+  ],
+  "target_attribution_reference": {
+    "top_modules": [
+      "gpt_neox.layers.11.attention.query_key_value",
+      "gpt_neox.layers.10.mlp.dense_h_to_4h",
+      "gpt_neox.layers.21.attention.query_key_value",
+      "gpt_neox.layers.16.attention.query_key_value",
+      "gpt_neox.layers.0.mlp.dense_4h_to_h",
+      "gpt_neox.layers.0.mlp.dense_h_to_4h",
+      "gpt_neox.layers.6.mlp.dense_h_to_4h",
+      "gpt_neox.layers.5.attention.query_key_value",
+      "gpt_neox.layers.0.attention.query_key_value",
+      "gpt_neox.layers.6.attention.query_key_value",
+      "gpt_neox.layers.7.mlp.dense_h_to_4h",
+      "gpt_neox.layers.19.attention.query_key_value",
+      "gpt_neox.layers.8.attention.query_key_value",
+      "gpt_neox.layers.18.attention.query_key_value",
+      "gpt_neox.layers.20.attention.query_key_value",
+      "gpt_neox.layers.8.mlp.dense_h_to_4h"
+    ],
+    "top_heads": [
+      {
+        "layer": 5,
+        "head": 2
+      },
+      {
+        "layer": 7,
+        "head": 0
+      },
+      {
+        "layer": 11,
+        "head": 2
+      },
+      {
+        "layer": 0,
+        "head": 14
+      },
+      {
+        "layer": 7,
+        "head": 1
+      },
+      {
+        "layer": 6,
+        "head": 6
+      },
+      {
+        "layer": 0,
+        "head": 3
+      },
+      {
+        "layer": 9,
+        "head": 5
+      },
+      {
+        "layer": 4,
+        "head": 11
+      },
+      {
+        "layer": 8,
+        "head": 6
+      },
+      {
+        "layer": 1,
+        "head": 9
+      },
+      {
+        "layer": 9,
+        "head": 3
+      },
+      {
+        "layer": 1,
+        "head": 10
+      },
+      {
+        "layer": 11,
+        "head": 14
+      },
+      {
+        "layer": 1,
+        "head": 15
+      },
+      {
+        "layer": 7,
+        "head": 4
+      },
+      {
+        "layer": 4,
+        "head": 0
+      },
+      {
+        "layer": 1,
+        "head": 0
+      },
+      {
+        "layer": 1,
+        "head": 4
+      },
+      {
+        "layer": 19,
+        "head": 15
+      },
+      {
+        "layer": 0,
+        "head": 0
+      },
+      {
+        "layer": 20,
+        "head": 14
+      },
+      {
+        "layer": 8,
+        "head": 13
+      },
+      {
+        "layer": 0,
+        "head": 5
+      },
+      {
+        "layer": 7,
+        "head": 6
+      },
+      {
+        "layer": 3,
+        "head": 1
+      },
+      {
+        "layer": 11,
+        "head": 15
+      },
+      {
+        "layer": 6,
+        "head": 13
+      },
+      {
+        "layer": 11,
+        "head": 6
+      },
+      {
+        "layer": 8,
+        "head": 10
+      },
+      {
+        "layer": 5,
+        "head": 7
+      },
+      {
+        "layer": 5,
+        "head": 9
+      }
+    ]
+  },
+  "posthoc_head_ground_truth": {
+    "warning": "Empirical post-hoc circuit reference, not literal ground truth. A head can be shared infrastructure or interact non-additively.",
+    "n_heads_tested": 384,
+    "top_by_ablation": [
+      {
+        "layer": 5,
+        "head": 2,
+        "mean_gap_damage": 3.971401,
+        "gap_damage_ci95": [
+          3.249097,
+          4.701828
+        ],
+        "mean_abs_attribution": 2.40361,
+        "matched_negative_kl": 0.660436,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 4,
+        "head": 11,
+        "mean_gap_damage": 2.426753,
+        "gap_damage_ci95": [
+          1.45207,
+          3.387307
+        ],
+        "mean_abs_attribution": 1.300975,
+        "matched_negative_kl": 1.690731,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 7,
+        "head": 1,
+        "mean_gap_damage": 1.708935,
+        "gap_damage_ci95": [
+          1.355433,
+          2.050374
+        ],
+        "mean_abs_attribution": 1.705399,
+        "matched_negative_kl": 0.160636,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 11,
+        "head": 14,
+        "mean_gap_damage": 1.315283,
+        "gap_damage_ci95": [
+          0.985279,
+          1.646806
+        ],
+        "mean_abs_attribution": 1.043177,
+        "matched_negative_kl": 0.107254,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 9,
+        "head": 5,
+        "mean_gap_damage": 1.180146,
+        "gap_damage_ci95": [
+          0.840349,
+          1.531071
+        ],
+        "mean_abs_attribution": 1.445959,
+        "matched_negative_kl": 0.116267,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 11,
+        "head": 2,
+        "mean_gap_damage": 1.157517,
+        "gap_damage_ci95": [
+          0.897719,
+          1.439965
+        ],
+        "mean_abs_attribution": 1.814227,
+        "matched_negative_kl": 0.098484,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 8,
+        "head": 6,
+        "mean_gap_damage": 0.876045,
+        "gap_damage_ci95": [
+          0.60203,
+          1.203541
+        ],
+        "mean_abs_attribution": 1.289203,
+        "matched_negative_kl": 0.087575,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 1,
+        "head": 15,
+        "mean_gap_damage": 0.83165,
+        "gap_damage_ci95": [
+          0.4848,
+          1.197586
+        ],
+        "mean_abs_attribution": 1.022018,
+        "matched_negative_kl": 0.098032,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 9,
+        "head": 9,
+        "mean_gap_damage": 0.754253,
+        "gap_damage_ci95": [
+          0.506985,
+          1.022712
+        ],
+        "mean_abs_attribution": 0.718636,
+        "matched_negative_kl": 0.071187,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 11,
+        "head": 6,
+        "mean_gap_damage": 0.557822,
+        "gap_damage_ci95": [
+          0.349795,
+          0.802991
+        ],
+        "mean_abs_attribution": 0.867961,
+        "matched_negative_kl": 0.058644,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 11,
+        "head": 15,
+        "mean_gap_damage": 0.523193,
+        "gap_damage_ci95": [
+          0.288545,
+          0.78634
+        ],
+        "mean_abs_attribution": 0.910827,
+        "matched_negative_kl": 0.071785,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 9,
+        "head": 6,
+        "mean_gap_damage": 0.485804,
+        "gap_damage_ci95": [
+          0.279678,
+          0.702691
+        ],
+        "mean_abs_attribution": 0.675846,
+        "matched_negative_kl": 0.062276,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 9,
+        "head": 0,
+        "mean_gap_damage": 0.475294,
+        "gap_damage_ci95": [
+          0.224839,
+          0.746118
+        ],
+        "mean_abs_attribution": 0.619218,
+        "matched_negative_kl": 0.068827,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 14,
+        "head": 8,
+        "mean_gap_damage": 0.457861,
+        "gap_damage_ci95": [
+          0.29355,
+          0.650867
+        ],
+        "mean_abs_attribution": 0.479733,
+        "matched_negative_kl": 0.053323,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 5,
+        "head": 9,
+        "mean_gap_damage": 0.437598,
+        "gap_damage_ci95": [
+          0.189532,
+          0.711494
+        ],
+        "mean_abs_attribution": 0.841101,
+        "matched_negative_kl": 0.073596,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 1,
+        "head": 0,
+        "mean_gap_damage": 0.424307,
+        "gap_damage_ci95": [
+          0.146227,
+          0.698107
+        ],
+        "mean_abs_attribution": 0.987438,
+        "matched_negative_kl": 0.10354,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 8,
+        "head": 7,
+        "mean_gap_damage": 0.401217,
+        "gap_damage_ci95": [
+          0.197231,
+          0.62999
+        ],
+        "mean_abs_attribution": 0.640695,
+        "matched_negative_kl": 0.063839,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 9,
+        "head": 14,
+        "mean_gap_damage": 0.395876,
+        "gap_damage_ci95": [
+          0.193609,
+          0.598532
+        ],
+        "mean_abs_attribution": 0.593388,
+        "matched_negative_kl": 0.060726,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 18,
+        "head": 8,
+        "mean_gap_damage": 0.381357,
+        "gap_damage_ci95": [
+          0.154061,
+          0.620445
+        ],
+        "mean_abs_attribution": 0.596376,
+        "matched_negative_kl": 0.065145,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 12,
+        "head": 11,
+        "mean_gap_damage": 0.377925,
+        "gap_damage_ci95": [
+          0.19574,
+          0.564016
+        ],
+        "mean_abs_attribution": 0.52954,
+        "matched_negative_kl": 0.051309,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 18,
+        "head": 12,
+        "mean_gap_damage": 0.37499,
+        "gap_damage_ci95": [
+          0.104021,
+          0.663614
+        ],
+        "mean_abs_attribution": 0.40591,
+        "matched_negative_kl": 0.065539,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 4,
+        "head": 0,
+        "mean_gap_damage": 0.369229,
+        "gap_damage_ci95": [
+          0.122535,
+          0.615444
+        ],
+        "mean_abs_attribution": 0.991684,
+        "matched_negative_kl": 0.067857,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 10,
+        "head": 0,
+        "mean_gap_damage": 0.369043,
+        "gap_damage_ci95": [
+          0.151124,
+          0.585771
+        ],
+        "mean_abs_attribution": 0.468041,
+        "matched_negative_kl": 0.060023,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 7,
+        "head": 4,
+        "mean_gap_damage": 0.362441,
+        "gap_damage_ci95": [
+          0.131917,
+          0.611943
+        ],
+        "mean_abs_attribution": 0.995058,
+        "matched_negative_kl": 0.069949,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 22,
+        "head": 6,
+        "mean_gap_damage": 0.360699,
+        "gap_damage_ci95": [
+          0.269686,
+          0.470818
+        ],
+        "mean_abs_attribution": 0.410593,
+        "matched_negative_kl": 0.011044,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 0,
+        "head": 0,
+        "mean_gap_damage": 0.345339,
+        "gap_damage_ci95": [
+          0.086624,
+          0.595286
+        ],
+        "mean_abs_attribution": 0.944618,
+        "matched_negative_kl": 0.089776,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 11,
+        "head": 1,
+        "mean_gap_damage": 0.3446,
+        "gap_damage_ci95": [
+          0.118091,
+          0.577156
+        ],
+        "mean_abs_attribution": 0.794041,
+        "matched_negative_kl": 0.066153,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 10,
+        "head": 12,
+        "mean_gap_damage": 0.344346,
+        "gap_damage_ci95": [
+          0.140521,
+          0.552372
+        ],
+        "mean_abs_attribution": 0.479423,
+        "matched_negative_kl": 0.051055,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 10,
+        "head": 10,
+        "mean_gap_damage": 0.309932,
+        "gap_damage_ci95": [
+          0.134625,
+          0.500778
+        ],
+        "mean_abs_attribution": 0.678411,
+        "matched_negative_kl": 0.05214,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 2,
+        "head": 10,
+        "mean_gap_damage": 0.284509,
+        "gap_damage_ci95": [
+          0.055069,
+          0.50613
+        ],
+        "mean_abs_attribution": 0.820187,
+        "matched_negative_kl": 0.060138,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 10,
+        "head": 6,
+        "mean_gap_damage": 0.279901,
+        "gap_damage_ci95": [
+          0.125966,
+          0.432592
+        ],
+        "mean_abs_attribution": 0.401721,
+        "matched_negative_kl": 0.047799,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 12,
+        "head": 1,
+        "mean_gap_damage": 0.267979,
+        "gap_damage_ci95": [
+          0.085203,
+          0.443788
+        ],
+        "mean_abs_attribution": 0.323879,
+        "matched_negative_kl": 0.050932,
+        "positive_causal_ci": true
+      }
+    ],
+    "top_by_attribution": [
+      {
+        "layer": 5,
+        "head": 2,
+        "mean_gap_damage": 3.971401,
+        "gap_damage_ci95": [
+          3.249097,
+          4.701828
+        ],
+        "mean_abs_attribution": 2.40361,
+        "matched_negative_kl": 0.660436,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 7,
+        "head": 0,
+        "mean_gap_damage": -0.552895,
+        "gap_damage_ci95": [
+          -0.802786,
+          -0.306751
+        ],
+        "mean_abs_attribution": 1.992046,
+        "matched_negative_kl": 0.108334,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 11,
+        "head": 2,
+        "mean_gap_damage": 1.157517,
+        "gap_damage_ci95": [
+          0.897719,
+          1.439965
+        ],
+        "mean_abs_attribution": 1.814227,
+        "matched_negative_kl": 0.098484,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 0,
+        "head": 14,
+        "mean_gap_damage": 0.017783,
+        "gap_damage_ci95": [
+          -0.255489,
+          0.291979
+        ],
+        "mean_abs_attribution": 1.708243,
+        "matched_negative_kl": 0.102387,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 7,
+        "head": 1,
+        "mean_gap_damage": 1.708935,
+        "gap_damage_ci95": [
+          1.355433,
+          2.050374
+        ],
+        "mean_abs_attribution": 1.705399,
+        "matched_negative_kl": 0.160636,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 6,
+        "head": 6,
+        "mean_gap_damage": -0.465898,
+        "gap_damage_ci95": [
+          -0.761395,
+          -0.148801
+        ],
+        "mean_abs_attribution": 1.543931,
+        "matched_negative_kl": 0.111944,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 0,
+        "head": 3,
+        "mean_gap_damage": 0.14177,
+        "gap_damage_ci95": [
+          -0.164789,
+          0.433518
+        ],
+        "mean_abs_attribution": 1.52813,
+        "matched_negative_kl": 0.119481,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 9,
+        "head": 5,
+        "mean_gap_damage": 1.180146,
+        "gap_damage_ci95": [
+          0.840349,
+          1.531071
+        ],
+        "mean_abs_attribution": 1.445959,
+        "matched_negative_kl": 0.116267,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 4,
+        "head": 11,
+        "mean_gap_damage": 2.426753,
+        "gap_damage_ci95": [
+          1.45207,
+          3.387307
+        ],
+        "mean_abs_attribution": 1.300975,
+        "matched_negative_kl": 1.690731,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 8,
+        "head": 6,
+        "mean_gap_damage": 0.876045,
+        "gap_damage_ci95": [
+          0.60203,
+          1.203541
+        ],
+        "mean_abs_attribution": 1.289203,
+        "matched_negative_kl": 0.087575,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 1,
+        "head": 9,
+        "mean_gap_damage": 0.170475,
+        "gap_damage_ci95": [
+          -0.100135,
+          0.42483
+        ],
+        "mean_abs_attribution": 1.284881,
+        "matched_negative_kl": 0.085196,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 9,
+        "head": 3,
+        "mean_gap_damage": -0.528975,
+        "gap_damage_ci95": [
+          -0.747788,
+          -0.293112
+        ],
+        "mean_abs_attribution": 1.217437,
+        "matched_negative_kl": 0.075385,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 1,
+        "head": 10,
+        "mean_gap_damage": 0.082451,
+        "gap_damage_ci95": [
+          -0.190503,
+          0.385643
+        ],
+        "mean_abs_attribution": 1.111985,
+        "matched_negative_kl": 0.099119,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 11,
+        "head": 14,
+        "mean_gap_damage": 1.315283,
+        "gap_damage_ci95": [
+          0.985279,
+          1.646806
+        ],
+        "mean_abs_attribution": 1.043177,
+        "matched_negative_kl": 0.107254,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 1,
+        "head": 15,
+        "mean_gap_damage": 0.83165,
+        "gap_damage_ci95": [
+          0.4848,
+          1.197586
+        ],
+        "mean_abs_attribution": 1.022018,
+        "matched_negative_kl": 0.098032,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 7,
+        "head": 4,
+        "mean_gap_damage": 0.362441,
+        "gap_damage_ci95": [
+          0.131917,
+          0.611943
+        ],
+        "mean_abs_attribution": 0.995058,
+        "matched_negative_kl": 0.069949,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 4,
+        "head": 0,
+        "mean_gap_damage": 0.369229,
+        "gap_damage_ci95": [
+          0.122535,
+          0.615444
+        ],
+        "mean_abs_attribution": 0.991684,
+        "matched_negative_kl": 0.067857,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 1,
+        "head": 0,
+        "mean_gap_damage": 0.424307,
+        "gap_damage_ci95": [
+          0.146227,
+          0.698107
+        ],
+        "mean_abs_attribution": 0.987438,
+        "matched_negative_kl": 0.10354,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 1,
+        "head": 4,
+        "mean_gap_damage": -0.024316,
+        "gap_damage_ci95": [
+          -0.239823,
+          0.179503
+        ],
+        "mean_abs_attribution": 0.967623,
+        "matched_negative_kl": 0.063571,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 19,
+        "head": 15,
+        "mean_gap_damage": -0.810869,
+        "gap_damage_ci95": [
+          -1.017948,
+          -0.616781
+        ],
+        "mean_abs_attribution": 0.956492,
+        "matched_negative_kl": 0.054359,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 0,
+        "head": 0,
+        "mean_gap_damage": 0.345339,
+        "gap_damage_ci95": [
+          0.086624,
+          0.595286
+        ],
+        "mean_abs_attribution": 0.944618,
+        "matched_negative_kl": 0.089776,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 20,
+        "head": 14,
+        "mean_gap_damage": -0.045232,
+        "gap_damage_ci95": [
+          -0.12749,
+          0.037883
+        ],
+        "mean_abs_attribution": 0.93531,
+        "matched_negative_kl": 0.017647,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 8,
+        "head": 13,
+        "mean_gap_damage": -0.395894,
+        "gap_damage_ci95": [
+          -0.674682,
+          -0.149292
+        ],
+        "mean_abs_attribution": 0.920076,
+        "matched_negative_kl": 0.074319,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 0,
+        "head": 5,
+        "mean_gap_damage": 0.246992,
+        "gap_damage_ci95": [
+          -0.009788,
+          0.532414
+        ],
+        "mean_abs_attribution": 0.917445,
+        "matched_negative_kl": 0.08754,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 7,
+        "head": 6,
+        "mean_gap_damage": -0.285986,
+        "gap_damage_ci95": [
+          -0.509265,
+          -0.084912
+        ],
+        "mean_abs_attribution": 0.915768,
+        "matched_negative_kl": 0.086624,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 3,
+        "head": 1,
+        "mean_gap_damage": 0.055988,
+        "gap_damage_ci95": [
+          -0.150811,
+          0.239284
+        ],
+        "mean_abs_attribution": 0.911696,
+        "matched_negative_kl": 0.060913,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 11,
+        "head": 15,
+        "mean_gap_damage": 0.523193,
+        "gap_damage_ci95": [
+          0.288545,
+          0.78634
+        ],
+        "mean_abs_attribution": 0.910827,
+        "matched_negative_kl": 0.071785,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 6,
+        "head": 13,
+        "mean_gap_damage": -0.219092,
+        "gap_damage_ci95": [
+          -0.423043,
+          -0.025734
+        ],
+        "mean_abs_attribution": 0.903455,
+        "matched_negative_kl": 0.067744,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 11,
+        "head": 6,
+        "mean_gap_damage": 0.557822,
+        "gap_damage_ci95": [
+          0.349795,
+          0.802991
+        ],
+        "mean_abs_attribution": 0.867961,
+        "matched_negative_kl": 0.058644,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 8,
+        "head": 10,
+        "mean_gap_damage": -0.151997,
+        "gap_damage_ci95": [
+          -0.409482,
+          0.092722
+        ],
+        "mean_abs_attribution": 0.853169,
+        "matched_negative_kl": 0.099703,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 5,
+        "head": 7,
+        "mean_gap_damage": 0.122275,
+        "gap_damage_ci95": [
+          -0.107464,
+          0.377533
+        ],
+        "mean_abs_attribution": 0.851425,
+        "matched_negative_kl": 0.073913,
+        "positive_causal_ci": false
+      },
+      {
+        "layer": 5,
+        "head": 9,
+        "mean_gap_damage": 0.437598,
+        "gap_damage_ci95": [
+          0.189532,
+          0.711494
+        ],
+        "mean_abs_attribution": 0.841101,
+        "matched_negative_kl": 0.073596,
+        "positive_causal_ci": true
+      }
+    ],
+    "attribution_and_positive_ablation": [
+      {
+        "layer": 5,
+        "head": 2,
+        "mean_gap_damage": 3.971401,
+        "gap_damage_ci95": [
+          3.249097,
+          4.701828
+        ],
+        "mean_abs_attribution": 2.40361,
+        "matched_negative_kl": 0.660436,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 4,
+        "head": 11,
+        "mean_gap_damage": 2.426753,
+        "gap_damage_ci95": [
+          1.45207,
+          3.387307
+        ],
+        "mean_abs_attribution": 1.300975,
+        "matched_negative_kl": 1.690731,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 7,
+        "head": 1,
+        "mean_gap_damage": 1.708935,
+        "gap_damage_ci95": [
+          1.355433,
+          2.050374
+        ],
+        "mean_abs_attribution": 1.705399,
+        "matched_negative_kl": 0.160636,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 11,
+        "head": 14,
+        "mean_gap_damage": 1.315283,
+        "gap_damage_ci95": [
+          0.985279,
+          1.646806
+        ],
+        "mean_abs_attribution": 1.043177,
+        "matched_negative_kl": 0.107254,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 9,
+        "head": 5,
+        "mean_gap_damage": 1.180146,
+        "gap_damage_ci95": [
+          0.840349,
+          1.531071
+        ],
+        "mean_abs_attribution": 1.445959,
+        "matched_negative_kl": 0.116267,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 11,
+        "head": 2,
+        "mean_gap_damage": 1.157517,
+        "gap_damage_ci95": [
+          0.897719,
+          1.439965
+        ],
+        "mean_abs_attribution": 1.814227,
+        "matched_negative_kl": 0.098484,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 8,
+        "head": 6,
+        "mean_gap_damage": 0.876045,
+        "gap_damage_ci95": [
+          0.60203,
+          1.203541
+        ],
+        "mean_abs_attribution": 1.289203,
+        "matched_negative_kl": 0.087575,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 1,
+        "head": 15,
+        "mean_gap_damage": 0.83165,
+        "gap_damage_ci95": [
+          0.4848,
+          1.197586
+        ],
+        "mean_abs_attribution": 1.022018,
+        "matched_negative_kl": 0.098032,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 11,
+        "head": 6,
+        "mean_gap_damage": 0.557822,
+        "gap_damage_ci95": [
+          0.349795,
+          0.802991
+        ],
+        "mean_abs_attribution": 0.867961,
+        "matched_negative_kl": 0.058644,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 11,
+        "head": 15,
+        "mean_gap_damage": 0.523193,
+        "gap_damage_ci95": [
+          0.288545,
+          0.78634
+        ],
+        "mean_abs_attribution": 0.910827,
+        "matched_negative_kl": 0.071785,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 5,
+        "head": 9,
+        "mean_gap_damage": 0.437598,
+        "gap_damage_ci95": [
+          0.189532,
+          0.711494
+        ],
+        "mean_abs_attribution": 0.841101,
+        "matched_negative_kl": 0.073596,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 1,
+        "head": 0,
+        "mean_gap_damage": 0.424307,
+        "gap_damage_ci95": [
+          0.146227,
+          0.698107
+        ],
+        "mean_abs_attribution": 0.987438,
+        "matched_negative_kl": 0.10354,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 4,
+        "head": 0,
+        "mean_gap_damage": 0.369229,
+        "gap_damage_ci95": [
+          0.122535,
+          0.615444
+        ],
+        "mean_abs_attribution": 0.991684,
+        "matched_negative_kl": 0.067857,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 7,
+        "head": 4,
+        "mean_gap_damage": 0.362441,
+        "gap_damage_ci95": [
+          0.131917,
+          0.611943
+        ],
+        "mean_abs_attribution": 0.995058,
+        "matched_negative_kl": 0.069949,
+        "positive_causal_ci": true
+      },
+      {
+        "layer": 0,
+        "head": 0,
+        "mean_gap_damage": 0.345339,
+        "gap_damage_ci95": [
+          0.086624,
+          0.595286
+        ],
+        "mean_abs_attribution": 0.944618,
+        "matched_negative_kl": 0.089776,
+        "positive_causal_ci": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,1212 @@
+{
+  "artifact": "nano_apd/out/pythia-410m_induction_components_functional_v4_C16",
+  "precision": "bf16",
+  "n_pairs": 256,
+  "eligible_count": 105,
+  "model": "EleutherAI/pythia-410m",
+  "components": 16,
+  "rank": 1,
+  "cross_layer": {
+    "modules": 96,
+    "layers": 24,
+    "component_index_shared_across_modules": true
+  },
+  "routing": {
+    "normalization": "sum",
+    "mean_effective_components": 4.949022,
+    "mean_winner_share": 0.3717,
+    "components_owning_examples": 10
+  },
+  "behavior": {
+    "target_gap": 11.004812,
+    "routed_gap": 10.119528,
+    "residual_gap": 9.891996,
+    "target_positive_accuracy": 1.0,
+    "routed_positive_accuracy": 0.714286,
+    "residual_positive_accuracy": 0.657143,
+    "routed_selected_kl": 0.219957,
+    "residual_matched_negative_kl": 0.274943
+  },
+  "necessity_rule": {
+    "owned": "top owner or share >= 0.12",
+    "minimum_owned_examples": 5,
+    "requirements": "bootstrap CI lower bound > 0 and gap-damage rate above 0.05 >= 50%",
+    "components_passing": 0
+  },
+  "components_detail": [
+    {
+      "component": 0,
+      "owned_examples": 12,
+      "mean_share_on_owned": 0.203726,
+      "max_share": 0.342596,
+      "mean_gap_damage": 0.077108,
+      "gap_damage_ci95": [
+        -0.027353,
+        0.202556
+      ],
+      "necessity_rate": 0.5,
+      "prediction_flip_rate": 0.0833,
+      "matched_negative_kl": 0.246554,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        19,
+        20,
+        21,
+        18,
+        23
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 10,
+          "head": 0
+        },
+        {
+          "layer": 18,
+          "head": 8
+        },
+        {
+          "layer": 8,
+          "head": 10
+        },
+        {
+          "layer": 11,
+          "head": 2
+        },
+        {
+          "layer": 10,
+          "head": 10
+        },
+        {
+          "layer": 1,
+          "head": 9
+        },
+        {
+          "layer": 6,
+          "head": 6
+        },
+        {
+          "layer": 18,
+          "head": 10
+        }
+      ],
+      "piece_mass_effective_layers": 23.7658
+    },
+    {
+      "component": 1,
+      "owned_examples": 2,
+      "mean_share_on_owned": 0.13215,
+      "max_share": 0.132975,
+      "mean_gap_damage": -0.023438,
+      "gap_damage_ci95": [
+        -0.296875,
+        0.25
+      ],
+      "necessity_rate": 0.5,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.182263,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        19,
+        14,
+        20,
+        18
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 7,
+          "head": 1
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 1,
+          "head": 4
+        },
+        {
+          "layer": 8,
+          "head": 13
+        },
+        {
+          "layer": 8,
+          "head": 10
+        },
+        {
+          "layer": 8,
+          "head": 6
+        },
+        {
+          "layer": 18,
+          "head": 8
+        }
+      ],
+      "piece_mass_effective_layers": 23.7885
+    },
+    {
+      "component": 2,
+      "owned_examples": 1,
+      "mean_share_on_owned": 0.136728,
+      "max_share": 0.136728,
+      "mean_gap_damage": 0.25,
+      "gap_damage_ci95": [
+        0.25,
+        0.25
+      ],
+      "necessity_rate": 1.0,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.270502,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        19,
+        21,
+        20,
+        23,
+        17
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 11,
+          "head": 2
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 0,
+          "head": 3
+        },
+        {
+          "layer": 13,
+          "head": 12
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 11,
+          "head": 15
+        },
+        {
+          "layer": 8,
+          "head": 13
+        },
+        {
+          "layer": 1,
+          "head": 13
+        }
+      ],
+      "piece_mass_effective_layers": 23.7382
+    },
+    {
+      "component": 3,
+      "owned_examples": 0,
+      "mean_share_on_owned": null,
+      "max_share": 0.110687,
+      "mean_gap_damage": null,
+      "gap_damage_ci95": [
+        null,
+        null
+      ],
+      "necessity_rate": null,
+      "prediction_flip_rate": null,
+      "matched_negative_kl": null,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        14,
+        20,
+        19,
+        17
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 19,
+          "head": 2
+        },
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 7,
+          "head": 1
+        },
+        {
+          "layer": 7,
+          "head": 0
+        },
+        {
+          "layer": 1,
+          "head": 9
+        },
+        {
+          "layer": 12,
+          "head": 13
+        },
+        {
+          "layer": 7,
+          "head": 4
+        },
+        {
+          "layer": 12,
+          "head": 0
+        }
+      ],
+      "piece_mass_effective_layers": 23.8421
+    },
+    {
+      "component": 4,
+      "owned_examples": 18,
+      "mean_share_on_owned": 0.222394,
+      "max_share": 0.48204,
+      "mean_gap_damage": 0.072808,
+      "gap_damage_ci95": [
+        -0.104563,
+        0.250054
+      ],
+      "necessity_rate": 0.5,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.339139,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        19,
+        20,
+        21,
+        18,
+        17
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 7,
+          "head": 4
+        },
+        {
+          "layer": 7,
+          "head": 0
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 7,
+          "head": 1
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 18,
+          "head": 8
+        },
+        {
+          "layer": 9,
+          "head": 4
+        },
+        {
+          "layer": 11,
+          "head": 2
+        }
+      ],
+      "piece_mass_effective_layers": 23.6246
+    },
+    {
+      "component": 5,
+      "owned_examples": 0,
+      "mean_share_on_owned": null,
+      "max_share": 0.118111,
+      "mean_gap_damage": null,
+      "gap_damage_ci95": [
+        null,
+        null
+      ],
+      "necessity_rate": null,
+      "prediction_flip_rate": null,
+      "matched_negative_kl": null,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        14,
+        20,
+        19,
+        16,
+        21
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 8,
+          "head": 6
+        },
+        {
+          "layer": 8,
+          "head": 2
+        },
+        {
+          "layer": 5,
+          "head": 14
+        },
+        {
+          "layer": 20,
+          "head": 1
+        },
+        {
+          "layer": 20,
+          "head": 11
+        },
+        {
+          "layer": 20,
+          "head": 2
+        },
+        {
+          "layer": 20,
+          "head": 13
+        },
+        {
+          "layer": 5,
+          "head": 2
+        }
+      ],
+      "piece_mass_effective_layers": 23.6999
+    },
+    {
+      "component": 6,
+      "owned_examples": 11,
+      "mean_share_on_owned": 0.16634,
+      "max_share": 0.280108,
+      "mean_gap_damage": -0.057528,
+      "gap_damage_ci95": [
+        -0.54636,
+        0.285618
+      ],
+      "necessity_rate": 0.4545,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.266366,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        19,
+        18,
+        16,
+        23
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 1,
+          "head": 4
+        },
+        {
+          "layer": 13,
+          "head": 14
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 7,
+          "head": 1
+        },
+        {
+          "layer": 7,
+          "head": 4
+        },
+        {
+          "layer": 11,
+          "head": 2
+        },
+        {
+          "layer": 9,
+          "head": 5
+        }
+      ],
+      "piece_mass_effective_layers": 23.7236
+    },
+    {
+      "component": 7,
+      "owned_examples": 14,
+      "mean_share_on_owned": 0.187327,
+      "max_share": 0.410914,
+      "mean_gap_damage": 0.009295,
+      "gap_damage_ci95": [
+        -0.106221,
+        0.125929
+      ],
+      "necessity_rate": 0.5,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.196438,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.22.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        19,
+        14,
+        22,
+        20
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 9,
+          "head": 6
+        },
+        {
+          "layer": 10,
+          "head": 7
+        },
+        {
+          "layer": 9,
+          "head": 4
+        },
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 10,
+          "head": 0
+        },
+        {
+          "layer": 10,
+          "head": 6
+        },
+        {
+          "layer": 18,
+          "head": 8
+        }
+      ],
+      "piece_mass_effective_layers": 23.7374
+    },
+    {
+      "component": 8,
+      "owned_examples": 22,
+      "mean_share_on_owned": 0.220756,
+      "max_share": 0.36682,
+      "mean_gap_damage": -0.021751,
+      "gap_damage_ci95": [
+        -0.176882,
+        0.111708
+      ],
+      "necessity_rate": 0.4091,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.186606,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.16.attention.query_key_value",
+        "gpt_neox.layers.22.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        14,
+        16,
+        19,
+        18,
+        22
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 8,
+          "head": 12
+        },
+        {
+          "layer": 1,
+          "head": 15
+        },
+        {
+          "layer": 14,
+          "head": 11
+        },
+        {
+          "layer": 9,
+          "head": 2
+        },
+        {
+          "layer": 18,
+          "head": 8
+        },
+        {
+          "layer": 1,
+          "head": 9
+        },
+        {
+          "layer": 8,
+          "head": 10
+        }
+      ],
+      "piece_mass_effective_layers": 23.603
+    },
+    {
+      "component": 9,
+      "owned_examples": 16,
+      "mean_share_on_owned": 0.211516,
+      "max_share": 0.329555,
+      "mean_gap_damage": 0.185135,
+      "gap_damage_ci95": [
+        -0.041515,
+        0.420641
+      ],
+      "necessity_rate": 0.5625,
+      "prediction_flip_rate": 0.125,
+      "matched_negative_kl": 0.252161,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value",
+        "gpt_neox.layers.16.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        23,
+        17,
+        16,
+        20
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 11,
+          "head": 2
+        },
+        {
+          "layer": 11,
+          "head": 15
+        },
+        {
+          "layer": 7,
+          "head": 0
+        },
+        {
+          "layer": 7,
+          "head": 7
+        },
+        {
+          "layer": 16,
+          "head": 14
+        },
+        {
+          "layer": 15,
+          "head": 8
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 5,
+          "head": 2
+        }
+      ],
+      "piece_mass_effective_layers": 23.7831
+    },
+    {
+      "component": 10,
+      "owned_examples": 1,
+      "mean_share_on_owned": 0.129405,
+      "max_share": 0.129405,
+      "mean_gap_damage": 0.125,
+      "gap_damage_ci95": [
+        0.125,
+        0.125
+      ],
+      "necessity_rate": 1.0,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.22953,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value",
+        "gpt_neox.layers.16.mlp.dense_h_to_4h"
+      ],
+      "top_credit_layers": [
+        21,
+        17,
+        19,
+        16,
+        18
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 7,
+          "head": 0
+        },
+        {
+          "layer": 18,
+          "head": 8
+        },
+        {
+          "layer": 0,
+          "head": 5
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 9,
+          "head": 12
+        },
+        {
+          "layer": 9,
+          "head": 5
+        },
+        {
+          "layer": 19,
+          "head": 2
+        },
+        {
+          "layer": 5,
+          "head": 2
+        }
+      ],
+      "piece_mass_effective_layers": 23.6534
+    },
+    {
+      "component": 11,
+      "owned_examples": 45,
+      "mean_share_on_owned": 0.266379,
+      "max_share": 0.74899,
+      "mean_gap_damage": 0.007709,
+      "gap_damage_ci95": [
+        -0.094464,
+        0.113389
+      ],
+      "necessity_rate": 0.4444,
+      "prediction_flip_rate": 0.0222,
+      "matched_negative_kl": 0.223007,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.16.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        19,
+        21,
+        16,
+        14,
+        15
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 10,
+          "head": 7
+        },
+        {
+          "layer": 15,
+          "head": 8
+        },
+        {
+          "layer": 1,
+          "head": 12
+        },
+        {
+          "layer": 17,
+          "head": 10
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 10,
+          "head": 0
+        },
+        {
+          "layer": 11,
+          "head": 6
+        },
+        {
+          "layer": 7,
+          "head": 2
+        }
+      ],
+      "piece_mass_effective_layers": 23.7094
+    },
+    {
+      "component": 12,
+      "owned_examples": 51,
+      "mean_share_on_owned": 0.338594,
+      "max_share": 0.755995,
+      "mean_gap_damage": 0.127216,
+      "gap_damage_ci95": [
+        -0.001126,
+        0.253139
+      ],
+      "necessity_rate": 0.549,
+      "prediction_flip_rate": 0.0392,
+      "matched_negative_kl": 0.23517,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.22.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        19,
+        22,
+        14,
+        20
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 0,
+          "head": 3
+        },
+        {
+          "layer": 5,
+          "head": 7
+        },
+        {
+          "layer": 5,
+          "head": 2
+        },
+        {
+          "layer": 9,
+          "head": 4
+        },
+        {
+          "layer": 9,
+          "head": 7
+        },
+        {
+          "layer": 17,
+          "head": 10
+        },
+        {
+          "layer": 19,
+          "head": 4
+        },
+        {
+          "layer": 18,
+          "head": 8
+        }
+      ],
+      "piece_mass_effective_layers": 23.8217
+    },
+    {
+      "component": 13,
+      "owned_examples": 0,
+      "mean_share_on_owned": null,
+      "max_share": 0.074996,
+      "mean_gap_damage": null,
+      "gap_damage_ci95": [
+        null,
+        null
+      ],
+      "necessity_rate": null,
+      "prediction_flip_rate": null,
+      "matched_negative_kl": null,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value",
+        "gpt_neox.layers.14.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        20,
+        19,
+        17,
+        14
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 11,
+          "head": 2
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 8,
+          "head": 2
+        },
+        {
+          "layer": 9,
+          "head": 3
+        },
+        {
+          "layer": 0,
+          "head": 0
+        },
+        {
+          "layer": 8,
+          "head": 14
+        },
+        {
+          "layer": 7,
+          "head": 4
+        },
+        {
+          "layer": 5,
+          "head": 2
+        }
+      ],
+      "piece_mass_effective_layers": 23.6601
+    },
+    {
+      "component": 14,
+      "owned_examples": 10,
+      "mean_share_on_owned": 0.172676,
+      "max_share": 0.252359,
+      "mean_gap_damage": 0.1255,
+      "gap_damage_ci95": [
+        -0.020529,
+        0.272133
+      ],
+      "necessity_rate": 0.6,
+      "prediction_flip_rate": 0.0,
+      "matched_negative_kl": 0.194603,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value",
+        "gpt_neox.layers.22.attention.query_key_value",
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.20.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        21,
+        18,
+        20,
+        19,
+        22
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 17,
+          "head": 1
+        },
+        {
+          "layer": 20,
+          "head": 14
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 17,
+          "head": 10
+        },
+        {
+          "layer": 11,
+          "head": 2
+        },
+        {
+          "layer": 9,
+          "head": 6
+        },
+        {
+          "layer": 15,
+          "head": 4
+        },
+        {
+          "layer": 0,
+          "head": 14
+        }
+      ],
+      "piece_mass_effective_layers": 23.746
+    },
+    {
+      "component": 15,
+      "owned_examples": 61,
+      "mean_share_on_owned": 0.274782,
+      "max_share": 0.645743,
+      "mean_gap_damage": 0.084211,
+      "gap_damage_ci95": [
+        -0.026478,
+        0.204277
+      ],
+      "necessity_rate": 0.5246,
+      "prediction_flip_rate": 0.0328,
+      "matched_negative_kl": 0.243615,
+      "passes_necessity_rule": false,
+      "top_credit_modules": [
+        "gpt_neox.layers.19.attention.query_key_value",
+        "gpt_neox.layers.17.attention.query_key_value",
+        "gpt_neox.layers.21.attention.query_key_value",
+        "gpt_neox.layers.18.attention.query_key_value",
+        "gpt_neox.layers.23.attention.query_key_value"
+      ],
+      "top_credit_layers": [
+        19,
+        17,
+        21,
+        18,
+        23
+      ],
+      "top_attention_heads": [
+        {
+          "layer": 18,
+          "head": 10
+        },
+        {
+          "layer": 18,
+          "head": 8
+        },
+        {
+          "layer": 11,
+          "head": 15
+        },
+        {
+          "layer": 11,
+          "head": 14
+        },
+        {
+          "layer": 18,
+          "head": 12
+        },
+        {
+          "layer": 0,
+          "head": 3
+        },
+        {
+          "layer": 8,
+          "head": 9
+        },
+        {
+          "layer": 0,
+          "head": 5
+        }
+      ],
+      "piece_mass_effective_layers": 23.7313
+    }
+  ],
+  "target_attribution_reference": {
+    "top_modules": [
+      "gpt_neox.layers.11.attention.query_key_value",
+      "gpt_neox.layers.10.mlp.dense_h_to_4h",
+      "gpt_neox.layers.21.attention.query_key_value",
+      "gpt_neox.layers.16.attention.query_key_value",
+      "gpt_neox.layers.0.mlp.dense_h_to_4h",
+      "gpt_neox.layers.0.mlp.dense_4h_to_h",
+      "gpt_neox.layers.6.mlp.dense_h_to_4h",
+      "gpt_neox.layers.19.attention.query_key_value",
+      "gpt_neox.layers.5.attention.query_key_value",
+      "gpt_neox.layers.7.mlp.dense_h_to_4h",
+      "gpt_neox.layers.18.attention.query_key_value",
+      "gpt_neox.layers.20.attention.query_key_value",
+      "gpt_neox.layers.0.attention.query_key_value",
+      "gpt_neox.layers.8.mlp.dense_h_to_4h",
+      "gpt_neox.layers.6.attention.query_key_value",
+      "gpt_neox.layers.8.attention.query_key_value"
+    ],
+    "top_heads": [
+      {
+        "layer": 5,
+        "head": 2
+      },
+      {
+        "layer": 7,
+        "head": 0
+      },
+      {
+        "layer": 11,
+        "head": 2
+      },
+      {
+        "layer": 0,
+        "head": 14
+      },
+      {
+        "layer": 7,
+        "head": 1
+      },
+      {
+        "layer": 0,
+        "head": 3
+      },
+      {
+        "layer": 6,
+        "head": 6
+      },
+      {
+        "layer": 4,
+        "head": 11
+      },
+      {
+        "layer": 1,
+        "head": 9
+      },
+      {
+        "layer": 9,
+        "head": 5
+      },
+      {
+        "layer": 8,
+        "head": 6
+      },
+      {
+        "layer": 11,
+        "head": 14
+      },
+      {
+        "layer": 9,
+        "head": 3
+      },
+      {
+        "layer": 1,
+        "head": 15
+      },
+      {
+        "layer": 20,
+        "head": 14
+      },
+      {
+        "layer": 19,
+        "head": 15
+      },
+      {
+        "layer": 1,
+        "head": 0
+      },
+      {
+        "layer": 1,
+        "head": 10
+      },
+      {
+        "layer": 1,
+        "head": 4
+      },
+      {
+        "layer": 8,
+        "head": 13
+      },
+      {
+        "layer": 0,
+        "head": 5
+      },
+      {
+        "layer": 8,
+        "head": 10
+      },
+      {
+        "layer": 7,
+        "head": 4
+      },
+      {
+        "layer": 11,
+        "head": 15
+      },
+      {
+        "layer": 4,
+        "head": 0
+      },
+      {
+        "layer": 7,
+        "head": 6
+      },
+      {
+        "layer": 4,
+        "head": 15
+      },
+      {
+        "layer": 6,
+        "head": 13
+      },
+      {
+        "layer": 8,
+        "head": 9
+      },
+      {
+        "layer": 11,
+        "head": 6
+      },
+      {
+        "layer": 2,
+        "head": 10
+      },
+      {
+        "layer": 5,
+        "head": 9
+      }
+    ]
+  }
+}
