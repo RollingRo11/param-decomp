@@ -127,3 +127,8 @@ for a robustness check, which is written to a separate report.
 config, and refuses a silent train-data fallback. `polar_lm.py` reports reconstruction KL
 in nats per predicting token and clears non-optimizer target gradients. `targeted.py`
 checkpoints optimizer state, supports `--resume`, and records the actual probe split.
+
+
+## Cross-layer induction components
+
+`train_induction_components.py` trains 8, 16, or 32 task-conditioned component indices across every transformer layer, using sum-normalized attribution gates, an implicit exact residual, and stochastic intact/routed ablations. `eval_induction_roles.py` tests controlled functional variants; `eval_induction_natural.py` checks individual components on held-out Pile text; and `eval_induction_components.py --ground_truth` compares target head attribution with direct head ablation. See [`INDUCTION_COMPONENT_RESULTS.md`](INDUCTION_COMPONENT_RESULTS.md) for the mechanism, commands, complete C=8/16/32 results, negative results, and next-step criteria.
