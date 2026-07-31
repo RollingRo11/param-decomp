@@ -28,7 +28,7 @@ from pathlib import Path
 import torch
 import torch.distributed as dist
 import torch.nn.functional as F
-from torch import nn, Tensor
+from torch import Tensor, nn
 
 sys.path.insert(0, "/workspace/param-decomp")
 from nano_param_decomp.pythia14m import (  # noqa: E402
@@ -202,8 +202,8 @@ def compute_attributions(banks, tcache, gposts) -> Tensor:
     return attribution_inner(banks, tcache, gposts) ** 2
 
 
-def row_geometry(tcache, gposts, targets_W2, I, J) -> Tensor:
-    """Exact fingerprint-cosine rows for anchors I vs candidates J (both index the
+def row_geometry(tcache, gposts, targets_W2, anchors, candidates) -> Tensor:
+    """Exact fingerprint-cosine rows for anchors vs candidates (both index the
     flattened token axis), via the same bilinear identity as pair_geometry."""
     def flat(path):
         return (tcache[path]["pre"].detach().flatten(0, 1),
@@ -213,7 +213,7 @@ def row_geometry(tcache, gposts, targets_W2, I, J) -> Tensor:
     djj = None
     for path, W2 in targets_W2.items():
         pre, gp = flat(path)
-        PI, PJ, GI, GJ = pre[I], pre[J], gp[I], gp[J]
+        PI, PJ, GI, GJ = pre[anchors], pre[candidates], gp[anchors], gp[candidates]
         X = PI.unsqueeze(1) * PJ.unsqueeze(0)                 # [Na, Nc, d_in]
         Y = GI.unsqueeze(1) * GJ.unsqueeze(0)                 # [Na, Nc, d_out]
         t = ((X @ W2) * Y).sum(-1)                            # [Na, Nc]
@@ -259,8 +259,8 @@ def pair_geometry_modular(tcache, gposts, targets_W2, pi, pj) -> Tensor:
         gp = gposts[path].flatten(0, 1)
         W2 = targets_W2[path]
 
-        def d(ii, jj):
-            return torch.einsum("pd,do,po->p", pre[ii] * pre[jj], W2,
+        def d(ii, jj, pre=pre, gp=gp, weight_sq=W2):
+            return torch.einsum("pd,do,po->p", pre[ii] * pre[jj], weight_sq,
                                 gp[ii] * gp[jj])
         dij = d(pi, pj)
         dii = d(pi, pi).clamp_min(1e-20)
@@ -488,8 +488,7 @@ def main():
         torch.backends.cudnn.allow_tf32 = True
 
     if args.target == "pile4l":
-        from nano_param_decomp.pile_4L import (C_PER_MODULE_4L,
-                                               load_paper_target_model, make_loader)
+        from nano_param_decomp.pile_4L import C_PER_MODULE_4L, load_paper_target_model, make_loader
         MODULES[:] = list(C_PER_MODULE_4L.keys())
         target = load_paper_target_model().float().to(device)
         for p in target.parameters():
@@ -556,6 +555,9 @@ def main():
         for grp in opt.param_groups:
             grp["lr"] = lr
         opt.zero_grad(set_to_none=True)
+        # Target parameters require gradients so the captured activations have an
+        # autograd graph. They are not optimized, so clear accumulating gradients.
+        target.zero_grad(set_to_none=True)
         idx = next(loader).to(device)
 
         # heavy passes optionally under bf16 autocast; the faith loss is computed
@@ -607,9 +609,13 @@ def main():
                 loss_jac = jacobian_match_loss(runner, PERT, idx[sel], g[sel],
                                                logits_t[sel], args, device)
 
-            loss_recon = F.kl_div(F.log_softmax(logits_g[:, :-1], -1),
-                                  F.softmax(logits_t[sel][:, :-1].detach(), -1),
-                                  reduction="batchmean")
+            # Mean nats per predicting token. `batchmean` divided only by batch size,
+            # making the old training metric scale linearly with context length.
+            loss_recon = F.kl_div(
+                F.log_softmax(logits_g[:, :-1], -1),
+                F.softmax(logits_t[sel][:, :-1].detach(), -1),
+                reduction="none",
+            ).sum(-1).mean()
             loss_act = sum(((gcache[p]["post"] - tcache[p]["post"][sel].detach()) ** 2)
                            .mean() for p in MODULES) / len(MODULES)
 
@@ -620,13 +626,13 @@ def main():
                 # (softmaxed) are soft targets for the usage-cosine rows
                 perm = torch.randperm(BT, device=device)
                 J = perm[:args.n_cands]
-                I = J[:args.n_anchors]
+                anchors = J[:args.n_anchors]
                 with torch.no_grad():
-                    w_rows = row_geometry(tcache, gposts, W2, I, J).float()
+                    w_rows = row_geometry(tcache, gposts, W2, anchors, J).float()
                     tgt = F.softmax(w_rows / args.tau_t, dim=-1)
                 An = F.normalize(A.flatten(0, 1).float(), dim=-1)
                 scale = logit_scale.exp().clamp(max=100.0)
-                logits = (An[I] @ An[J].t()) * scale
+                logits = (An[anchors] @ An[J].t()) * scale
                 loss_geom = -(tgt * F.log_softmax(logits, dim=-1)).sum(-1).mean()
             elif args.geom_mode == "modular":
                 # ---- 1) mine violation pairs cheaply on a large candidate pool ----

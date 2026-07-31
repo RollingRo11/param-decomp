@@ -36,9 +36,10 @@ from pathlib import Path
 
 import torch
 import torch.nn.functional as F
-from torch import nn, Tensor
+from torch import Tensor, nn
 
 sys.path.insert(0, "/workspace/param-decomp")
+from nano_apd.lm_target import one_loader_batch  # noqa: E402
 from nano_param_decomp.pile_4L import (  # noqa: E402
     C_PER_MODULE_4L,
     load_paper_target_model,
@@ -166,6 +167,9 @@ def main():
     p.add_argument("--wandb", action="store_true")
     p.add_argument("--eval_every", type=int, default=250)
     p.add_argument("--ckpt_every", type=int, default=2000)
+    p.add_argument("--resume", action="store_true")
+    p.add_argument("--probe_split", default="validation")
+    p.add_argument("--allow_train_fallback", action="store_true")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--modules_filter", default="",
                    help="comma-separated substrings; decompose ONLY matching modules "
@@ -189,13 +193,34 @@ def main():
     editor = Editor(target, banks)
     opt = torch.optim.AdamW(banks.parameters(), lr=args.lr, weight_decay=0.0)
     n_params = sum(target.get_submodule(p_).weight.numel() for p_ in MODULES)
+    out_dir = OUT_ROOT / f"pile4l_targeted_{args.tag}"
+    ckpt_path = out_dir / "ckpt.pt"
+    start_step = 0
+    if args.resume and ckpt_path.exists():
+        checkpoint = torch.load(ckpt_path, weights_only=False, map_location="cpu")
+        banks.load_state_dict(checkpoint["banks"])
+        if "optimizer" in checkpoint:
+            opt.load_state_dict(checkpoint["optimizer"])
+        start_step = int(checkpoint["step"]) + 1
+        print(f"resumed {ckpt_path} at step {start_step}", flush=True)
 
     loader = make_loader(args.batch_pile, args.seq_len, 0, 1, "train", args.seed)
     half = args.seq_len // 2
 
-    # fixed held-out probes (never trained on): shipped-edit metrics every eval_every
+    # Fixed probes. A train-stream fallback is never silent and is recorded in config.
     probe_ind = induction_batch(24, half, device, 999)
-    probe_pile = next(make_loader(32, args.seq_len, 0, 1, "train", 999_999)).to(device)
+    try:
+        probe_pile = one_loader_batch(make_loader(
+            32, args.seq_len, 0, 1, args.probe_split, 999_999
+        )).to(device)
+        probe_split_actual = args.probe_split
+    except Exception:
+        if not args.allow_train_fallback:
+            raise
+        probe_pile = one_loader_batch(make_loader(
+            32, args.seq_len, 0, 1, "train", 999_999
+        )).to(device)
+        probe_split_actual = "train-fallback"
     probe_mask_ind = induction_predictable(probe_pile)[:, 1:]   # aligns with CE positions
 
     @torch.no_grad()
@@ -227,14 +252,13 @@ def main():
     zeros_masks = torch.zeros(max(64, args.batch_pile + args.batch_ind), 1, args.C,
                               device=device)
 
-    out_dir = OUT_ROOT / f"pile4l_targeted_{args.tag}"
     wb = None
     if args.wandb:
         import wandb
         wb = wandb.init(project="nano-apd", name=f"targeted_{args.tag}",
                         config=vars(args))
 
-    for step in range(args.steps + 1):
+    for step in range(start_step, args.steps + 1):
         lr = args.lr * min(1.0, (step + 1) / 100) * \
             (0.5 * (1 + torch.cos(torch.tensor(step / args.steps * 3.14159)))).item()
         for grp in opt.param_groups:
@@ -318,14 +342,18 @@ def main():
             if args.ckpt_every > 0 and step > 0 and step % args.ckpt_every == 0:
                 out_dir.mkdir(parents=True, exist_ok=True)
                 tmp = out_dir / "ckpt.tmp"
-                torch.save({"banks": banks.state_dict(), "step": step}, tmp)
+                torch.save({"banks": banks.state_dict(), "optimizer": opt.state_dict(),
+                            "step": step, "probe_split": probe_split_actual}, tmp)
                 tmp.replace(out_dir / "ckpt.pt")
 
     out_dir.mkdir(parents=True, exist_ok=True)
     torch.save(banks.state_dict(), out_dir / "banks.pt")
     with open(out_dir / "config.json", "w") as f:
-        json.dump(vars(args), f, indent=2)
+        json.dump(vars(args) | {"probe_split_actual": probe_split_actual}, f, indent=2)
     (out_dir / "ckpt.pt").unlink(missing_ok=True)
+    close_loader = getattr(loader, "close", None)
+    if close_loader is not None:
+        close_loader()
     print(f"saved to {out_dir}", flush=True)
     print("TARGETED_DONE", flush=True)
 

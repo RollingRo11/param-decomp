@@ -1,6 +1,6 @@
 # Attribution-Gated Parameter Decomposition — Method (detailed)
 
-*(nano_apd / `polar.py` (toys), `polar_lm.py` (LMs). Status: 2026-07-23. Extensions under test — IG attribution, entropy, Jacobian matching — in §10; first combined production trial `full_ig2_ent01_jacE4` in flight.)*
+*(nano_apd / `polar.py` (toys), `polar_lm.py` (LMs). Updated 2026-07-31. IG, Jacobian, rank-budget, and L0 experiments are recorded in §10; entropy was removed after its 67M regression. Targeted carving is documented separately in `carving_method.md`.)*
 
 ---
 
@@ -211,11 +211,11 @@ $\mathcal{L}_{L0} = \mathbb{E}_t\big[(\sum_c \mathcal{A}_{t,c})^2/\sum_c \mathca
 - **TMDR toys**: separation 0.99–1.00, keep-only 0.006–0.03, functional 73–84/100.
 - **Pythia-14M** ($C{=}1024$): faith ~1% of weight power, KL 0.039, 0 dead components, 241/1024 high-confidence labels.
 - **pile-4L 67M** ($C{=}2048$, VPD's benchmark, run `full_s4f40k`): faith <0.1% of weight power, KL 0.077, induction 0.846 (target 0.833); 2048/2048 labeled (48M-position evidence), 599 high-confidence, 72 semantic-topic; ~21% polysemantic, stable under 6× evidence = real superposition. Circuit ownership: bigrams moderately owned (top-4 ablation −31%), paren-matching **fully owned** (top-16 → P=0 vs random null), induction **smeared** (128 components → 0.42 vs random 0.74). Dividing line: per-token-representable state localizes; cross-position content retrieval smears.
-- In flight: `full_ig2_ent01_jacE4` (IG $K{=}2$ + entropy 0.1 + lazy jac) — first production trial of §10.1–10.3 combined.
+- Completed: `full_ig2_ent01_jacE4` (IG $K{=}2$ + entropy 0.1 + lazy jac). Its saved evaluation is diffuse (292 gates above 0.01/token; gated induction 0.686 vs target 0.833), and the entropy term was subsequently removed. The later `p4l_sum_jacE4` run must be evaluated with its saved sum-normalized gate recipe.
 
 ## 12. Known limitations (and their diagnosis)
 
-1. **Per-token diffuseness**: ~180–250 gates > 0.01 per token; keep-top-$j$ has no knee. Nothing in the *core* objective demands per-token concentration — §10.2 is the candidate fix (toy-validated).
+1. **Per-token diffuseness**: ~180–292 gates > 0.01 per token; keep-top-$j$ has no knee. Entropy (§10.2) worsened 67M interpretations, while L0 (§10.5) produced coarse catch-alls. No validated concentration pressure currently fixes this at LM scale.
 2. **Participation, not ownership**: any weight split summing to $W$ is equally faithful, and ensembles satisfy the functional losses, so nothing rewards a single component solely owning a circuit's directions (L2H2-QK ownership at 14M: top component 0.47% — chance; 67M L2H4: top component 4.14% — 6–17× controls, mild). Shared with VPD/MPD/mask methods. §10.4 and the weight-mass diffuseness measurement (§2.3) target this axis.
 3. **The attribution sensor is first-order and node-local — with a measured, narrower-than-it-first-looked gap.** On the 67M induction circuit, the specificity control separates the four ablation-fatal heads into one induction-*specific* head (L2H4: copy → 0 at only +0.16 nats general CE), two *mixed* heads (L1H1/L1H5), and shared previous-token *infrastructure* (L0H3: +0.67 nats general CE — necessary but not specific). Every attribution tier finds L2H4; edge-level EAP-IG additionally recovers the mixed heads; L0H3's invisibility to contrast-based attribution is *correct* (it acts identically in both conditions). The honest residual gap — single-point node credit misses mixed mid-circuit heads — is what §10.1 addresses (in trial now); what "gate" means for pair-of-positions credit remains the open design fork.
 

@@ -64,3 +64,66 @@ None intended in the math. Structural differences only: no hook framework (forwa
 return explicit caches), no wandb, no n>0 hidden-layer TMS variant, and the attribution
 sum over output indices is computed with one batched `autograd.grad` call instead of a
 Python loop (verified identical in `tests.py`).
+
+
+## Targeted parameter carving
+
+`train_carving.py` is the low-cost research branch. It does **not** train a global
+component dictionary. Given matched contexts and one selected next-token position, it
+learns `C` rank-`m` pieces in a small set of matrices and defines the rest of each weight
+as an implicit exact residual.
+
+```bash
+# Ground-truth recovery benchmark; automatically runs the C=1 rank-matched baseline
+python -m nano_apd.run_carving_toy
+
+# Main 410M run on both H100s (batch sizes are global, not per GPU)
+torchrun --standalone --nproc_per_node=2 -m nano_apd.train_carving \
+  --target hf --model_name EleutherAI/pythia-410m --tag induction_free \
+  --C 16 --rank_m 4 --auto_modules 8 --batch_pairs 16 --batch_retain 32 --bf16
+
+# Required parameter-matched editing baseline: one component with the same total rank
+torchrun --standalone --nproc_per_node=2 -m nano_apd.train_carving \
+  --target hf --model_name EleutherAI/pythia-410m --tag induction_rank64 \
+  --C 1 --rank_m 64 --auto_modules 8 --batch_pairs 16 --batch_retain 32 --bf16
+
+# Stricter control: each piece is a projection of the existing target weight
+torchrun --standalone --nproc_per_node=2 -m nano_apd.train_carving \
+  --target hf --model_name EleutherAI/pythia-410m --tag induction_projected \
+  --bank_type projected --C 16 --rank_m 4 --auto_modules 8 \
+  --batch_pairs 16 --batch_retain 32 --bf16
+
+# Independent held-out evaluation, including a low-rank relearning attack
+python -m nano_apd.eval_carving --run pythia-410m_carving_induction_free \
+  --relearn_steps 100
+
+# Re-evaluate an older targeted.py artifact with checked-in code
+python -m nano_apd.eval_targeted --run pile4l_targeted_v1
+```
+
+The built-in induction contrast changes one earlier token while keeping the selected cue,
+target token, and local context identical. Training and localization ignore examples
+where the target misses the selected positive token unless `--include_target_incorrect`
+is explicitly set. A custom dataset can be supplied with
+`--pairs_file FILE.pt`; it must contain `[N,T]` `positive` and `negative` token tensors,
+`[N]` prediction `positions`, and optionally `[N]` `labels`. A retain tensor can be
+supplied with `--retain_file` for offline/reproducible training. The default retain
+stream is the repo's pre-tokenized Pile stream and is sharded across DDP ranks; for a
+non-Pythia Hugging Face model, provide token IDs produced by that model's tokenizer.
+
+The carving claim is intentionally narrower than full parameter decomposition. A run is
+only evidence for multiple parameter components if individual pieces have distinct causal
+effects and unseen subsets compose predictably. The mandatory comparison for `C × rank_m`
+is a single component of rank `C * rank_m`; without a win over that baseline the bank is a
+factorized LoRA edit, not an overcomplete mechanistic decomposition. See
+[`carving_method.md`](carving_method.md) for the objective and decision criteria and
+[`pilot_410m.md`](pilot_410m.md) for the deliberately negative 20-update engineering
+pilot. The evaluator follows the saved BF16 setting by default; pass `--precision fp32`
+for a robustness check, which is written to a separate report.
+
+### Evaluation correctness fixes
+
+`eval_lm.py` now uses the gate normalization saved in each run, infers the target from its
+config, and refuses a silent train-data fallback. `polar_lm.py` reports reconstruction KL
+in nats per predicting token and clears non-optimizer target gradients. `targeted.py`
+checkpoints optimizer state, supports `--resume`, and records the actual probe split.

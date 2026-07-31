@@ -21,9 +21,14 @@ import torch
 import torch.nn.functional as F
 
 sys.path.insert(0, "/workspace/param-decomp")
+from nano_apd.lm_target import one_loader_batch  # noqa: E402
+from nano_apd.polar_lm import (  # noqa: E402
+    MODULES,
+    Runner,
+    attribution_inner,
+    build_banks,
+)
 from nano_param_decomp.pythia14m import generate_pool, load_pythia14m_target  # noqa: E402
-from nano_apd.polar_lm import (MODULES, Runner, attribution_inner, build_banks,  # noqa: E402
-                               compute_attributions)
 
 OUT_ROOT = Path(__file__).parent / "out"
 
@@ -55,20 +60,44 @@ def kl_per_token(logits_g, logits_t):
                     reduction="none").sum(-1).mean()
 
 
+def normalize_gates(A, cfg):
+    """Apply the exact gate normalization saved by the training run."""
+    norm = cfg.get("gate_norm", "max")
+    if norm == "sum":
+        denom = A.sum(-1, keepdim=True)
+    elif norm == "max":
+        denom = A.amax(-1, keepdim=True)
+    else:
+        raise ValueError(f"unknown gate_norm={norm!r}")
+    gates = (A / (denom + 1e-12)) ** cfg.get("tau", 1.0)
+    threshold = cfg.get("gate_thresh", 0.0)
+    if not 0 <= threshold < 1:
+        raise ValueError(f"gate_thresh must be in [0, 1), got {threshold}")
+    if threshold > 0:
+        gates = F.relu(gates - threshold) / (1 - threshold)
+    return gates
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", required=True)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--n_seqs", type=int, default=16)
     parser.add_argument("--seq_len", type=int, default=256)
-    parser.add_argument("--target", choices=["pythia14m", "pile4l"], default="pythia14m")
+    parser.add_argument("--target", choices=["pythia14m", "pile4l"], default=None,
+                        help="override the target saved in config.json")
+    parser.add_argument("--allow_train_fallback", action="store_true",
+                        help="fall back to a fresh train stream if validation is unavailable")
     args = parser.parse_args()
     device = args.device
 
-    cfg = json.load(open(OUT_ROOT / args.run / "config.json"))
-    if args.target == "pile4l":
-        from nano_param_decomp.pile_4L import (C_PER_MODULE_4L,
-                                               load_paper_target_model, make_loader)
+    with open(OUT_ROOT / args.run / "config.json") as config_file:
+        cfg = json.load(config_file)
+    target_name = args.target or cfg.get("target", "pythia14m")
+    if args.target is not None and cfg.get("target") not in (None, args.target):
+        raise ValueError(f"--target={args.target} disagrees with saved target={cfg['target']}")
+    if target_name == "pile4l":
+        from nano_param_decomp.pile_4L import C_PER_MODULE_4L, load_paper_target_model, make_loader
         MODULES[:] = list(C_PER_MODULE_4L.keys())
         target = load_paper_target_model().float().to(device)
     else:
@@ -80,14 +109,19 @@ def main():
                                      weights_only=True, map_location=device))
     runner = Runner(target, banks, cfg.get("tau", 1.0))
 
-    # held-out sequences (fresh seed, never in the training pool)
-    if args.target == "pile4l":
+    # Held-out sequences. Falling back to train data must be explicit and is reported.
+    eval_split = "generated"
+    if target_name == "pile4l":
         try:
             loader = make_loader(args.n_seqs, args.seq_len, 0, 1, "validation", 777)
-            idx = next(loader).to(device)
+            idx = one_loader_batch(loader).to(device)
+            eval_split = "validation"
         except Exception:
+            if not args.allow_train_fallback:
+                raise
             loader = make_loader(args.n_seqs, args.seq_len, 0, 1, "train", 777_777)
-            idx = next(loader).to(device)
+            idx = one_loader_batch(loader).to(device)
+            eval_split = "train-fallback"
     else:
         idx = generate_pool(target, args.n_seqs, args.seq_len, torch.device(device),
                             seed=777).to(device)
@@ -95,18 +129,19 @@ def main():
     K = cfg.get("ig_steps", 1)
     A, logits_t = attributions_for(runner, banks, idx, K)
 
-    report = {"run": args.run}
+    report = {"run": args.run, "target": target_name, "eval_split": eval_split,
+              "gate_norm": cfg.get("gate_norm", "max")}
     C = cfg["C"]
     order = A.argsort(dim=-1, descending=True)                    # [B, T, C]
     for j in [1, 2, 4, 8, 16, C]:
         mask = torch.zeros_like(A)
         mask.scatter_(-1, order[..., :j], 1.0)
-        g = (A / (A.amax(-1, keepdim=True) + 1e-12)) ** cfg.get("tau", 1.0)
+        g = normalize_gates(A, cfg)
         with torch.no_grad():
             logits_g, _ = runner.gated_pass(idx, g * mask)
         report[f"keep_top{j if j < C else 'ALL'}_kl"] = round(
             kl_per_token(logits_g[:, :-1], logits_t[:, :-1]).item(), 4)
-    g_full = (A / (A.amax(-1, keepdim=True) + 1e-12)) ** cfg.get("tau", 1.0)
+    g_full = normalize_gates(A, cfg)
     report["gates_l0_0.01"] = round((g_full > 0.01).float().sum(-1).mean().item(), 1)
 
     # induction: [random half | same half repeated]
@@ -119,7 +154,7 @@ def main():
         lt = target(seq)
     lt_acc = (lt[:, half:-1].argmax(-1) == seq[:, half + 1:]).float().mean().item()
     A2, _ = attributions_for(runner, banks, seq, K)
-    g2 = (A2 / (A2.amax(-1, keepdim=True) + 1e-12)) ** cfg.get("tau", 1.0)
+    g2 = normalize_gates(A2, cfg)
     with torch.no_grad():
         lg, _ = runner.gated_pass(seq, g2)
     lg_acc = (lg[:, half:-1].argmax(-1) == seq[:, half + 1:]).float().mean().item()
