@@ -101,12 +101,17 @@ def build_evidence(device) -> tuple[list[dict], object]:
     tok = AutoTokenizer.from_pretrained("EleutherAI/pythia-14m")
     model = load_pythia14m_target().float()
     banks, ci, cfg, model = load_decomp(CKPT, model, device)
-    pool = torch.load("/tmp/pythia_compare/pool.pt", weights_only=True)[:512, :128].to(device)
+    # POOL env: path to a [N, S] int token tensor (e.g. a real-Pile sample — the default
+    # self-generated pool is tiny and narrow, which silently shrinks the "live" component set);
+    # NPOOL caps the sequence count.
+    pool_path = os.environ.get("POOL", "/tmp/pythia_compare/pool.pt")
+    n_pool = int(os.environ.get("NPOOL", "512"))
+    pool = torch.load(pool_path, weights_only=True)[:n_pool, :128].to(device)
     half = pool.shape[0] // 2
     n_comp = int(os.environ.get("NCOMP", "40"))
     min_rate = float(os.environ.get("MIN_RATE", "1e-4"))
 
-    # gates over the full pool, computed in sequence-chunks (C=4096 gate tensors are ~1 GB each;
+    # gates over the full pool, streamed to CPU fp16 ([8k, 128, 4096] fp32 would be ~17 GB on GPU;
     # the masked forwards below are the real memory hazard and are restricted per-component)
     S = pool.shape[1]
     g_chunks = []
@@ -115,8 +120,8 @@ def build_evidence(device) -> tuple[list[dict], object]:
         model(pool[lo:lo + 128])
         acts = {n: b.last_input for n, b in banks.items()}
         gl, _ = ci(acts)
-        g_chunks.append(gl)
-    g_lower = torch.cat(g_chunks, dim=0)
+        g_chunks.append(gl.half().cpu())
+    g_lower = torch.cat(g_chunks, dim=0)  # CPU fp16 [N, S, C]
     del g_chunks
     refresh_caches(banks)
     g_upper = g_lower  # for usage ordering, lower/upper differ only outside [0,1]; lower suffices
@@ -149,15 +154,16 @@ def build_evidence(device) -> tuple[list[dict], object]:
             seen.add(b); contexts.append("  " + ctx_str(tok, pool[b].tolist(), s))
         # ablation support: run masked forwards ONLY on this component's evidence sequences
         ub = torch.unique(bi)
-        sub = pool[ub]
+        sub = pool[ub.to(device)]
         row = {b.item(): i for i, b in enumerate(ub)}
         bi_s = torch.tensor([row[b.item()] for b in bi], device=device)
-        g_sub = g_lower[ub]
+        g_sub = g_lower[ub].float().to(device)
         zeros_sub = {n: torch.zeros(*sub.shape, device=device) for n in banks}
         pred_ci = masked_forward(model, banks, sub, g_sub, zeros_sub)
         gate_ab = g_sub.clone(); gate_ab[..., c] = 0.0
         pred_ab = masked_forward(model, banks, sub, gate_ab, zeros_sub)
-        p_ci = F.softmax(pred_ci[bi_s, si], -1); p_ab = F.softmax(pred_ab[bi_s, si], -1)
+        si_d = si.to(device)
+        p_ci = F.softmax(pred_ci[bi_s, si_d], -1); p_ab = F.softmax(pred_ab[bi_s, si_d], -1)
         sup_v, sup_i = (p_ci - p_ab).mean(0).topk(6)
         supports = ", ".join(f"'{tok.decode([i]).strip() or repr(tok.decode([i]))}'"
                              for v, i in zip(sup_v.tolist(), sup_i.tolist()) if v > 1e-4) or "(none clear)"
