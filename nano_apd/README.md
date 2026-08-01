@@ -132,3 +132,20 @@ checkpoints optimizer state, supports `--resume`, and records the actual probe s
 ## Cross-layer induction components
 
 `train_induction_components.py` trains 8, 16, or 32 task-conditioned component indices across every transformer layer, using sum-normalized attribution gates, an implicit exact residual, and stochastic intact/routed ablations. `eval_induction_roles.py` tests controlled functional variants; `eval_induction_natural.py` checks individual components on held-out Pile text; and `eval_induction_components.py --ground_truth` compares target head attribution with direct head ablation. See [`INDUCTION_COMPONENT_RESULTS.md`](INDUCTION_COMPONENT_RESULTS.md) for the mechanism, commands, complete C=8/16/32 results, negative results, and next-step criteria.
+
+## Token-conditioned weight carving
+
+`run_token_weight_carving.py` is the optimizer-free follow-up. It computes a factorized
+selected-token contrast gradient, extracts four fixed rank-one directions from every
+Pythia-410M transformer matrix, ranks them with sum-normalized attribution, and evaluates
+a frozen 16-piece shortlist with exact ablation, FP32 path integration, stochastic
+coalitions, prompt controls, and a matched direct-head reference. Ordinary and
+diagonal-KFAC geometries are implemented as independent controls.
+
+This is not an APD dictionary: each candidate is local to one matrix, and the intact
+remainder of the model is implicit. The corrected runs required no optimizer steps and
+about 5.2 GiB per H100. Their nine supporting pieces jointly removed 60--68% of the
+held-out selected margin, but the pieces had highly redundant behavioral fingerprints
+and did not recover the positive induction-head layer profile. See
+[`TOKEN_WEIGHT_CARVING_RESULTS.md`](TOKEN_WEIGHT_CARVING_RESULTS.md) for the complete
+results, explicit negative findings, commands, and checked-in artifacts.
